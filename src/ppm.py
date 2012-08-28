@@ -1,8 +1,8 @@
-# This file is part of 'Experimentos Computacionais de MS480 - 2012S2 - Aterro com Obstáculo'.
+# This file is part of 'Experimentos Computacionais de MS480 - 2012S2 - Aterro com Obstaculo'.
 #
 # Copyright (c) 2012 Raniere Silva <r.gaia.cs@gmail.com>
 #
-# 'Experimentos Computacionais de MS480 - 2012S2 - Aterro com Obstáculo' is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+# 'Experimentos Computacionais de MS480 - 2012S2 - Aterro com Obstaculo' is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 #
 # This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 #
@@ -11,6 +11,13 @@
 class PPM:
     """PPM Class
     This class store a ppm file.
+
+    Example:
+
+    Load ppm file:
+    
+        >>> import ppm
+        >>> test = ppm.PPM('test/minimal.ppm')
     """
     def __init__(self, f_name):
         try:
@@ -57,3 +64,22 @@ class PPM:
                                     insert2row = insert2row + 1
             l = f.readline()
         f.close()
+
+    def get_row(self):
+        return self.row
+
+    def get_col(self):
+        return self.col
+
+    def get_color(self, i, j):
+        """Get Color
+        i: row number
+        j: column number
+
+        Example:
+
+        Get color at (0,0):
+        
+            >>> test.get_color(0,0)
+        """
+        return (self.r[i][j], self.g[i][j], self.b[i][j])
