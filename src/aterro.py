@@ -35,29 +35,58 @@ def get_valid_paths(f_name):
             if is_j(p_map.get_color(j_i, j_j)):
                 for a_i in xrange(r):
                     for a_j in xrange(c):
-                        if is_a(p_map.get_color(a_i, a_j)):
+                        if (j_i, j_j) != (a_i, a_j) and is_a(p_map.get_color(a_i, a_j)):
                             for p_i in xrange(r):
                                 for p_j in xrange(c):
-                                    if not is_b(p_map.get_color(p_i, p_j)):
-                                        print("({0}, {1}, {2}, {3}, {4}, {5})".format(j_i, j_j, a_i, a_j, p_i, p_j))
+                                    if (j_i, j_j) != (p_i, p_j) and (a_i, a_j) != (p_i, p_j) and not is_b(p_map.get_color(p_i, p_j)):
+                                        if try_path(p_map, (j_i, j_j), (a_i, a_j), (p_i, p_j)):
+                                            print("({0}, {1}, {2}, {3}, {4}, {5})".format(j_i, j_j, a_i, a_j, p_i, p_j))
 
 def is_j(p_map):
     r = False
-    if isinstance(p_map, tuple):
+    try:
         if 0 < p_map[0] <= 255 and p_map[1] == 0 and p_map[2] == 0:
             r = True
+    except:
+        pass
     return r
 
 def is_a(p_map):
     r = False
-    if isinstance(p_map, tuple):
+    try:
         if  p_map[0] == 0 and 0 < p_map[1] <= 255 and p_map[2] == 0:
             r = True
+    except:
+        pass
     return r
 
 def is_b(p_map):
     r = False
-    if isinstance(p_map, tuple):
+    try:
         if p_map[0] == 0 and p_map[1] == 0 and p_map[2] == 255:
             r = True
+    except:
+        pass
+    return r
+
+def try_path(p_map, j, a, p):
+    """Try Path from j to a passing in p for p_map
+
+    Use the Bresenham line algorithm.
+    """
+    r = False
+    if try_line(p_map, j, p) and try_line(p_map, p, a):
+        r = True
+    return r
+
+def try_line(p_map, s, d):
+    """Try line from s to d for p_map
+    """
+    # TODO Configurar quadrante
+    deltax = s[0] - d[0]
+    deltay = s[1] - d[1]
+    error = 0
+    deltaerr = abs(deltax / deltay)
+    r = False
+    # TODO Loop
     return r
