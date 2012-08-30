@@ -63,7 +63,7 @@ def is_a(p_map):
 def is_b(p_map):
     r = False
     try:
-        if p_map[0] == 0 and p_map[1] == 0 and p_map[2] == 255:
+        if p_map[0] == 0 and p_map[1] == 0 and 0 < p_map[2] <= 255:
             r = True
     except:
         pass
@@ -74,19 +74,43 @@ def try_path(p_map, j, a, p):
 
     Use the Bresenham line algorithm.
     """
-    r = False
-    if try_line(p_map, j, p) and try_line(p_map, p, a):
-        r = True
+    r = True
+    if not try_line(p_map, j, p) or not try_line(p_map, p, a):
+        r = False
     return r
 
 def try_line(p_map, s, d):
     """Try line from s to d for p_map
     """
-    # TODO Configurar quadrante
-    deltax = s[0] - d[0]
-    deltay = s[1] - d[1]
-    error = 0
-    deltaerr = abs(deltax / deltay)
-    r = False
-    # TODO Loop
+    r = True
+    s = list(s)
+    d = list(d)
+    steep = abs(d[1] - s[1]) > abs(d[0] - s[0])
+    if steep:
+        s[0], s[1] = s[1], s[0]
+        d[0], d[1] = d[1], d[0]
+    if s[0] > d[0]:
+        s, d = d, s
+    deltax = int(d[0] - s[0])
+    deltay = int(abs(d[1] - s[1]))
+    error = 0.0
+    deltaerr = abs(deltay / deltax)
+    if s[1] < d[1]:
+        ystep = 1
+    else:
+        ystep = -1
+    y = s[1]
+    for x in xrange(s[0], d[0] + 1):
+        if steep:
+            if is_b(p_map.get_color(y, x)):
+                r = False
+                break
+        else:
+            if is_b(p_map.get_color(y, x)):
+                r = False
+                break
+        error = error + deltaerr
+        if error >= 0.5:
+            y = y + ystep
+            error = error - 1
     return r
