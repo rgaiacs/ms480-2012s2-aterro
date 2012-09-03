@@ -1,22 +1,32 @@
-﻿Este é o repositório referente ao projeto 'MS480 - 2012S2 - Aterro com Obstáculo'.
+﻿Este é o repositório referente ao projeto 'MS480 - 2012S2 - Aterro com
+Obstáculo'.
 
 Copyright (c) 2012 Raniere Silva <r.gaia.cs@gmail.com>
 Copyright (c) 2012 Fernando Cezarino <feolce@gmail.com>
 Copyright (c) 2012 Ana Paula Diniz Marques <anapdinizm@gmail.com>
 Copyright (c) 2012 Camile Kunz <camileknz@gmail.com>
+Copyright (c) 2012 Ana Flavia <anaflavia.c.lima@gmail.com>
 
 Os arquivos do projeto encontram-se dividos nos seguintes diretórios:
 - relatorio
   Possue os arquivos referentes ao relatório final do projeto.
-  Sob Licença Creative Commons Atribuição-CompartilhaIgual 3.0 Não Adaptada.
+  Sob Licença Creative Commons Atribuição-CompartilhaIgual 3.0 Não
+  Adaptada.
 - poster
   Possue os arquivos referentes ao poster do projeto.
-  Sob Licença Creative Commons Atribuição-CompartilhaIgual 3.0 Não Adaptada.
+  Sob Licença Creative Commons Atribuição-CompartilhaIgual 3.0 Não
+  Adaptada.
 - figuras
-  Possue as figuras (.jpg, .png, ...) utilizados no relatório e no poster.
-  Sob Licença Creative Commons Atribuição-CompartilhaIgual 3.0 Não Adaptada.
+  Possue as figuras (.jpg, .png, ...) utilizados no relatório e no
+  poster.
+  Sob Licença Creative Commons Atribuição-CompartilhaIgual 3.0 Não
+  Adaptada.
 - src
-  Possue os arquivos referentes a parte computacional, implementação, do projeto.
+  Possue os arquivos referentes a parte computacional, implementação, do
+  projeto.
   Sob Licença Pública Geral GNU v3.0.
 
-Existe também o arquivo 'referencias.bib', sob Licença Creative Commons Atribuição-CompartilhaIgual 3.0 Não Adaptada, que não encontra-se em nenhum dos diretórios descritos acima e registra as referências bibliográficas utilizadas nesse projeto.
+Existe também o arquivo 'referencias.bib', sob Licença Creative Commons
+Atribuição-CompartilhaIgual 3.0 Não Adaptada, que não encontra-se em nenhum
+dos diretórios descritos acima e registra as referências bibliográficas
+utilizadas nesse projeto.
