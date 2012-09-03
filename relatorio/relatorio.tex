@@ -1,33 +1,47 @@
+% Copyright (c) 2012 Raniere Silva <r.gaia.cs@gmail.com>
+% Copyright (c) 2012 Fernando Cezarino <feolce@gmail.com>
+% Copyright (c) 2012 Ana Paula Diniz Marques <anapdinizm@gmail.com>
+% Copyright (c) 2012 Camile Kunz <camileknz@gmail.com>
+% Copyright (c) 2012 Ana Flavia <anaflavia.c.lima@gmail.com>
+%
+% This file is part of 'MS480 - 2012S2 - Aterro com Obstáculo'.
+%
+% 'MS480 - 2012S2 - Aterro com Obstáculo' is licensed under the Creative Commons
+% Attribution-ShareAlike 3.0 Unported License. To view a copy of this license,
+% visit http://creativecommons.org/licenses/by-sa/3.0/.
+%
+% 'MS480 - 2012S2 - Aterro com Obstáculo' is distributed in the hope that it
+% will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 \documentclass[12pt,a4paper]{article}
 %Pacotes utilizados
-\usepackage[top=3cm,left=2cm,right=2cm,bottom=3cm]{geometry} %Borda das p\'{a}gina
-\usepackage[utf8]{inputenc} %Ser\'{a} utilizado a codifica\c{c}ao UTF8
+\usepackage[top=3cm,left=2cm,right=2cm,bottom=3cm]{geometry}
+\usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
-\usepackage[brazil]{babel} %Ser\'{a} utilizado o idioma portugu\^{e}s
-\usepackage{indentfirst} %Identa\c{c}\~{a}o de linha
-\usepackage{amsmath, amsfonts, amssymb, amsthm} % Pacote matem\'{a}tico
-\usepackage{graphicx} %Pacote para incluir figuras
-\usepackage{tikz} %Pacote para desenho de figuras
-\usepackage{url} % Pacote para url
-\usepackage{hyperref} % Pacote para hyperlink
+\usepackage[brazil]{babel}
+\usepackage{indentfirst}
+\usepackage{amsmath, amsfonts, amssymb, amsthm}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usetikzlibrary{patterns}
+\usepackage{url}
+\usepackage{hyperref}
 
 \begin{document}
 \title{MS480 - Aterro com obst\'{a}culo}
-\author{Raniere Silva (ra092767) \and Fernando Cezarino \and Ana Paula Diniz Marques \and Camile Kunz}
 % TODO Incluir n\'{u}mero de RA.
+\author{Raniere Silva (ra092767) \and Fernando Cezarino \and Ana Paula Diniz
+Marques \and Camile Kunz \and Ana Flavia}
 \maketitle
 \begin{abstract}
     Neste projeto
     %TODO Escrever o resumo.
 \end{abstract}
 
-% TODO Introdu\c{c}\~{a}o do problema.
-
+\input{problema@relatorio.tex}
 \input{modelagem@relatorio.tex}
-
 % TODO Detalhes t\'{e}cnicos.
-
 % TODO Resultados
+\bibliographystyle{alpha}
+\bibliography{../referencias}
 \end{document}
-
-
