@@ -26,10 +26,11 @@ $J$.
 \begin{figure}[!htb]
     \centering
     \begin{tikzpicture}
-        \draw[pattern=bricks](0,0) rectangle (2,2) node[fill=white,
-        midway]{$A$};
-        \draw[pattern=checkerboard] (6,6) rectangle (8,8) node[fill=white,
-        midway]{$J$};
+        \draw[pattern=bricks] (0,0) -- (0,3) -- (2,2) -- (4,0) -- (0,0);
+        \node[fill=white] at (1,1) {$A$};
+        \draw[pattern=checkerboard] (6,6) -- (8,6) -- (8,8) -- (6,8) -- (5,7) --
+        (6,6);
+        \node[fill=white] at (7,7) {$J$};
 
         % Escala
         \node[fill=white, above] at (5,1.2) {$0$};
@@ -49,18 +50,21 @@ seguindo a lógica indicada na Figura~\ref{fig:disc_J_A}.
     \centering
     \begin{tikzpicture}
         \draw[color=gray, step=.5] (0,0) grid (8,8);
-        \draw[->] (-.2,8) -- (8.2,8);
-        \draw[->] (0,-.2) -- (0,8.2);
+        \draw[pattern=bricks] (0,0) -- (0,3) -- (2,2) -- (4,0) -- (0,0);
+        \node[fill=white] at (1,1) {$A$};
+        \draw[pattern=checkerboard] (6,6) -- (8,6) -- (8,8) -- (6,8) -- (5,7) --
+        (6,6);
+        \node[fill=white] at (7,7) {$J$};
 
         \draw[pattern=bricks](0,0) rectangle (2,2) node[fill=white,
         midway]{$A$};
         \draw[pattern=checkerboard] (6,6) rectangle (8,8) node[fill=white,
         midway]{$J$};
 
-        \foreach \x in {1,...,12}{
+        \foreach \x in {1,...,11}{
             \node at (\x/2 - .25,7.75) {\small{$\x$}};
         }
-        \foreach \x in {17,...,28}{
+        \foreach \x in {17,...,26}{
             \node at (\x/2 - 8.25,7.25) {\small{$\x$}};
         }
 
@@ -72,6 +76,40 @@ seguindo a lógica indicada na Figura~\ref{fig:disc_J_A}.
     \end{tikzpicture}
     \caption{Ilustra\c{c}\~{a}o das regiões $J$ e $A$.}
     \label{fig:disc_J_A}
+\end{figure}
+
+Pela Figura~\ref{fig:disc_J_A} \'{e} poss\'{i}vel observar que alguns elementos
+da malha quadriculada encontram-se apenas parcialmente dentro de uma das
+regi\~{o}es. Para corrigir isso, aproximamos as regi\~{o}es para a malha
+utilizada de modo que todos os elementos da malha que encontram-se parcialmente
+presentes em uma das regi\~{o}es passa a pertencer totalmente a ela. O resultado
+\'{e} apresentado na Figura~\ref{fig:disc_J_A_aprox}.
+\begin{figure}[!htb]
+    \centering
+    \begin{tikzpicture}
+        \draw[color=gray, step=.5] (0,0) grid (8,8);
+        \draw[pattern=bricks] (0,0) -- (0,3) -- ++(1,0) -- ++(0,-.5) -- ++(1,0)
+        -- ++(0,-.5) -- ++(.5,0) -- ++(0,-.5) -- ++(.5,0) -- ++(0,-.5) --
+        ++(.5,0) -- ++(0,-.5) -- ++(.5,0) -- ++(0,-.5) -- (4,0) -- (0,0);
+        \node[fill=white] at (1,1) {$A$};
+        \draw[pattern=checkerboard] (6,6) -- (8,6) -- (8,8) -- (6,8) --
+        ++(-.5,0) -- ++(0,-.5) -- ++(-.5,0) -- ++ (0,-.5) -- ++(0,-.5) --
+        ++(.5,0) -- ++(0,-.5) -- ++(.5,0) -- (6,6);
+        \node[fill=white] at (7,7) {$J$};
+
+        \draw[pattern=bricks](0,0) rectangle (2,2) node[fill=white,
+        midway]{$A$};
+        \draw[pattern=checkerboard] (6,6) rectangle (8,8) node[fill=white,
+        midway]{$J$};
+
+        % Escala
+        \node[fill=white, above] at (5,1.2) {$0$};
+        \draw[fill=black] (5,1) rectangle (6,1.2) node[fill=white, above]{$e$};
+        \draw[fill=white] (6,1) rectangle (7,1.2) node[fill=white, above]{$2e$};
+        \draw[fill=black] (7,1) rectangle (8,1.2) node[fill=white, above]{$3e$};
+    \end{tikzpicture}
+    \caption{Ilustra\c{c}\~{a}o das regiões $J$ e $A$.}
+    \label{fig:disc_J_A_aprox}
 \end{figure}
 
 Seja $\phi : J \to \mathbb{R}$, $\psi: A \to \mathbb{R}$, $f: (J, A) \to
@@ -111,44 +149,66 @@ Figura~\ref{fig:malha_quad_num}.
 \begin{figure}[!htb]
     \centering
     \begin{tikzpicture}
-        \draw[color=gray] (0,0) grid (8,8);
+        \draw[color=gray, step=.5] (0,0) grid (8,8);
         \draw[->] (-.2,8) -- (8.2,8);
         \draw[->] (0,-.2) -- (0,8.2);
 
-        \draw[pattern=bricks](0,0) rectangle (2,2) node[fill=white,
-        midway]{$A$};
+        \draw[color=gray, step=.5] (0,0) grid (8,8);
+        \draw[pattern=bricks] (0,0) -- (0,3) -- ++(1,0) -- ++(0,-.5) -- ++(1,0)
+        -- ++(0,-.5) -- ++(.5,0) -- ++(0,-.5) -- ++(.5,0) -- ++(0,-.5) --
+        ++(.5,0) -- ++(0,-.5) -- ++(.5,0) -- ++(0,-.5) -- (4,0) -- (0,0);
+        \node[fill=white] at (1,1) {$A$};
+        \draw[pattern=checkerboard] (6,6) -- (8,6) -- (8,8) -- (6,8) --
+        ++(-.5,0) -- ++(0,-.5) -- ++(-.5,0) -- ++ (0,-.5) -- ++(0,-.5) --
+        ++(.5,0) -- ++(0,-.5) -- ++(.5,0) -- (6,6);
+        \node[fill=white] at (7,7) {$J$};
         \draw[pattern=fivepointed stars] (4,4) node[fill=white]{$R$}
         circle (1.7) ;
-        \draw[pattern=checkerboard] (6,6) rectangle (8,8) node[fill=white,
-        midway]{$J$};
 
-        \draw[<->] (6,1) -- (7,1) node[midway, below]{$\delta$};
+        % Escala
+        \node[fill=white, above] at (5,1.2) {$0$};
+        \draw[fill=black] (5,1) rectangle (6,1.2) node[fill=white, above]{$e$};
+        \draw[fill=white] (6,1) rectangle (7,1.2) node[fill=white, above]{$2e$};
+        \draw[fill=black] (7,1) rectangle (8,1.2) node[fill=white, above]{$3e$};
     \end{tikzpicture}
     \caption{Ilustra\c{c}\~{a}o da malha quadricular sobre a regi\~{a}o de
     interesse.}
-    \label{fig:malha_quad}
+    \label{fig:disc_J_A_R}
 \end{figure}
+
 \begin{figure}[!htb]
     \centering
     \begin{tikzpicture}
-        \draw[color=gray] (0,0) grid (8,8);
+        \draw[color=gray, step=.5] (0,0) grid (8,8);
         \draw[->] (-.2,8) -- (8.2,8);
         \draw[->] (0,-.2) -- (0,8.2);
 
-        \foreach \x in {1,...,8}{
-            \node at (\x - .5,7.5) {$\x$};
-        }
-        \foreach \x in {9,...,16}{
-            \node at (\x - 8.5,6.5) {$\x$};
-        }
-        \foreach \x in {17,...,20}{
-            \node at (\x - 16.5,5.5) {$\x$};
-        }
-    \end{tikzpicture}
-    \caption{Ilustra\c{c}\~{a}o da numeração da malha quadricular.}
-    \label{fig:malha_quad_num}
-\end{figure}
+        \draw[color=gray, step=.5] (0,0) grid (8,8);
+        \draw[pattern=bricks] (0,0) -- (0,3) -- ++(1,0) -- ++(0,-.5) -- ++(1,0)
+        -- ++(0,-.5) -- ++(.5,0) -- ++(0,-.5) -- ++(.5,0) -- ++(0,-.5) --
+        ++(.5,0) -- ++(0,-.5) -- ++(.5,0) -- ++(0,-.5) -- (4,0) -- (0,0);
+        \node[fill=white] at (1,1) {$A$};
+        \draw[pattern=checkerboard] (6,6) -- (8,6) -- (8,8) -- (6,8) --
+        ++(-.5,0) -- ++(0,-.5) -- ++(-.5,0) -- ++ (0,-.5) -- ++(0,-.5) --
+        ++(.5,0) -- ++(0,-.5) -- ++(.5,0) -- (6,6);
+        \node[fill=white] at (7,7) {$J$};
+        \draw[pattern=fivepointed stars] (3,2.5) -- ++(0,-.5) -- ++(2,0) --
+        ++(0,.5) -- ++ (.5,0) -- ++(0,.5) -- ++(.5,0) -- ++(0,2) -- ++ (-.5,0)
+        -- ++(0,.5) -- ++(-.5,0) -- ++(0,.5) -- ++(-2,0) -- ++(0,-.5) --
+        ++(-.5,0) -- ++(0,-.5) -- ++(-.5,0) -- ++(0,-2) -- ++(.5,0) -- ++(0,-.5)
+        -- (3,2.5);
+        \node[fill=white] at (4,4) {$R$};
 
+        % Escala
+        \node[fill=white, above] at (5,1.2) {$0$};
+        \draw[fill=black] (5,1) rectangle (6,1.2) node[fill=white, above]{$e$};
+        \draw[fill=white] (6,1) rectangle (7,1.2) node[fill=white, above]{$2e$};
+        \draw[fill=black] (7,1) rectangle (8,1.2) node[fill=white, above]{$3e$};
+    \end{tikzpicture}
+    \caption{Ilustra\c{c}\~{a}o da malha quadricular sobre a regi\~{a}o de
+    interesse.}
+    \label{fig:disc_J_A_R_aprox}
+\end{figure}
 Seja $\phi : J \to \mathbb{R}$, $\psi: A \to \mathbb{R}$ e $f: (J, A) \to \mathbb{R}$,
 onde $\phi(x)$ corresponde ao volume de terra disponível na célula $x$, $\psi(y)$
 ao volume de terra necessário na célula $y$, $f(x,y)$ ao volume de terra
