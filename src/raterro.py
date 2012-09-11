@@ -27,6 +27,7 @@ import ppm
 # 
 # red: set J (source of soil)
 # green: set A (destination of soil)
+# blue: set B (barrier)
 def get_dist(f_name, t=0):
     """Get distance between points
     t: type of distance
@@ -48,7 +49,11 @@ def get_valid_paths(f_name):
                 for a_i in xrange(r):
                     for a_j in xrange(c):
                         if (j_i, j_j) != (a_i, a_j) and is_a(p_map.get_color(a_i, a_j)):
-                            print("({0}, {1}, {2}, {3})".format(j_i, j_j, a_i, a_j)
+                            for p_i in xrange(r):
+                                for p_j in xrange(c):
+                                    if (j_i, j_j) != (p_i, p_j) and (a_i, a_j) != (p_i, p_j) and not is_b(p_map.get_color(p_i, p_j)):
+                                        if try_path(p_map, (j_i, j_j), (a_i, a_j), (p_i, p_j)):
+                                            print("({0}, {1}, {2}, {3}, {4}, {5})".format(j_i, j_j, a_i, a_j, p_i, p_j))
 
 def is_j(p_map):
     r = False
@@ -66,4 +71,59 @@ def is_a(p_map):
             r = True
     except:
         pass
+    return r
+
+def is_b(p_map):
+    r = False
+    try:
+        if p_map[0] == 0 and p_map[1] == 0 and 0 < p_map[2] <= 255:
+            r = True
+    except:
+        pass
+    return r
+
+def try_path(p_map, j, a, p):
+    """Try Path from j to a passing in p for p_map
+
+    Use the Bresenham line algorithm.
+    """
+    r = True
+    if not try_line(p_map, j, p) or not try_line(p_map, p, a):
+        r = False
+    return r
+
+def try_line(p_map, s, d):
+    """Try line from s to d for p_map
+    """
+    r = True
+    s = list(s)
+    d = list(d)
+    steep = abs(d[1] - s[1]) > abs(d[0] - s[0])
+    if steep:
+        s[0], s[1] = s[1], s[0]
+        d[0], d[1] = d[1], d[0]
+    if s[0] > d[0]:
+        s, d = d, s
+    deltax = int(d[0] - s[0])
+    deltay = int(abs(d[1] - s[1]))
+    error = 0.0
+    deltaerr = abs(deltay / deltax)
+    if s[1] < d[1]:
+        ystep = 1
+    else:
+        ystep = -1
+    y = s[1]
+    for x in xrange(s[0], d[0] + 1):
+        if steep:
+            if is_b(p_map.get_color(y, x)):
+                r = False
+                break
+        else:
+            if is_b(p_map.get_color(y, x)):
+                r = False
+                break
+        error = error + deltaerr
+        if error >= 0.5:
+            y = y + ystep
+            error = error - 1
     return r
