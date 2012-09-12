@@ -26,8 +26,8 @@ param n, integer, > 0;
 param m, integer, > 0;
 
 # Definicao do conjunto referente a malha quadriculada.
-set N, dimen 1, := {1..n};
-set M, dimen 1, := {1..m};
+set N, dimen 1, := {0..n - 1};
+set M, dimen 1, := {0..m - 1};
 
 # Definicao do conjunto J e A.
 set J, dimen 2;
@@ -38,19 +38,21 @@ param phi{J};
 param psi{A};
 
 # Definicao do conjunto de pares nao utilizados.
-set too_long, dimen 2;
+set too_long, dimen 4;
 
 # Definicao das variaveis.
 var xi{N, M, N, M}, >= 0;
 
 # Restricoes.
-s.t. lim_d{l in too_long}:
-    xi[l[1], l[2]], = 0;
-s.t. lim_j{x in J}:
-    sum{y in A} xi[x[1], x[2], y[1], y[2]], <= phi[x[1], x[2]];
-s.t. lim_a{y in A}:
-    sum{x in J} xi[x[1], x[2], y[1], y[2]], <= psi[x[1], x[2]];
+s.t. lim_d{(x1, x2, y1, y2) in too_long}:
+    xi[x1, x2, y1, y2], = 0;
+s.t. lim_j{(x1, x2) in J}:
+    sum{(y1, y2) in A} xi[x1, x2, y1, y2], <= phi[x1, x2];
+s.t. lim_a{(y1, y2) in A}:
+    sum{(x1, x2) in J} xi[x1, x2, y1, y2], <= psi[y1, y2];
 
 # Funcao objetivo.
 maximize obj:
-    sum{x in J, y in A} xi[x[1], x[2], y[1], y[2]];
+    sum{(x1, x2) in J, (y1, y2) in A} xi[x1, x2, y1, y2];
+
+end;

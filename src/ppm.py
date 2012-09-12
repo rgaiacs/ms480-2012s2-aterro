@@ -21,6 +21,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
+import math
+
 class PPM:
     """PPM Class
     This class store a ppm file.
@@ -37,14 +39,16 @@ class PPM:
             f = open(f_name, 'r')
         except:
             print("Check if {0} exist.".format(f_name))
-        l = f.readline()
-        digits = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
+
         self.col = 0
         self.row = 0
         self.max_color = 0
         self.r = []
         self.g = []
         self.b = []
+
+        l = f.readline()
+        digits = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
         insert2col = 0
         insert2row = 0
         insert2color = 0
@@ -84,15 +88,68 @@ class PPM:
     def get_col(self):
         return self.col
 
-    def get_color(self, i, j):
+    def get_color(self, p):
         """Get Color
-        i: row number
-        j: column number
+        p: (row number, column number)
 
         Example:
 
         Get color at (0,0):
         
-            >>> test.get_color(0,0)
+            >>> test.get_color((0,0))
         """
-        return (self.r[i][j], self.g[i][j], self.b[i][j])
+        return (self.r[p[0]][p[1]], self.g[p[0]][p[1]],
+                self.b[p[0]][p[1]])
+
+    def get_red(self, p):
+        """Get Red Value
+        p: (row number, column number)
+
+        Example:
+
+        Get red value at (0,0):
+        
+            >>> test.get_red((0,0))
+        """
+        return (self.r[p[0]][p[1]])
+
+    def get_green(self, p):
+        """Get Green Value
+        p: (row number, column number)
+
+        Example:
+
+        Get red value at (0,0):
+        
+            >>> test.get_green((0,0))
+        """
+        return (self.g[p[0]][p[1]])
+
+    def get_blue(self, p):
+        """Get Blue Value
+        p: (row number, column number)
+
+        Example:
+
+        Get red value at (0,0):
+        
+            >>> test.get_blue((0,0))
+        """
+        return (self.b[p[0]][p[1]])
+
+    def dl(self, o, d):
+        """Compute distance dl between o and d.
+        """
+        # TODO Write function.
+        pass
+
+    def du(self, o, d):
+        """Compute distance du between o and a.
+        """
+        # TODO Write function.
+        pass
+
+    def dc(self, o, d):
+        """Compute distance dc between o and d.
+        """
+        return math.sqrt((o[0] - d[0])**2 + (o[1] - d[1])**2)

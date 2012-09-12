@@ -21,11 +21,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-import sys
 import aterro
 
-f = open('test/test.out', 'w')
-sys.stdout = f
-aterro.get_valid_paths('test/sample_12x12.ppm')
-sys.stdout = sys.__stdout__
-f.close()
+test = aterro.Aterro('test/sample_12x12.ppm', 3)
+test.wdf()

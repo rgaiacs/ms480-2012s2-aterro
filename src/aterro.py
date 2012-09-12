@@ -21,49 +21,133 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
+import sys
 import ppm
 
-# Some conventions:
-# 
-# red: set J (source of soil)
-# green: set A (destination of soil)
-def get_dist(f_name, t=0):
-    """Get distance between points
-    t: type of distance
-    """
-    # TODO Write function.
-    pass
+class Aterro:
+    """Aterro Aterro
+    This class store information of aterro.
 
-def get_valid_paths(f_name):
-    """Get valid paths
-    
-    The valid path is based on Bresenham line algorithm.
+    Some conventions:
+
+        red: set J (source of soil)
+        green: set A (destination of soil)
+
+    Example:
+
+    Create:
+
+        >>> import aterro
+        >>> test = aterro.Aterro('test/minimal.ppm', 3)
     """
-    p_map = ppm.PPM(f_name)
-    r = p_map.get_row()
-    c = p_map.get_col()
-    for j_i in xrange(r):
-        for j_j in xrange(c):
-            if is_j(p_map.get_color(j_i, j_j)):
+    def __init__(self, f_name, D):
+        self.f_name = f_name
+        self.map = ppm.PPM(f_name)
+        self.D = D
+
+    def is_j(self, p):
+        c = self.map.get_color(p)
+        r = False
+        try:
+            if 0 < c[0] <= 255 and c[1] == 0 and c[2] == 0:
+                r = True
+        except:
+            pass
+        return r
+
+    def is_a(self, p):
+        c = self.map.get_color(p)
+        r = False
+        try:
+            if c[0] == 0 and 0 < c[1] <= 255 and c[2] == 0:
+                r = True
+        except:
+            pass
+        return r
+
+    def path_is_valid(self, o, d, t=0):
+        """Get if path between o and d is valid.
+        t: type of distance
+        """
+        r = self.map.get_row()
+        c = self.map.get_col()
+        valid = False
+        if t == 1:
+            if self.map.dl(o, d) < self.D:
+                valid = True
+        elif t == 2:
+            if self.map.du(o, d) < self.D:
+                valid = True
+        else:
+            if self.map.dc(o, d) < self.D:
+                valid = True
+        return valid
+
+    def wdf(self, t=0):
+        """Write data file.
+        """
+        sys.stdout = open(self.f_name.replace(".ppm", ".dat"), 'w')
+        print("data;")
+
+        # Dimensao da malha.
+        r = self.map.get_row()
+        c = self.map.get_col()
+        print("param n := {0};".format(r))
+        print("param m := {0};".format(c))
+
+        # Definicao do conjunto J e A.
+        print("set J := ");
+        for i in xrange(r):
+            for j in xrange(c):
+                if self.is_j((i, j)):
+                    print("({0}, {1})".format(i, j))
+        print(";")
+        print("set A := ");
+        for i in xrange(r):
+            for j in xrange(c):
+                if self.is_a((i, j)):
+                    print("({0}, {1})".format(i, j))
+        print(";")
+
+        # Definicao dos valores para J e A.
+        print("param phi :=")
+        begin = True
+        for i in xrange(r):
+            for j in xrange(c):
+                if self.is_j((i, j)):
+                    if begin:
+                        begin = False
+                        print("[{0}, {1}] {2}".format(
+                            i, j, self.map.get_red((i, j))))
+                    else:
+                        print(", [{0}, {1}] {2}".format(
+                            i, j, self.map.get_red((i, j))))
+        print(";")
+        print("param psi :=")
+        begin = True
+        for i in xrange(r):
+            for j in xrange(c):
+                if self.is_a((i, j)):
+                    if begin:
+                        begin = False
+                        print("[{0}, {1}] {2}".format(
+                            i, j, self.map.get_green((i, j))))
+                    else:
+                        print(", [{0}, {1}] {2}".format(
+                            i, j, self.map.get_green((i, j))))
+        print(";")
+
+        print("set too_long :=")
+        for j_i in xrange(r):
+            for j_j in xrange(c):
                 for a_i in xrange(r):
                     for a_j in xrange(c):
-                        if (j_i, j_j) != (a_i, a_j) and is_a(p_map.get_color(a_i, a_j)):
-                            print("({0}, {1}, {2}, {3})".format(j_i, j_j, a_i, a_j)
+                        if not self.path_is_valid(
+                                (j_i, j_j), (a_i, a_j), t):
+                            print("({0}, {1}, {2}, {3})". format(
+                                j_i, j_j, a_i, a_j))
 
-def is_j(p_map):
-    r = False
-    try:
-        if 0 < p_map[0] <= 255 and p_map[1] == 0 and p_map[2] == 0:
-            r = True
-    except:
-        pass
-    return r
-
-def is_a(p_map):
-    r = False
-    try:
-        if  p_map[0] == 0 and 0 < p_map[1] <= 255 and p_map[2] == 0:
-            r = True
-    except:
-        pass
-    return r
+        print(";")
+        print("end;")
+        sys.stdout.close()
+        sys.stdout = sys.__stdout__
