@@ -26,6 +26,10 @@
 \usetikzlibrary{patterns}
 \usepackage{url}
 \usepackage{hyperref}
+\usepackage{listings}
+
+\newcommand{\flang}[1]{\textit{#1}}
+\newcommand{\clang}[1]{\texttt{#1}}
 
 \begin{document}
 \title{MS480 - Aterro com obst\'{a}culo}
@@ -37,11 +41,16 @@ Marques \and Camile Kunz \and Ana Flavia}
     Neste projeto
     %TODO Escrever o resumo.
 \end{abstract}
+\tableofcontents
+\newpage
 
 \input{problema@relatorio.tex}
 \input{modelagem@relatorio.tex}
 \input{implementacao@relatorio.tex}
 % TODO Resultados
+
+\appendix
+\input{ppm@relatorio.tex}
 \bibliographystyle{alpha}
 \bibliography{../referencias}
 \end{document}

@@ -1,0 +1,47 @@
+% Copyright (c) 2012 Raniere Silva <r.gaia.cs@gmail.com>
+% Copyright (c) 2012 Fernando Cezarino <feolce@gmail.com>
+% Copyright (c) 2012 Ana Paula Diniz Marques <anapdinizm@gmail.com>
+% Copyright (c) 2012 Camile Kunz <camileknz@gmail.com>
+% Copyright (c) 2012 Ana Flavia <anaflavia.c.lima@gmail.com>
+%
+% This file is part of 'MS480 - 2012S2 - Aterro com Obstáculo'.
+%
+% 'MS480 - 2012S2 - Aterro com Obstáculo' is licensed under the Creative
+% Commons Attribution-ShareAlike 3.0 Unported License. To view a copy of
+% this license, visit http://creativecommons.org/licenses/by-sa/3.0/.
+%
+% 'MS480 - 2012S2 - Aterro com Obstáculo' is distributed in the hope
+% that it will be useful, but WITHOUT ANY WARRANTY; without even the
+% implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+% PURPOSE.
+
+\section{Formato Netpbm} \label{sse:Netpbm}
+Nesta seção descrevemos o formato de arquivo \clang{ppm} utilizado neste projeto
+que é um mapa de pixels capaz de representar todas as cores definidas pelo
+padrão \clang{RGB} e um dos formatos descritos na biblioteca
+Netpbm.\nocite{wiki:Netpbm_format, Henderson:Netpbm}
+
+Cada arquivo inicia com dois bits (em ASCII) que especifica o formato do arquivo
+e a codificação (ASCII ou binário), no caso do arquivo \clang{ppm} utilizados
+será \clang{P3}.\footnote{Linhas iniciadas com cerquilha, \#, são tratadas
+como comentários.}
+
+Após os dois bits iniciais, é especificado a largura e a altura da imagem.
+Depois o valor máximo das cores que deve ser maior que zero e menor que 65536.
+Por último é apresentado um conjunto de triplas que indicam os valores das cores
+vermelho, verde e azul do pixel corespondente sendo que a ordem de relação entre
+as triplas e os pixels é da esquerda para a direita e de cima para baixo.
+
+A seguir é apresentado o conteudo de um arquivo \clang{ppm} e a visualização do
+mesmo encontra-se na Figura~\ref{fig:minimal.ppm}.
+visualização.
+\lstinputlisting[basicstyle=\ttfamily,]{../src/test/minimal.ppm}
+\begin{figure}[!htb]
+    \begin{center}
+        \includegraphics[scale=20]{../src/test/minimal.png}
+    \end{center}
+    \caption{Visualização do arquivo \clang{ppm} apresentado na
+    Seção~\ref{sse:Netpbm} com um aumento de 20 vezes.}
+    \label{fig:minimal.ppm}
+\end{figure}
+

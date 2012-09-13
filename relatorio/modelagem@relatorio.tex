@@ -126,7 +126,7 @@ transportado de $x$ para $y$, podemos modelar o problema da seguinte forma:
         \label{eq:model_without_obs:obj_func} \\
         \text{s.a. } & \xi_{x,y} \geq 0, && \forall x, y \in N,
         \label{eq:model_without_obs:var} \\
-        & \xi_{x,y} = 0 && \forall d(x,y) > D,
+        & \xi_{x,y} = 0 && \forall x, y | d(x,y) > D,
         \label{eq:model_without_obs:max_dist} \\
         & \sum_{y \in A} \xi_{x,y} \leq \phi(x), && \forall x \in J,
         \label{eq:model_without_obs:max_jazida} \\
@@ -140,12 +140,16 @@ canos utilizados, \eqref{eq:model_without_obs:max_jazida} a quantidade de terra
 que pode ser retirado de $J$ e \eqref{eq:model_without_obs:max_aterro} a
 quantidade de terra necessário e $A$.
 
+O modelo apresentado em \eqref{eq:model_without_obs} possue função objetivo e
+restrições lineares. Em relação a restrição
+\eqref{eq:model_without_obs:max_dist}, como $d(x, y)$ é um dado do problema
+o conjunto $\left\{ (x, y) | d(x, y) > D \right\}$ é construido no
+pré-processamento.
+
 \subsection{Problema com obstáculo}
-Trataremos o problema descrito em sua forma discreta, i.e., dado um valor
-$\delta$ definimos uma malha quadriculada que cobre toda a regi\~{a}o de
-interesse como na Figura~\ref{fig:malha_quad}. Cada elemento da malha
-quadriculada recebe uma identificação numérica como ilustrada na
-Figura~\ref{fig:malha_quad_num}.
+Considerando que a região $R$ pela qual os canos que fazem o transporte da terra
+não podem passar é circular, temos a região de interesse ilustrada na
+Figura~\ref{fig:disc_J_A_R}.
 \begin{figure}[!htb]
     \centering
     \begin{tikzpicture}
@@ -176,6 +180,42 @@ Figura~\ref{fig:malha_quad_num}.
     \label{fig:disc_J_A_R}
 \end{figure}
 
+Seja $P$ a região que não corresponde a jazida, ao aterro e nem ao obstáculo.
+De maneira semelhante as definições utilizadas na subseção anterior, seja $\phi
+: J \to \mathbb{R}$, $\psi: A \to \mathbb{R}$ e $f: (J, P, A) \to \mathbb{R}$,
+onde $\phi(x)$ corresponde ao volume de terra disponível no quadrado $x$,
+$\psi(y)$ ao volume de terra necessário no quadrado $y$, $f(x, z, y)$ ao volume
+de terra transportado do quadrado $x$ para o quadrado $y$ passando pelo quadrado
+$z$ e $d(x, y)$ a distância entre os quadrados $x$ e $y$\footnote{A distância
+entre as células $x$ e $y$ será definida posteriormente.}. Seja também $D$ o
+comprimento dos canos disponíveis, $J$ o conjunto de células que compõem a
+jazida e $A$ o conjunto de células que compõem o aterro.
+
+Então, podemos modelar o problema da seguinte forma
+\begin{subequations}
+    \begin{align}
+        \text{min } & \sum_{x \in J} \sum_{y \in A} \xi_{x,y},
+        \label{eq:model_with_obs_nl:obj_func} \\
+        \text{s.a. } & \xi_{x,y} \geq 0, && \forall x, y \in N,
+        \label{eq:model_with_obs_nl:var} \\
+        & \xi_{x,y} = 0 && \forall d_{x,y} > D,
+        \label{eq:model_with_obs_nl:max_dist} \\
+        & \sum_{y \in A} \xi_{x,y} \leq \phi(x), && \forall x \in J,
+        \label{eq:model_with_obs_nl:max_jazida} \\
+        & \sum_{x \in J} \xi_{x,y} \leq \psi(y), && \forall y \in A,
+        \label{eq:model_with_obs_nl:max_aterro}
+    \end{align}
+    \label{eq:model_with_obs_nl}
+\end{subequations}
+
+Como podemos observar, o modelo acima possue um conjunto de restrições não
+lineares.
+
+Seria interessante aproximar o modelo \eqref{eq:model_with_obs_nl} de modo a
+obter um modelo linear. Para isso, o primeiro passo é aproximar a região $R$
+utilizando o mesmo procedimento adotado para aproximar as regiões $J$ e $A$. O
+resultado da aproximação da região $R$ é ilustrada na
+Figura~\ref{fig:disc_J_A_R_aprox}.
 \begin{figure}[!htb]
     \centering
     \begin{tikzpicture}
@@ -209,6 +249,10 @@ Figura~\ref{fig:malha_quad_num}.
     interesse.}
     \label{fig:disc_J_A_R_aprox}
 \end{figure}
+
+Para evitar a distância, é possível utilizar o \flang{Bresenham's line
+algorithm}.
+
 Seja $\phi : J \to \mathbb{R}$, $\psi: A \to \mathbb{R}$ e $f: (J, A) \to \mathbb{R}$,
 onde $\phi(x)$ corresponde ao volume de terra disponível na célula $x$, $\psi(y)$
 ao volume de terra necessário na célula $y$, $f(x,y)$ ao volume de terra
