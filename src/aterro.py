@@ -69,8 +69,6 @@ class Aterro:
         """Get if path between o and d is valid.
         t: type of distance
         """
-        r = self.map.get_row()
-        c = self.map.get_col()
         valid = False
         if t == 1:
             if self.map.dl(o, d) < self.D:

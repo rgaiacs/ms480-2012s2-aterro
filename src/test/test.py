@@ -21,7 +21,22 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-import aterro
+def aterro():
+    import aterro
 
-test = aterro.Aterro('test/sample_12x12.ppm', 3)
-test.wdf()
+    test = aterro.Aterro('test/sample_12x12.ppm', 3)
+    test.wdf()
+
+def raterro():
+    import raterro
+
+    test = raterro.RAterro('test/sample_12x12.ppm', 3)
+    test.wdf()
+
+if __name__ == "__main__":
+    import sys
+
+    if sys.argv[1] == 'aterro':
+        aterro()
+    elif sys.argv[1] == 'raterro':
+        raterro()

@@ -27,8 +27,15 @@ Como Testar
 $ cd src
 $ python
 >>> import test.test
+>>> test.test.aterro
 >>> exit()
 $ glpsol -m aterro.mod -d test/test/sample_12x12.dat --check
+$ python
+>>> import test.test
+>>> test.test.raterro
+>>> exit()
+$ glpsol -m raterro.mod -d test/test/sample_12x12.dat --check
+
 
 Como Utilizar
 =============
