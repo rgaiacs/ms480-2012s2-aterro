@@ -21,19 +21,31 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
+"""Test the module.
+"""
+
 def aterro():
+    """Test aterro.
+    """
     import aterro
 
-    test = aterro.Aterro('test/sample_12x12.ppm', 3)
+    test = aterro.Aterro('test/sample12x12.ppm', 3)
     test.wdf()
 
 def raterro():
+    """Test raterro.
+    """
     import raterro
 
-    test = raterro.RAterro('test/sample_12x12.ppm', 3)
+    test = raterro.RAterro('test/sample12x12.ppm', 6)
     test.wdf()
 
 if __name__ == "__main__":
+    import os
+    parentdir = os.path.dirname(
+            os.path.dirname(os.path.abspath(__file__)))
+    os.sys.path.insert(0,parentdir)
+
     import sys
 
     if sys.argv[1] == 'aterro':

@@ -32,9 +32,15 @@ class PPM:
     Load ppm file:
     
         >>> import ppm
-        >>> test = ppm.PPM('test/minimal.ppm')
+        >>> test = ppm.PPM('test/sample12x12.ppm')
     """
     def __init__(self, f_name):
+        """Contructor
+
+        :param f_name: name of ppm file.
+
+        :type f_name: string.
+        """
         try:
             f = open(f_name, 'r')
         except:
@@ -83,16 +89,35 @@ class PPM:
         f.close()
 
     def get_row(self):
+        """Get number of rows.
+
+        :return: number or rows.
+
+        :rtype: integer.
+        """
         return self.row
 
     def get_col(self):
+        """Get number of columns.
+
+        :return: number of columns.
+
+        :rtype: integer.
+        """
         return self.col
 
     def get_color(self, p):
         """Get Color
-        p: (row number, column number)
 
-        Example:
+        :param p: coordinates of point.
+
+        :type p: tuple.
+
+        :return: color of point.
+
+        :rtype: tuple.
+
+        EXAMPLE:
 
         Get color at (0,0):
         
@@ -103,9 +128,16 @@ class PPM:
 
     def get_red(self, p):
         """Get Red Value
-        p: (row number, column number)
 
-        Example:
+        :param p: coordinates of point.
+
+        :type p: tuple.
+
+        :return: value of red color.
+
+        :rtype: integer.
+
+        EXAMPLE:
 
         Get red value at (0,0):
         
@@ -115,9 +147,16 @@ class PPM:
 
     def get_green(self, p):
         """Get Green Value
-        p: (row number, column number)
 
-        Example:
+        :param p: coordinates of point.
+
+        :type p: tuple.
+
+        :return: value of green color.
+
+        :rtype: integer.
+
+        EXAMPLE:
 
         Get red value at (0,0):
         
@@ -127,9 +166,16 @@ class PPM:
 
     def get_blue(self, p):
         """Get Blue Value
-        p: (row number, column number)
 
-        Example:
+        :param p: coordinates of point.
+
+        :type p: tuple.
+
+        :return: value of blue color.
+
+        :rtype: integer.
+
+        EXAMPLE:
 
         Get red value at (0,0):
         
@@ -139,17 +185,53 @@ class PPM:
 
     def dl(self, o, d):
         """Compute distance dl between o and d.
+
+        :param o: coordinates of origin point.
+
+        :type o: tuple.
+
+        :param d: coordinates of destination point.
+
+        :type d: tuple.
+
+        :return: distance dl.
+
+        :rtype: float.
         """
         # TODO Write function.
         pass
 
     def du(self, o, d):
         """Compute distance du between o and a.
+
+        :param o: coordinates of origin point.
+
+        :type o: tuple.
+
+        :param d: coordinates of destination point.
+
+        :type d: tuple.
+
+        :return: distance du.
+
+        :rtype: float.
         """
         # TODO Write function.
         pass
 
     def dc(self, o, d):
         """Compute distance dc between o and d.
+
+        :param o: coordinates of origin point.
+
+        :type o: tuple.
+
+        :param d: coordinates of destination point.
+
+        :type d: tuple.
+
+        :return: distance dc.
+
+        :rtype: float.
         """
         return math.sqrt((o[0] - d[0])**2 + (o[1] - d[1])**2)

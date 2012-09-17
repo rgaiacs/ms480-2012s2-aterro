@@ -39,13 +39,34 @@ class Aterro:
 
         >>> import aterro
         >>> test = aterro.Aterro('test/minimal.ppm', 3)
+        >>> test.wdf()
     """
     def __init__(self, f_name, D):
+        """Constructor
+
+        :param f_name: name of ppm file.
+
+        :type f_name: string.
+
+        :param D: max distance between points.
+        
+        :type D: float.
+        """
         self.f_name = f_name
         self.map = ppm.PPM(f_name)
         self.D = D
 
     def is_j(self, p):
+        """Return true if point belong to J.
+
+        :param p: coordinates of point.
+
+        :type p: tuple.
+
+        :return: true if point belong to J.
+
+        :rtype: boolean.
+        """
         c = self.map.get_color(p)
         r = False
         try:
@@ -56,6 +77,16 @@ class Aterro:
         return r
 
     def is_a(self, p):
+        """Return true if point belong to A.
+
+        :param p: coordinates of point.
+
+        :type p: tuple.
+
+        :return: true if point belong to A.
+
+        :rtype: boolean.
+        """
         c = self.map.get_color(p)
         r = False
         try:
@@ -67,7 +98,22 @@ class Aterro:
 
     def path_is_valid(self, o, d, t=0):
         """Get if path between o and d is valid.
-        t: type of distance
+
+        :param o: coordinates of the point of origin.
+
+        :type o: tuple.
+
+        :param d: coordinates of the point of destination.
+
+        :type d: tuple.
+
+        :param t: type of distance
+
+        :type t: integer
+
+        :return: true if the path is valid.
+
+        :rtype: boolean.
         """
         valid = False
         if t == 1:
@@ -83,8 +129,13 @@ class Aterro:
 
     def wdf(self, t=0):
         """Write data file.
+
+        :param t: type of distance
+
+        :type t: integer
         """
-        sys.stdout = open(self.f_name.replace(".ppm", ".dat"), 'w')
+        sys.stdout = open(self.f_name.replace(
+            ".ppm", "_aterro.dat"), 'w+')
         print("data;")
 
         # Dimensao da malha.

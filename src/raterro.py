@@ -23,8 +23,9 @@
 
 import sys
 import ppm
+import aterro
 
-class RAterro:
+class RAterro(aterro.Aterro):
     """RAterro Aterro with restriction
     This class store information of aterro with restriction.
 
@@ -39,34 +40,33 @@ class RAterro:
     Create:
 
         >>> import aterro
-        >>> test = raterro.RAterro('test/minimal.ppm.', 6)
+        >>> test = raterro.RAterro('test/sample12x12.ppm.', 6)
+        >>> test.wdf()
     """
     def __init__(self, f_name, D):
-        self.f_name = f_name
-        self.map = ppm.PPM(f_name)
-        self.D = D
+        """Constructor
 
-    def is_j(self, p):
-        c = self.map.get_color(p)
-        r = False
-        try:
-            if 0 < c[0] <= 255 and c[1] == 0 and c[2] == 0:
-                r = True
-        except:
-            pass
-        return r
+        :param f_name: name of ppm file.
 
-    def is_a(self, p):
-        c = self.map.get_color(p)
-        r = False
-        try:
-            if c[0] == 0 and 0 < c[1] <= 255 and c[2] == 0:
-                r = True
-        except:
-            pass
-        return r
+        :type f_name: string.
+
+        :param D: max distance between two points.
+
+        :type D: float.
+        """
+        aterro.Aterro.__init__(self, f_name, D)
 
     def is_r(self, p):
+        """Return true if point belong to R.
+
+        :param p: coordinates of point.
+
+        :type p: tuple.
+
+        :return: true if point belong to R.
+
+        :rtype: boolean.
+        """
         c = self.map.get_color(p)
         r = False
         try:
@@ -77,8 +77,28 @@ class RAterro:
         return r
 
     def try_line(self, o, d):
-        """Try line from s to d for p_map
+        """Try line from o to d.
+
+        :param o: point of origin.
+        
+        :type o: tuple.
+
+        :param d: point of destination.
+        
+        :type d: tuple.
+
+        :return: true if line is valid.
+
+        :rtype: boolean.
+
+        ALGORITHM:
+
+        Use the Bresenham line algorithm.
         """
+        # 'tuple' object does not support item assignment
+        o = list(o)
+        d = list(d)
+
         r = True
         if o == d:
             r = False
@@ -114,9 +134,23 @@ class RAterro:
         return r
 
     def try_path(self, o, p, d):
-        """Try Path from j to a passing in p for p_map
+        """Try Path from o to d passing in p.
 
-        Use the Bresenham line algorithm.
+        :param o: coordinates of the point of origin.
+
+        :type o: tuple.
+
+        :param p: coordinates of the point of pivot.
+
+        :type p: tuple.
+
+        :param d: coordinates of the point of destination.
+
+        :type d: tuple.
+
+        :return: true if path is valid.
+
+        :treturn: boolean.
         """
         r = True
         if not self.try_line(o, p) or not self.try_line(p, d):
@@ -125,7 +159,26 @@ class RAterro:
 
     def path_is_valid(self, o, p, d, t=0):
         """Get if path between o and d is valid passing by point p.
-        t: type of distance
+
+        :param o: coordinates of the point of origin.
+
+        :type o: tuple.
+
+        :param p: coordinates of the point of pivot.
+
+        :type p: tuple.
+
+        :param d: coordinates of the point of destination.
+
+        :type d: tuple.
+
+        :param t: type of distance.
+
+        :type t: integer.
+
+        :return: true if path is valid.
+
+        :treturn: boolean.
         """
         valid = False
         if self.try_path(o, p, d):
@@ -145,8 +198,13 @@ class RAterro:
 
     def wdf(self, t=0):
         """Write data file.
+
+        :param t: type of distance
+
+        :type t: integer
         """
-        sys.stdout = open(self.f_name.replace(".ppm", ".dat"), 'w')
+        sys.stdout = open(self.f_name.replace(
+            ".ppm", "_raterro.dat"), 'w+')
         print("data;")
 
         # Dimensao da malha.
@@ -215,8 +273,8 @@ class RAterro:
                                 if not self.path_is_valid(
                                         (j_i, j_j), (p_i, p_j),
                                         (a_i, a_j), t):
-                                    print("({0}, {1}, {2}, {3})". format(
-                                        j_i, j_j, a_i, a_j))
+                                    print("({0}, {1}, {2}, {3}, {4}, {5})".format(
+                                        j_i, j_j, p_i, p_j, a_i, a_j))
 
         print(";")
         print("end;")

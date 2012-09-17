@@ -54,6 +54,6 @@ s.t. lim_a{(y1, y2) in A, (z1, z2) in P}:
 
 # Funcao objetivo.
 maximize obj:
-    sum{(x1, x2) in J, (y1, y2) in A} xi[x1, x2, z1, z2, y1, y2];
+    sum{(x1, x2) in J, (z1, z2) in P, (y1, y2) in A} xi[x1, x2, z1, z2, y1, y2];
 
 end;
