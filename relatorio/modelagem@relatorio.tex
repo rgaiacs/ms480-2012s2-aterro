@@ -16,7 +16,7 @@
 % PURPOSE.
 
 \section{Modelagem}
-A seguir apresentamos a modelagem proposta por Andjel e depois expandimos essa
+A seguir, apresentamos a modelagem proposta por Andjel e expandimos essa
 modelagem para o problema a ser tratado. Ao final, abordamos a questão da
 distância.
 
@@ -43,9 +43,9 @@ $A$.
 \end{figure}
 
 Para modelarmos o problema, discretizamos a região ilustrada na
-Figura~\ref{fig:ilust_J_A} utilizando uma malha quadriculada como, ilustrado na
+Figura~\ref{fig:ilust_J_A} utilizando uma malha quadriculada, como ilustrado na
 Figura~\ref{fig:disc_J_A}, e nomeamos cada quadrado da malha por um número
-seguindo a lógica parcialmente indicada na Figura~\ref{fig:disc_J_A}.
+seguindo a lógica parcialmente indicada.
 \begin{figure}[!htb]
     \centering
     \begin{tikzpicture}
@@ -78,12 +78,14 @@ seguindo a lógica parcialmente indicada na Figura~\ref{fig:disc_J_A}.
     \label{fig:disc_J_A}
 \end{figure}
 
-Pela Figura~\ref{fig:disc_J_A} \'{e} poss\'{i}vel observar que alguns elementos
-da malha quadriculada encontram-se apenas parcialmente dentro de uma das
-regi\~{o}es. Para corrigir isso, aproximamos as regi\~{o}es para a malha
-utilizada de modo que todos os elementos da malha que encontram-se parcialmente
-presentes em uma das regi\~{o}es passa a pertencer totalmente a ela. O resultado
-\'{e} apresentado na Figura~\ref{fig:disc_J_A_aprox}.
+É poss\'{i}vel observar que alguns elementos da malha quadriculada encontram-se
+apenas parcialmente dentro de uma das regi\~{o}es. Para corrigir isso,
+aproximamos as regi\~{o}es para a malha utilizada de modo que todos os
+elementos da malha que encontram-se parcialmente presentes em uma das regiões
+passa a pertencer totalmente a ela. O resultado \'{e} apresentado na
+Figura~\ref{fig:disc_J_A_aprox}.
+%TODO Melhorar esse parágrafo.
+
 \begin{figure}[!htb]
     \centering
     \begin{tikzpicture}
@@ -138,16 +140,16 @@ da seguinte forma:
 onde $x \in J$, $y \in A$, \eqref{eq:model_without_obs:max_dist} refere-se a
 distância máxima dos canos utilizados, \eqref{eq:model_without_obs:max_jazida} a
 quantidade de terra que pode ser retirado de $J$ e
-\eqref{eq:model_without_obs:max_aterro} a quantidade de terra necessário em $A$.
+\eqref{eq:model_without_obs:max_aterro} a quantidade de terra necessária em $A$.
 
-O modelo apresentado em \eqref{eq:model_without_obs} possue função objetivo e
-restrições lineares. Em relação a restrição
-\eqref{eq:model_without_obs:max_dist}, como $d(x, y)$ é um dado do problema
+O modelo apresentado em \eqref{eq:model_without_obs} possui função objetivo e
+restrições lineares. Em relação à restrição
+\eqref{eq:model_without_obs:max_dist}, como $d(x, y)$ é um dado do problema,
 o conjunto $\left\{ (x, y) | d(x, y) > D \right\}$ é gerado dinamicamente ao
-construir os dados para uma dada instância do problema.
+construirmos os dados para uma dada instância.
 
 \subsection{Problema com obstáculo}
-Considerando que a região $R$ pela qual os canos que fazem o transporte da terra
+Considere que a região $R$ pela qual os canos que fazem o transporte da terra
 não podem passar é circular, com centro $c = (c_1, c_2) \in \mathbb{R}^2$ e raio
 $r \in \mathbb{R}$. Então temos a região de interesse ilustrada na
 Figura~\ref{fig:disc_J_A_R}.
