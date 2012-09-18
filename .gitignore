@@ -39,3 +39,9 @@
 src/doc/_build/*
 src/doc/_static/*
 src/doc/_template/*
+
+# GLPK
+*.svg
+*.ppm
+*.dat
+*.dis

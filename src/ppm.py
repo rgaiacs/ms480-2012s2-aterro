@@ -44,7 +44,7 @@ class PPM:
         try:
             f = open(f_name, 'r')
         except:
-            print("Check if {0} exist.".format(f_name))
+            raise NameError("Check if {0} exist.".format(f_name))
 
         self.col = 0
         self.row = 0
