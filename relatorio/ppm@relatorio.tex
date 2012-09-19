@@ -26,15 +26,14 @@ e a codificação (ASCII ou binário), no caso do arquivo \clang{ppm} utilizados
 será \clang{P3}.\footnote{Linhas iniciadas com cerquilha, \#, são tratadas
 como comentários.}
 
-Após os dois bits iniciais, é especificado a largura e a altura da imagem.
-Depois o valor máximo das cores que deve ser maior que zero e menor que 65536.
-Por último é apresentado um conjunto de triplas que indicam os valores das cores
-vermelho, verde e azul do pixel corespondente sendo que a ordem de relação entre
-as triplas e os pixels é da esquerda para a direita e de cima para baixo.
+Após os dois bits iniciais, é especificado a largura e a altura da imagem e o
+valor máximo das cores, que deve ser maior que zero e menor que 65536. Por
+último, é apresentado um conjunto de triplas que indicam os valores das cores
+vermelho, verde e azul do pixel corespondente, sendo que a ordem de relação
+entre as triplas e os pixels é da esquerda para a direita e de cima para baixo.
 
-A seguir é apresentado o conteudo de um arquivo \clang{ppm} e a visualização do
+A seguir é apresentado o conteudo de um arquivo \clang{ppm}. A visualização do
 mesmo encontra-se na Figura~\ref{fig:minimal.ppm}.
-visualização.
 \lstinputlisting[basicstyle=\ttfamily,]{../src/test/minimal.ppm}
 \begin{figure}[!htb]
     \begin{center}
