@@ -78,11 +78,11 @@ seguindo a lógica parcialmente indicada.
     \label{fig:disc_J_A}
 \end{figure}
 
-É poss\'{i}vel observar que alguns elementos da malha quadriculada encontram-se
-apenas parcialmente dentro de uma das regi\~{o}es. Para corrigir isso,
-aproximamos as regi\~{o}es para a malha utilizada de modo que todos os
+É possível observar que alguns elementos da malha quadriculada encontram-se
+apenas parcialmente dentro de uma das regiões. Para corrigir isso,
+aproximamos as regiões para a malha utilizada de modo que todos os
 elementos da malha que encontram-se parcialmente presentes em uma das regiões
-passa a pertencer totalmente a ela. O resultado \'{e} apresentado na
+passa a pertencer totalmente a ela. O resultado é apresentado na
 Figura~\ref{fig:disc_J_A_aprox}.
 %TODO Melhorar esse parágrafo.
 
@@ -227,10 +227,10 @@ necessário em $A$.
 O modelo apresentado em \eqref{eq:model_with_obs_nl} possue função objetivo e
 restrições lineares. Em relação as restrições
 \eqref{eq:model_with_obs_nl:max_dist} e \eqref{eq:model_with_obs_nl:dist_obs},
-como $d(x, z)$, $d(y, z)$, $l(x, z)$ e $l(y, z)$ são dados do problema os
+como $d(x, z)$, $d(y, z)$, $l(x, z)$ e $l(y, z)$ são dados do problema, os
 conjuntos $\left\{ (x, z, y) | d(x, z) > D \text{ ou } d(y, z) > D \right\}$ e
 $\left\{ (x, z, y) | l(x, z) < r \text{ ou } l(y, z) < r \right\}$ são gerados
-dinamicamente ao construir os dados para uma dada instância do problema.
+dinamicamente ao construirmos os dados para uma dada instância do problema.
 
 Seria interessante poder lidar com regiões $R$ mais gerais. Uma forma de fazer
 isso é aproximar a região $R$ utilizando o mesmo procedimento adotado para
@@ -270,7 +270,7 @@ ilustrada na Figura~\ref{fig:disc_J_A_R_aprox}.
     \label{fig:disc_J_A_R_aprox}
 \end{figure}
 
-O modelo a ser utilizado ao utilizar a aproximação da região $R$ é semelhante a
+O modelo a ser utilizado com a aproximação da região $R$ é semelhante a
 \eqref{eq:model_with_obs_nl} mudando apenas a restrição
 \eqref{eq:model_with_obs_nl:dist_obs} que passa a ser
 \begin{align}
@@ -286,16 +286,16 @@ algoritmo de Bresenham\footnote{Ver o Apêndice~\ref{sse:bresenham_line}.} passa
 por $R$ e $0$ caso contrário.
 
 \subsection{Distância entre pontos}
-Ao utilizar a malha quadriculada podemos definir a dist\^{a}ncia entre dois
-quadrados da malha de pelo menos tr\^{e}s maneiras diferentes:
+Ao utilizar a malha quadriculada, podemos definir a distância entre dois
+de seus quadrados de pelo menos três maneiras diferentes:
 \begin{enumerate}
-    \item $d_l$, que \'{e} a menor dist\^{a}ncia entre qualquer dois pontos dos
+    \item $d_l$, que é a menor distência entre qualquer dois pontos dos
         quadrados,
-    \item $d_u$, que \'{e} a maior dist\^{a}ncia entre qualquer dois pontos dos
+    \item $d_u$, que é a maior distância entre qualquer dois pontos dos
         quadrados, e
-    \item $d_c$, que \'{e} a dist\^{a}ncia entre os centros dos quadrados.
+    \item $d_c$, que é a distância entre os centros dos quadrados.
 \end{enumerate}
-Na Figura~\ref{fig:dist_malha} \'{e} ilustrado cada uma das dist\^{a}ncias acima
+Na Figura~\ref{fig:dist_malha} é ilustrado cada uma das distâncias acima
 descrita.
 \begin{figure}[!htb]
     \centering
