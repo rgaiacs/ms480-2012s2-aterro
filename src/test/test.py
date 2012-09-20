@@ -27,66 +27,83 @@ import os
 import sys
 from subprocess import call
 
-def aterro(f_names, solve):
-    """Test aterro.
+def run(model, f_names, build, check, solve):
+    """Run test.
+    
+    :param model: model type.
+    
+    :type model: string.
+    
+    :param f_names: names of files.
+    
+    :type f_names: list.
+    
+    :param build: build data file from ppm.
+    
+    :type build: boolean.
+    
+    :param check: check model and data for error.
+
+    type check: boolean.
+
+    :param solve: try to solve the problem.
+
+    :type solve: boolean.
     """
     import aterro
-
-    if not f_names:
-        f_names = ['test/sample12x12.ppm']
-    for f in f_names:
-        test = aterro.Aterro(f, 3)
-        test.wdf()
-        if solve:
-            s = 'glpsol -m aterro.mod -d {0} -y {1} --log {2} \
-            --tmlim 600 --memlim 512'.format(f.replace('.ppm', '_aterro.dat'),
-            f.replace('.ppm', '_aterro.dis'), f.replace('.ppm', '_aterro.log'))
-        else:
-            s = 'glpsol -m aterro.mod -d {0} --log {1} --tmlim 600 \
-                    --memlim 512 --check'.format(f.replace('.ppm',
-                    '_aterro.dat'), f.replace('.ppm', '_aterro.log'))
-        print(s)
-        call(s, shell=True)
-
-def raterro(f_names, solve):
-    """Test raterro.
-    """
     import raterro
 
     if not f_names:
         f_names = ['test/sample12x12.ppm']
     for f in f_names:
-        test = raterro.RAterro(f, 3)
-        test.wdf()
-        if solve:
-            s = 'glpsol -m raterro.mod -d {0} -y {1} --log {2} \
-                    --tmlim 600 --memlim 512'.format(f.replace('.ppm',
-                    '_raterro.dat'), f.replace('.ppm', '_raterro.dis'),
-                    f.replace('.ppm', '_raterro.log'))
+        if build == True:
+            print('Reading {0}. This will take some time.'.format(f))
+            if model:
+                test = raterro.RAterro(f, 8)
+            else:
+                test = aterro.Aterro(f, 8)
+            print('Writing data. This will take some time.')
+            test.wdf()
+        if model:
+            m = 'raterro'
+            f = f.replace('.ppm', '_raterro.ppm')
         else:
-            s = 'glpsol -m raterro.mod -d {0} --log {1} --tmlim 600 \
-                    --memlim 512 --check'.format(f.replace('.ppm',
-                    '_raterro.dat'), f.replace('.ppm', '_raterro.log'))
-        print(s)
-        call(s, shell=True)
+            m = 'aterro'
+            f = f.replace('.ppm', '_aterro.ppm')
+        if check == True:
+            s = 'glpsol -m {0}.mod -d {1} --log {2} --tmlim 3600 \
+                    --memlim 4096 --check'.format(m, f.replace('.ppm',
+                    '.dat'), f.replace('.ppm', '.log'))
+            print(s)
+            call(s, shell=True)
+        elif solve == True:
+            s = 'glpsol -m {0}.mod -d {1} -y {2} --log {3} \
+            --tmlim 3600 --memlim 4096'.format(m, f.replace('.ppm', '.dat'),
+            f.replace('.ppm', '.dis'), f.replace('.ppm', '.log'))
+            print(s)
+            call(s, shell=True)
 
 if __name__ == "__main__":
+    import argparse
+
+    # See functions at parent directory.
     parentdir = os.path.dirname(
             os.path.dirname(os.path.abspath(__file__)))
     os.sys.path.insert(0,parentdir)
 
-    f_names = sys.argv[1:]
-    for i in xrange(f_names.count('solve')):
-        f_names.remove('solve')
-    for i in xrange(f_names.count('aterro')):
-        f_names.remove('aterro')
-    for i in xrange(f_names.count('raterro')):
-        f_names.remove('raterro')
-    if 'solve' in sys.argv[1:]:
-        solve = True
-    else:
-        solve = False
-    if 'aterro' in sys.argv[1:]:
-        aterro(f_names, solve)
-    if 'raterrp' in sys.argv[1:]:
-        raterro(f_names, solve)
+    # Parse of flags.
+    parser = argparse.ArgumentParser(description='Test for MS480.')
+    parser.add_argument('-b', action='store_true',
+            help='using barrier in the model.')
+    parser.add_argument('--data', action='store_true',
+            help='build the data file based on ppm file.')
+    parser.add_argument('--check', action='store_true',
+            help='only check for error the problem.')
+    parser.add_argument('--solve', action='store_true',
+            help='solve the problem.')
+    parser.add_argument('-f', nargs='*',
+            help='name of ppm files to process')
+
+    args = parser.parse_args()
+
+    run(args.b, args.f, args.data, args.check, args.solve)
