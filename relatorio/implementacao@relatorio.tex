@@ -16,6 +16,52 @@
 % PURPOSE.
 
 \section{Implementa\c{c}\~{a}o computacional}
-Tomando como exemplo as
-Figuras~\ref{fig:disc_J_A_aprox}~e~\ref{fig:disc_J_A_R_aprox} podemos armazenas
-os mapas utilizando o formato ppm.
+A parte computacional do projeto foi desenvolvida utilizando o GLPK (GNU Linear
+Programming Kit)\nocite{GLPK} e a linguagem de programação Python\nocite{Python}.
+
+As figuras utilizadas para armazenar os mapas foram armazenadas
+utilizando o formato ppm.
+
+\subsection{Implementação seguindo os modelos}
+Ao implementar \eqref{eq:model_without_obs} foi possível resolver em
+% TODO Incluir resultados.
+
+Já ao implementar \eqref{eq:model_with_obs_nl} não foi possível resolver o
+problema pois não havia memória suficiente para alocar a matriz de restrições.
+
+\subsection{Heurística}
+A seguir apresentamos a heurística utilizada para conseguir uma solução para
+\eqref{eq:model_with_obs_nl} dado que não foi possível alocar a matriz de
+restrições.
+
+Considere a relaxação de \eqref{eq:model_with_obs_nl} dada por
+\begin{align}
+    \text{max } & \sum_{x} \sum_{y} \xi_{x, y}, \notag \\
+    \text{s.a. } & \xi_{x, y} \geq 0, && \forall x, y, \notag \\
+    & \xi_{x, y} = 0, && \forall (x, y) \mid d(x, y) > 2D,
+    \label{eq:model_rel} \\
+    & \sum_{y} \xi_{x, y} \leq \phi(x), && \forall x, \notag \\
+    & \sum_{x} \xi_{x, y} \leq \psi(y), && \forall y, \notag
+\end{align}
+i.e., por \eqref{eq:model_without_obs} onde a distância máxima para o transporte
+é $2D$.
+
+Agora considere que $\xi_{x, y}^*$ seja a solução ótima de \eqref{eq:model_rel},
+$S = \left\{ (x^*, y^*) \mid \xi_{x^*, y^*}^* > 0 \right\}$, i.e., o conjunto
+das duplas em que ocorre o transporte de terra satisfazendo \eqref{eq:model_rel},
+e
+\begin{align*}
+    V = \left\{ (\hat{x}, \hat{z}, \hat{y}) \mid d(\hat{x}, \hat{z}) < D \text{
+    e } d(\hat{z}, \hat{y}) < D \text{ e } l(\hat{x}, \hat{z}) > r \text{ e }
+    l(\hat{z}, \hat{y}) > r \right\},
+\end{align*}
+i.e., o conjunto das triplas em que é possível ocorrer o transporte de terra
+para \eqref{eq:model_with_obs_nl}.
+
+Então, o conjunto dado por
+\begin{align*}
+    \left\{ (\tilde{x}, \tilde{z}, \tilde{y}) \mid 
+    (x^*, z^*, y^*) = (\hat{x}, \hat{z}, \hat{y}), \forall (x^*, y^*) \in S,
+    \forall z^*, \forall (\hat{x}, \hat{z}, \hat{y}) \in V \right\}
+\end{align*}
+é uma boa solução para \eqref{eq:model_with_obs_nl}.

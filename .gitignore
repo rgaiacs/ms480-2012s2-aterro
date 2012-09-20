@@ -45,3 +45,4 @@ src/doc/_template/*
 *.ppm
 *.dat
 *.dis
+*.val

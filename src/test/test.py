@@ -27,7 +27,7 @@ import os
 import sys
 from subprocess import call
 
-def run(model, f_names, build, check, solve):
+def run(model, f_names, build, check, solve, tmlim, memlim):
     """Run test.
     
     :param model: model type.
@@ -49,6 +49,14 @@ def run(model, f_names, build, check, solve):
     :param solve: try to solve the problem.
 
     :type solve: boolean.
+
+    :param tmlim: time limit.
+
+    :type tmlim: integer.
+
+    :param memlim: memory limit.
+
+    :type memlim: integer.
     """
     import aterro
     import raterro
@@ -71,15 +79,18 @@ def run(model, f_names, build, check, solve):
             m = 'aterro'
             f = f.replace('.ppm', '_aterro.ppm')
         if check == True:
-            s = 'glpsol -m {0}.mod -d {1} --log {2} --tmlim 3600 \
-                    --memlim 4096 --check'.format(m, f.replace('.ppm',
-                    '.dat'), f.replace('.ppm', '.log'))
+            s = 'glpsol -m {0}.mod -d {1} --log {2} --tmlim {3} '\
+                    '--memlim {4} --check'.format(m, f.replace('.ppm',
+                    '.dat'), f.replace('.ppm', '.log'), tmlim, memlim)
             print(s)
             call(s, shell=True)
         elif solve == True:
-            s = 'glpsol -m {0}.mod -d {1} -y {2} --log {3} \
-            --tmlim 3600 --memlim 4096'.format(m, f.replace('.ppm', '.dat'),
-            f.replace('.ppm', '.dis'), f.replace('.ppm', '.log'))
+            s = 'glpsol -m {0}.mod -d {1} -y {2} --log {3} '\
+                    '--tmlim {4} --memlim {5}'.format(m, 
+                            f.replace('.ppm', '.dat'),
+                            f.replace('.ppm', '.dis'),
+                            f.replace('.ppm', '.log'),
+                            tmlim, memlim)
             print(s)
             call(s, shell=True)
 
@@ -101,9 +112,14 @@ if __name__ == "__main__":
             help='only check for error the problem.')
     parser.add_argument('--solve', action='store_true',
             help='solve the problem.')
+    parser.add_argument('--tmlim', type=int, default=600,
+            help='time limit (in seconds).')
+    parser.add_argument('--memlim', type=int, default=512,
+            help='memory limit (in megabits).')
     parser.add_argument('-f', nargs='*',
             help='name of ppm files to process')
 
     args = parser.parse_args()
 
-    run(args.b, args.f, args.data, args.check, args.solve)
+    run(args.b, args.f, args.data, args.check, args.solve, args.tmlim,
+           args.memlim)

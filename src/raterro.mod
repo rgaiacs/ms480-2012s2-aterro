@@ -47,10 +47,12 @@ var xi{N, M, N, M, N, M}, >= 0;
 # Restricoes.
 s.t. lim_d{(x1, x2, z1, z2, y1, y2) in too_long}:
     xi[x1, x2, z1, z2, y1, y2], = 0;
-s.t. lim_j{(x1, x2) in J, (z1, z2) in P}:
-    sum{(y1, y2) in A} xi[x1, x2, z1, z2, y1, y2], <= phi[x1, x2];
-s.t. lim_a{(y1, y2) in A, (z1, z2) in P}:
-    sum{(x1, x2) in J} xi[x1, x2, z1, z2, y1, y2], <= psi[y1, y2];
+s.t. lim_j{(x1, x2) in J}:
+    sum{(z1, z2) in P, (y1, y2) in A} xi[x1, x2, z1, z2, y1, y2],
+        <= phi[x1, x2];
+s.t. lim_a{(y1, y2) in A}:
+    sum{(x1, x2) in J, (z1, z2) in P} xi[x1, x2, z1, z2, y1, y2],
+        <= psi[y1, y2];
 
 # Funcao objetivo.
 maximize obj:
