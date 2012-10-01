@@ -55,4 +55,16 @@ s.t. lim_a{(y1, y2) in A}:
 maximize obj:
     sum{(x1, x2) in J, (y1, y2) in A} xi[x1, x2, y1, y2];
 
+solve;
+
+for{x1 in N}{
+    for{x2 in M}{
+        for{y1 in N}{
+            for{y2 in M : xi[x1, x2, y1, y2] != 0}{
+                printf "(%d, %d, %d, %d)\n", x1, x2, y1, y2;
+            }
+        }
+    }
+}
+        
 end;

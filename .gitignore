@@ -45,6 +45,7 @@ src/doc/_template/*
 *.ppm
 *.dat
 *.dis
+*.val
 *.lp
 *.pickle
 *.spickle

@@ -318,6 +318,8 @@ class RAterro(aterro.Aterro):
                             i, j, self.map.get_green((i, j))))
         print(";")
 
+        v = open(self.f_name.replace(
+            ".ppm", "_raterro.val"), 'w+')
         print("set too_long :=")
         for j_i in xrange(r):
             for j_j in xrange(c):
@@ -330,6 +332,10 @@ class RAterro(aterro.Aterro):
                                         (a_i, a_j), t):
                                     print("({0}, {1}, {2}, {3}, {4}, {5})".format(
                                         j_i, j_j, p_i, p_j, a_i, a_j))
+                                else:
+                                    v.write("({0}, {1}, {2}, {3}, {4}, {5})\n".format(
+                                        j_i, j_j, p_i, p_j, a_i, a_j))
+
 
         print(";")
         print("end;")

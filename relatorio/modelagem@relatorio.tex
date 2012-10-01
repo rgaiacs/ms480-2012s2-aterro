@@ -128,7 +128,7 @@ da seguinte forma:
         \label{eq:model_without_obs:obj_func} \\
         \text{s.a. } & \xi_{x, y} \geq 0, && \forall x, y,
         \label{eq:model_without_obs:var} \\
-        & \xi_{x, y} = 0, && \forall (x, y) | d(x, y) > D,
+        & \xi_{x, y} = 0, && \forall (x, y) \mid d(x, y) > D,
         \label{eq:model_without_obs:max_dist} \\
         & \sum_{y} \xi_{x, y} \leq \phi(x), && \forall x,
         \label{eq:model_without_obs:max_jazida} \\
@@ -145,7 +145,7 @@ quantidade de terra que pode ser retirado de $J$ e
 O modelo apresentado em \eqref{eq:model_without_obs} possui função objetivo e
 restrições lineares. Em relação à restrição
 \eqref{eq:model_without_obs:max_dist}, como $d(x, y)$ é um dado do problema,
-o conjunto $\left\{ (x, y) | d(x, y) > D \right\}$ é gerado dinamicamente ao
+o conjunto $\left\{ (x, y) \mid d(x, y) > D \right\}$ é gerado dinamicamente ao
 construirmos os dados para uma dada instância.
 
 \subsection{Problema com obstáculo}
@@ -183,16 +183,17 @@ Figura~\ref{fig:disc_J_A_R}.
     \label{fig:disc_J_A_R}
 \end{figure}
 
-Seja $P$ a região que não corresponde a jazida, ao aterro e nem ao obstáculo.
-De maneira semelhante as definições utilizadas na subseção anterior, seja $\phi
-: J \to \mathbb{R}$, $\psi: A \to \mathbb{R}$, $f: (J, P, A) \to \mathbb{R}$,
-$d: (J \cup A, P) \to \mathbb{R}$ e $l: (J \cup A, P) \to \mathbb{R}$, onde
-$\phi(x)$ corresponde ao volume de terra disponível no quadrado $x$, $\psi(y)$
-ao volume de terra necessário no quadrado $y$, $f(x, z, y)$ ao volume de terra
-transportado do quadrado $x$ para o quadrado $y$ passando pelo quadrado $z$,
-$d(w, z)$ a distância entre os quadrados $w$ e $z$\footnote{A distância entre os
-quadrados $w$ e $z$ será definida posteriormente.} e $l(w, z)$ a distância entre
-a reta formada pelos quadrados $w$ e $z$ ao ponto $c$\footnote{A distância entre a
+Seja $P$ a região que não corresponde \`{a} jazida, nem ao aterro e nem ao
+obstáculo. De maneira semelhante \`{a}s definições utilizadas na subseção
+anterior, seja $\phi: J \to \mathbb{R}$, $\psi: A \to \mathbb{R}$,
+$f: (J, P, A) \to \mathbb{R}$, $d: (J \cup A, P) \to \mathbb{R}$ e $l:
+(J \cup A, P) \to \mathbb{R}$, onde $\phi(x)$ corresponde ao volume de terra
+disponível no quadrado $x$, $\psi(y)$ ao volume de terra necessário no quadrado
+$y$, $f(x, z, y)$ ao volume de terra transportado do quadrado $x$ para o
+quadrado $y$ passando pelo quadrado $z$, $d(w, z)$ a distância entre os
+quadrados $w$ e $z$\footnote{A distância entre os quadrados $w$ e $z$ é
+definida no Apêndice~\ref{sse:distance}.} e $l(w, z)$ a distância entre a reta
+formada pelos quadrados $w$ e $z$ ao ponto $c$\footnote{A distância entre a
 reta formada pelos quadrados $w$ e $z$ ao ponto $c$ é abordada no
 Apêndice~\ref{sse:point2line}.}.
 
@@ -204,15 +205,15 @@ problema da seguinte forma:
         \label{eq:model_with_obs_nl:obj_func} \\
         \text{s.a. } & \xi_{x, z, y} \geq 0, && \forall x, z, y,
         \label{eq:model_with_obs_nl:var} \\
-        & \xi_{x, z, y} = 0, && \forall (x, z, y) | d(x, z) > D \text{ ou } 
+        & \xi_{x, z, y} = 0, && \forall (x, z, y) \mid d(x, z) > D \text{ ou } 
         d(y, z) > D,
         \label{eq:model_with_obs_nl:max_dist} \\
-        & \xi_{x, z, y} = 0, && \forall (x, z, y) | l(x, z) < r \text{ ou }
+        & \xi_{x, z, y} = 0, && \forall (x, z, y) \mid l(x, z) < r \text{ ou }
         l(y, z) < r,
         \label{eq:model_with_obs_nl:dist_obs} \\
-        & \sum_{y} \xi_{x, z, y} \leq \phi(x), && \forall x, z,
+        & \sum_{z} \sum_{y} \xi_{x, z, y} \leq \phi(x), && \forall x,
         \label{eq:model_with_obs_nl:max_jazida} \\
-        & \sum_{x} \xi_{x, z, y} \leq \psi(y), && \forall z, y,
+        & \sum_{x} \sum_{z} \xi_{x, z, y} \leq \psi(y), && \forall y,
         \label{eq:model_with_obs_nl:max_aterro}
     \end{align}
     \label{eq:model_with_obs_nl}
@@ -225,11 +226,11 @@ ser retirado de $J$ e \eqref{eq:model_with_obs_nl:max_aterro} a quantidade de te
 necessário em $A$.
 
 O modelo apresentado em \eqref{eq:model_with_obs_nl} possue função objetivo e
-restrições lineares. Em relação as restrições
+restrições lineares. Em relação \`{a}s restrições
 \eqref{eq:model_with_obs_nl:max_dist} e \eqref{eq:model_with_obs_nl:dist_obs},
 como $d(x, z)$, $d(y, z)$, $l(x, z)$ e $l(y, z)$ são dados do problema, os
-conjuntos $\left\{ (x, z, y) | d(x, z) > D \text{ ou } d(y, z) > D \right\}$ e
-$\left\{ (x, z, y) | l(x, z) < r \text{ ou } l(y, z) < r \right\}$ são gerados
+conjuntos $\left\{ (x, z, y) \mid d(x, z) > D \text{ ou } d(y, z) > D \right\}$ e
+$\left\{ (x, z, y) \mid l(x, z) < r \text{ ou } l(y, z) < r \right\}$ são gerados
 dinamicamente ao construirmos os dados para uma dada instância do problema.
 
 Seria interessante poder lidar com regiões $R$ mais gerais. Uma forma de fazer
@@ -274,9 +275,9 @@ O modelo a ser utilizado com a aproximação da região $R$ é semelhante a
 \eqref{eq:model_with_obs_nl} mudando apenas a restrição
 \eqref{eq:model_with_obs_nl:dist_obs} que passa a ser
 \begin{align}
-    % \xi_{x, z, y} &= 0, && \forall (x, z, y) | b(x, z) \notin R \text{ ou }
+    % \xi_{x, z, y} &= 0, && \forall (x, z, y) \mid b(x, z) \notin R \text{ ou }
     % b(y, z) \notin R,
-    \xi_{x, z, y} &= 0, && \forall (x, z, y) | b(x, z) \neq 1 \text{ ou }
+    \xi_{x, z, y} &= 0, && \forall (x, z, y) \mid b(x, z) \neq 1 \text{ ou }
     b(y, z) \neq 1,
     \label{eq:model_with_obs:dist_obs} 
 \end{align}
@@ -285,33 +286,3 @@ construída entre os quadrados $w \in J \cup A$ e $z \in P$ utilizando o
 algoritmo de Bresenham\footnote{Ver o Apêndice~\ref{sse:bresenham_line}.} passa
 por $R$ e $0$ caso contrário.
 
-\subsection{Distância entre pontos}
-Ao utilizar a malha quadriculada, podemos definir a distância entre dois
-de seus quadrados de pelo menos três maneiras diferentes:
-\begin{enumerate}
-    \item $d_l$, que é a menor distência entre qualquer dois pontos dos
-        quadrados,
-    \item $d_u$, que é a maior distância entre qualquer dois pontos dos
-        quadrados, e
-    \item $d_c$, que é a distância entre os centros dos quadrados.
-\end{enumerate}
-Na Figura~\ref{fig:dist_malha} é ilustrado cada uma das distâncias acima
-descrita.
-\begin{figure}[!htb]
-    \centering
-    \begin{tikzpicture}
-        \draw (0,0) rectangle (1,1);
-        \draw (2,0) rectangle (3,1);
-        \draw[<->] (1,1) -- (2,1) node[midway, below]{$d^l$};
-
-        \draw (4,0) rectangle (5,1);
-        \draw (6,0) rectangle (7,1);
-        \draw (4,0) -- (7,1) node[midway, below]{$d^u$};
-
-        \draw (8,0) rectangle (9,1) node[midway](A){};
-        \draw (10,0) rectangle (11,1) node[midway](B){};
-        \draw (A) -- (B) node[midway, below]{$d^c$};
-    \end{tikzpicture}
-    \caption{Ilustra\c{c}\~{a}o das dist\^{a}ncias entre quadrados da malha.}
-    \label{fig:dist_malha}
-\end{figure}
