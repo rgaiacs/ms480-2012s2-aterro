@@ -27,7 +27,7 @@ import os
 import sys
 from subprocess import call
 
-def run(model, f_names, build, check, solve):
+def run(model, f_names, build, pickle, check, solve, psolve, debug):
     """Run test.
     
     :param model: model type.
@@ -49,6 +49,14 @@ def run(model, f_names, build, check, solve):
     :param solve: try to solve the problem.
 
     :type solve: boolean.
+
+    :param psolve: try to solve the problem using pickle file.
+
+    :type psolve: boolean.
+
+    :param debug: enable the debug behavior.
+
+    :type debug: boolean.
     """
     import aterro
     import raterro
@@ -56,7 +64,8 @@ def run(model, f_names, build, check, solve):
     if not f_names:
         f_names = ['test/sample12x12.ppm']
     for f in f_names:
-        if build == True:
+        print('Processing {0}.'.format(f))
+        if build:
             print('Reading {0}. This will take some time.'.format(f))
             if model:
                 test = raterro.RAterro(f, 8)
@@ -64,24 +73,38 @@ def run(model, f_names, build, check, solve):
                 test = aterro.Aterro(f, 8)
             print('Writing data. This will take some time.')
             test.wdf()
+        if pickle:
+            print('Reading {0}. This will take some time.'.format(f))
+            if model:
+                test = raterro.RAterro(f, 8)
+            else:
+                test = aterro.Aterro(f, 8)
+            print('Writing data. This will take some time.')
+            test.wpf()
+        if psolve:
+            if model:
+                raterro.bs_model(f.replace('.ppm', '_raterro.pickle'), debug)
+            else:
+                aterro.bs_model(f.replace('.ppm', '_aterro.pickle'), debug)
         if model:
             m = 'raterro'
             f = f.replace('.ppm', '_raterro.ppm')
         else:
             m = 'aterro'
             f = f.replace('.ppm', '_aterro.ppm')
-        if check == True:
+        if check or debug:
             s = 'glpsol -m {0}.mod -d {1} --log {2} --tmlim 3600 \
                     --memlim 4096 --check'.format(m, f.replace('.ppm',
                     '.dat'), f.replace('.ppm', '.log'))
             print(s)
             call(s, shell=True)
-        elif solve == True:
+        elif solve:
             s = 'glpsol -m {0}.mod -d {1} -y {2} --log {3} \
             --tmlim 3600 --memlim 4096'.format(m, f.replace('.ppm', '.dat'),
             f.replace('.ppm', '.dis'), f.replace('.ppm', '.log'))
             print(s)
             call(s, shell=True)
+
 
 if __name__ == "__main__":
     import argparse
@@ -97,13 +120,20 @@ if __name__ == "__main__":
             help='using barrier in the model.')
     parser.add_argument('--data', action='store_true',
             help='build the data file based on ppm file.')
+    parser.add_argument('--debug', action='store_true',
+            help='enable the debug mode.')
+    parser.add_argument('--pickle', action='store_true',
+            help='build the data file, with pickle, based on ppm file.')
     parser.add_argument('--check', action='store_true',
             help='only check for error the problem.')
     parser.add_argument('--solve', action='store_true',
             help='solve the problem.')
+    parser.add_argument('--psolve', action='store_true',
+            help='solve the problem using pickle file.')
     parser.add_argument('-f', nargs='*',
             help='name of ppm files to process')
 
     args = parser.parse_args()
 
-    run(args.b, args.f, args.data, args.check, args.solve)
+    run(args.b, args.f, args.data, args.pickle, args.check, args.solve,
+            args.psolve, args.debug)

@@ -45,3 +45,9 @@ src/doc/_template/*
 *.ppm
 *.dat
 *.dis
+*.lp
+*.pickle
+*.spickle
+
+# Ctags
+src/tags

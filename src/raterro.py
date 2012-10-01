@@ -23,6 +23,7 @@
 
 import sys
 import ppm
+from glpk.glpkpi import *
 import aterro
 
 class RAterro(aterro.Aterro):
@@ -55,8 +56,10 @@ class RAterro(aterro.Aterro):
         :type D: float.
         """
         aterro.Aterro.__init__(self, f_name, D)
+        self.r = []
+        self.h = []
 
-    def is_r(self, p):
+    def _is_r(self, p):
         """Return true if point belong to R.
 
         :param p: coordinates of point.
@@ -75,6 +78,36 @@ class RAterro(aterro.Aterro):
         except:
             pass
         return r
+
+    def who_is_r(self):
+        """Return a list of tuples of points belong to R.
+
+        :return: points belong to R.
+
+        :rtype: list.
+        """
+        aux = []
+        for i in xrange(self.map.get_row()):
+            for j in xrange(self.map.get_col()):
+                if self._is_r((i, j)):
+                    aux.append((i, j))
+        self.j = aux
+
+    def who_is_h(self):
+        """Return a list of tuples of points not belong to J, A nor R.
+
+        :return: points not belong to J, A nor R.
+
+        :rtype: list.
+        """
+        aux = []
+        for i in xrange(self.map.get_row()):
+            for j in xrange(self.map.get_col()):
+                if (not self._is_j((i, j)) and
+                        not self._is_a((i, j)) and
+                        not self._is_p((i, j))):
+                    aux.append((i, j))
+        self.h = aux
 
     def try_line(self, o, d):
         """Try line from o to d.
@@ -157,7 +190,7 @@ class RAterro(aterro.Aterro):
             r = False
         return r
 
-    def path_is_valid(self, o, p, d, t=0):
+    def _path_is_valid(self, o, p, d, t=0):
         """Get if path between o and d is valid passing by point p.
 
         :param o: coordinates of the point of origin.
@@ -195,6 +228,28 @@ class RAterro(aterro.Aterro):
                         self.map.dc(p, d) < self.D):
                     valid = True
         return valid
+
+    def who_is_valid_path(self):
+        """ Return a list of tuples where the last position is a list of the
+        possible pivot, for the origin and destinity specify by the other
+        position of the tuple.
+
+        :return: valid paths.
+
+        :rtype: tuple of list.
+        """
+        aux = []
+
+        for (j_i, j_j) in self.j:
+            for (a_i, a_j) in self.a:
+                l = []
+                for (h_i, h_j) in self.h:
+                    if self._path_is_valid(
+                            (j_i, j_j), (h_i, h_j), (a_i, a_j)):
+                        l.append((h_i, h_j))
+                aux.append((j_i, j_j, a_i, a_j, l))
+
+        self.valid_paths = aux
 
     def wdf(self, t=0):
         """Write data file.
@@ -280,3 +335,94 @@ class RAterro(aterro.Aterro):
         print("end;")
         sys.stdout.close()
         sys.stdout = sys.__stdout__
+
+    def wpf(self, pf_name = None):
+        """Write pickle file.
+
+        :param pf_name: name to use for the pickle file.
+
+        If None, than self.f_name is used.
+
+        :type pf_name: string.
+        """
+        import pickle
+
+        self.who_is_j()
+        self._phi()
+        self.who_is_a()
+        self._psi()
+        self.who_is_valid_path()
+        if not pf_name:
+            pf_name = self.f_name.replace('.ppm', '_raterro.pickle')
+        with open(pf_name, 'wb') as f:
+            pickle.dump({"m": self.map.get_row(), "n": self.map.get_col(),
+                    "j": self.j, "a": self.a,
+                    "phi": self.phi, "psi": self.psi,
+                    "p": self.valid_paths}, f)
+
+def bs_model(f_name, debug = False):
+    """Build and solve the model.
+    
+    :param f_name: name of file with data.
+
+    :type f_name: string.
+
+    :param debug: enable the debug behavior.
+
+    :type debug: boolean.
+    """
+    import pickle
+
+    if debug:
+        print("Debug mode enable.")
+
+    with open(f_name, 'rb') as f:
+        print("Load {0}.".format(f_name))
+        data = pickle.load(f)
+
+    len_j = len(data['j'])
+    len_a = len(data['a'])
+    ind = intArray(len_j + len_a + 1)
+    val = doubleArray(len_j + len_a + 1)
+    prob = glp_create_prob()
+    glp_create_index(prob)
+
+    glp_add_rows(prob, len_j + len_a)
+    for i in xrange(len_j):
+        glp_set_row_name(prob, i + 1, "J{0}".format(data['j'][i]))
+        glp_set_row_bnds(prob, i + 1, GLP_UP, 0.0, data['phi'][i])
+    for i in xrange(len_a):
+        glp_set_row_name(prob, len_j + i + 1, "A{0}".format(data['a'][i]))
+        glp_set_row_bnds(prob, len_j + i + 1, GLP_UP, 0.0, data['psi'][i])
+
+    glp_set_obj_dir(prob, GLP_MAX)
+    for path in data['p']:
+        if not path[4]:
+            count = 0
+            col = glp_add_cols(prob, 1)
+            glp_set_col_name(prob, col, "{0}".format(path[0:4]))
+            glp_set_col_bnds(prob, col, GLP_LO, 0.0, 0.0)
+            for k in xrange(len_j):
+                if path[0] == data['j'][k][0] and path[1] == data['j'][k][1]:
+                    count = count + 1
+                    ind[count] = glp_find_row(prob, "J{0}".format(data['j'][k]))
+                    val[count] = data['phi'][k]
+            for k in xrange(len_a):
+                if path[4] == data['a'][k][0] and path[5] == data['a'][k][1]:
+                    count = count + 1
+                    ind[count] = glp_find_row(prob, "A{0}".format(data['a'][k]))
+                    val[count] = data['psi'][k]
+            glp_set_mat_col(prob, col, count, ind, val)
+            glp_set_obj_coef(prob, col, 1.0)
+
+    if debug:
+        glp_write_lp(prob, None, f_name.replace(".pickle", ".lp"))
+    else:
+        glp_simplex(prob, None)
+        z = glp_get_obj_val(prob)
+        x = []
+        for j in xrange(1, len(data['p']) + 1):
+            x.append(glp_get_col_prim(prob, j))
+        with open(f_name.replace(".pickle", ".spickle"), 'wb') as f:
+            pickle.dump({"z": z, "x": x}, f)
+    del prob

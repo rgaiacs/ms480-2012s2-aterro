@@ -3,19 +3,20 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to Experimentos Computacionais de MS480 - 2012S2 - Aterro com Obstaculo's documentation!
+Bem-vindo a Experimentos Computacionais de MS480 - 2012S2 - Aterro com Obstaculo!
 ================================================================================================
 
-Contents:
+Conteúdo:
 
 .. toctree::
    :maxdepth: 2
 
+   instruction
    test
    implementation
 
-    Indices and tables
-==================
+Índices e tabelas
+=================
 
 * :ref:`genindex`
 * :ref:`modindex`

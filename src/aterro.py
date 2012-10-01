@@ -23,6 +23,7 @@
 
 import sys
 import ppm
+from glpk.glpkpi import *
 
 class Aterro:
     """Aterro Aterro
@@ -55,8 +56,13 @@ class Aterro:
         self.f_name = f_name
         self.map = ppm.PPM(f_name)
         self.D = D
+        self.j = None
+        self.phi = None
+        self.a = None
+        self.psi = None
+        self.valid_paths = None
 
-    def is_j(self, p):
+    def _is_j(self, p):
         """Return true if point belong to J.
 
         :param p: coordinates of point.
@@ -76,7 +82,21 @@ class Aterro:
             pass
         return r
 
-    def is_a(self, p):
+    def who_is_j(self):
+        """Return a list of tuples of points belong to J.
+
+        :return: poins belong to J.
+
+        :rtype: list.
+        """
+        aux = []
+        for i in xrange(self.map.get_row()):
+            for j in xrange(self.map.get_col()):
+                if self._is_j((i, j)):
+                    aux.append((i, j))
+        self.j = aux
+
+    def _is_a(self, p):
         """Return true if point belong to A.
 
         :param p: coordinates of point.
@@ -96,7 +116,22 @@ class Aterro:
             pass
         return r
 
-    def path_is_valid(self, o, d, t=0):
+    def who_is_a(self):
+        """Return a list of tuples of points belong to A.
+
+        :return: poins belong to A.
+
+        :rtype: list.
+        """
+        aux = []
+        for i in xrange(self.map.get_row()):
+            for j in xrange(self.map.get_col()):
+                if self._is_a((i, j)):
+                    aux.append((i, j))
+        self.a = aux
+
+
+    def _path_is_valid(self, o, d, t=0):
         """Get if path between o and d is valid.
 
         :param o: coordinates of the point of origin.
@@ -126,6 +161,37 @@ class Aterro:
             if self.map.dc(o, d) < self.D:
                 valid = True
         return valid
+
+    def who_is_valid_path(self):
+        """ Return a list of all valid paths.
+
+        :return: valid paths.
+
+        :rtype: list.
+        """
+        aux = []
+
+        for (j_i, j_j) in self.j:
+            for (a_i, a_j) in self.a:
+                if self._path_is_valid(
+                        (j_i, j_j), (a_i, a_j)):
+                    aux.append((j_i, j_j, a_i, a_j))
+
+        self.valid_paths = aux
+
+    def _phi(self):
+        """Set vector of phi values.
+        """
+        self.phi = []
+        for (i, j) in self.j:
+            self.phi.append(self.map.get_red((i, j)))
+
+    def _psi(self):
+        """Set vector of psi values.
+        """
+        self.psi = []
+        for (i, j) in self.a:
+            self.psi.append(self.map.get_green((i, j)))
 
     def wdf(self, t=0):
         """Write data file.
@@ -191,7 +257,7 @@ class Aterro:
             for j_j in xrange(c):
                 for a_i in xrange(r):
                     for a_j in xrange(c):
-                        if not self.path_is_valid(
+                        if not self._path_is_valid(
                                 (j_i, j_j), (a_i, a_j), t):
                             print("({0}, {1}, {2}, {3})". format(
                                 j_i, j_j, a_i, a_j))
@@ -200,3 +266,97 @@ class Aterro:
         print("end;")
         sys.stdout.close()
         sys.stdout = sys.__stdout__
+
+    def wpf(self, pf_name = None):
+        """Write pickle file.
+
+        :param pf_name: name to use for the pickle file.
+
+        If None, than self.f_name is used.
+
+        :type pf_name: string.
+        """
+        import pickle
+
+        self.who_is_j()
+        self._phi()
+        self.who_is_a()
+        self._psi()
+        self.who_is_valid_path()
+        if not pf_name:
+            pf_name = self.f_name.replace('.ppm', '_aterro.pickle')
+        print("Try to write data in {0}.".format(pf_name))
+        with open(pf_name, 'wb') as f:
+            pickle.dump({"m": self.map.get_row(), "n": self.map.get_col(),
+                    "j": self.j, "a": self.a,
+                    "phi": self.phi, "psi": self.psi,
+                    "p": self.valid_paths}, f)
+        print("Data sucessfully write in {0}.".format(pf_name))
+
+def bs_model(f_name, debug = False):
+    """Build and solve the model.
+    
+    :param f_name: name of file with data.
+
+    :type f_name: string.
+
+    :param debug: enable the debug behavior.
+
+    :type debug: boolean.
+    """
+    import pickle
+
+    if debug:
+        print("Debug mode enable.")
+
+    print("Try to load data from {0}.".format(f_name))
+    with open(f_name, 'rb') as f:
+        print("Load {0}.".format(f_name))
+        data = pickle.load(f)
+    print("Data sucessfully load from {0}.".format(f_name))
+
+    len_j = len(data['j'])
+    len_a = len(data['a'])
+    ind = intArray(len_j + len_a + 1)
+    val = doubleArray(len_j + len_a + 1)
+    prob = glp_create_prob()
+    glp_create_index(prob)
+
+    glp_add_rows(prob, len_j + len_a)
+    for i in xrange(len_j):
+        glp_set_row_name(prob, i + 1, "J{0}".format(data['j'][i]))
+        glp_set_row_bnds(prob, i + 1, GLP_UP, 0.0, data['phi'][i])
+    for i in xrange(len_a):
+        glp_set_row_name(prob, len_j + i + 1, "A{0}".format(data['a'][i]))
+        glp_set_row_bnds(prob, len_j + i + 1, GLP_UP, 0.0, data['psi'][i])
+
+    glp_set_obj_dir(prob, GLP_MAX)
+    for path in data['p']:
+        count = 0
+        col = glp_add_cols(prob, 1)
+        glp_set_col_name(prob, col, "{0}".format(path))
+        glp_set_col_bnds(prob, col, GLP_LO, 0.0, 0.0)
+        for k in xrange(len_j):
+            if path[0] == data['j'][k][0] and path[1] == data['j'][k][1]:
+                count = count + 1
+                ind[count] = glp_find_row(prob, "J{0}".format(data['j'][k]))
+                val[count] = data['phi'][k]
+        for k in xrange(len_a):
+            if path[2] == data['a'][k][0] and path[3] == data['a'][k][1]:
+                count = count + 1
+                ind[count] = glp_find_row(prob, "A{0}".format(data['a'][k]))
+                val[count] = data['psi'][k]
+        glp_set_mat_col(prob, col, count, ind, val)
+        glp_set_obj_coef(prob, col, 1.0)
+
+    if debug:
+        glp_write_lp(prob, None, f_name.replace(".pickle", ".lp"))
+    else:
+        glp_simplex(prob, None)
+        z = glp_get_obj_val(prob)
+        x = []
+        for j in xrange(1, len(data['p']) + 1):
+            x.append(glp_get_col_prim(prob, j))
+        with open(f_name.replace(".pickle", ".spickle"), 'wb') as f:
+            pickle.dump({"z": z, "x": x}, f)
+    del prob
