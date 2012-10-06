@@ -8,6 +8,8 @@ Esse projeto foi desenvolvido utilizando apenas software livre:
 *   Python-GLPK, `http://www.dcc.fc.up.pt/~jpp/code/python-glpk/
     <http://www.dcc.fc.up.pt/~jpp/code/python-glpk/>`_;
 *   Swig, necessário para o Python-GLPK,
+*   Inkscape, para construção dos mapas,
+*   ImageMagick, para conversão dos mapas para o formato ppm,
 *   LaTeX, para o relatório,
 *   Sphinx, para a documentação.
 
@@ -15,6 +17,10 @@ Para instalar os softwares utilizados em um GNU/Linux que utilize o sistemas de
 pacotes `.deb`, e.g., Debian, Ubuntu, Mint, pode-se utilizar: ::
 
     # apt-get install python python-glpk
+
+Para manipular (criar) novos testes: ::
+
+    # apt-get install inkscape
 
 Para gerar o relatório: ::
 

@@ -12,6 +12,7 @@ Conteúdo:
    :maxdepth: 2
 
    instruction
+   build_images
    test
    implementation
 
