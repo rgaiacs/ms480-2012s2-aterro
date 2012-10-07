@@ -91,16 +91,18 @@ def run(model, f_names, build, pickle, check, solve, psolve, tmlim, memlim, debu
             test.wpf()
         if psolve:
             if model:
-                raterro.bs_model(f.replace('.ppm', '_raterro.pickle'), debug)
+                raterro.bs_model(f.replace('.ppm', '_raterro.pickle'), tmlim,
+                        memlim, True, False, debug)
             else:
-                aterro.bs_model(f.replace('.ppm', '_aterro.pickle'), debug)
+                aterro.bs_model(f.replace('.ppm', '_aterro.pickle'), tmlim,
+                        memlim, True, False, debug)
         if model:
             m = 'raterro'
             f = f.replace('.ppm', '_raterro.ppm')
         else:
             m = 'aterro'
             f = f.replace('.ppm', '_aterro.ppm')
-        if check or debug:
+        if check:
             s = 'glpsol -m {0}.mod -d {1} --log {2} --tmlim {3} '\
                     '--memlim {4} --check'.format(m, f.replace('.ppm',
                     '.dat'), f.replace('.ppm', '.log'), tmlim, memlim)

@@ -293,12 +293,28 @@ class Aterro:
                     "p": self.valid_paths}, f)
         print("Data sucessfully write in {0}.".format(pf_name))
 
-def bs_model(f_name, debug = False):
+def bs_model(f_name, tmlim=3600000, memlim=1024, w2ascii=True, w2pickle=False, debug=False):
     """Build and solve the model.
     
-    :param f_name: name of file with data.
+    :param f_name: name of pickle file with data.
 
     :type f_name: string.
+    
+    :param tmlim: time limit, in milliseconds.
+
+    :type tmlim: integer, default 3600000.
+
+    :param memlim: memory limit, in megabytes.
+
+    :type memlim: integer, default 1024.
+
+    :param w2ascii: write the solution to a ASCII file.
+
+    :type w2ascii: boolean, default True.
+
+    :param w2pickle: write the solution to a pcikle file.
+
+    :type w2pickle: boolean, default False.
 
     :param debug: enable the debug behavior.
 
@@ -352,11 +368,31 @@ def bs_model(f_name, debug = False):
     if debug:
         glp_write_lp(prob, None, f_name.replace(".pickle", ".lp"))
     else:
-        glp_simplex(prob, None)
+        glp_mem_limit(memlim)
+        param = glp_smcp()
+        glp_init_smcp(param)
+        param.tm_lim = tmlim
+        glp_simplex(prob, param)
         z = glp_get_obj_val(prob)
-        x = []
-        for j in xrange(1, len(data['p']) + 1):
-            x.append(glp_get_col_prim(prob, j))
-        with open(f_name.replace(".pickle", ".spickle"), 'wb') as f:
-            pickle.dump({"z": z, "x": x}, f)
+        if w2ascii:
+            print("Try to write solution in {0}.".format(
+                    f_name.replace(".pickle", ".txt")))
+            with open(f_name.replace(".pickle", ".txt"), 'wb') as f:
+                for j in xrange(1, glp_get_num_cols(prob) + 1):
+                    aux = glp_get_col_prim(prob, j)
+                    if aux > 0:
+                        f.write("{0} {1}\n".format(glp_get_col_name(prob, j),
+                                aux))
+            print("Solution sucessfully write in {0}.".format(
+                    f_name.replace(".pickle", ".txt")))
+        if w2pickle:
+            x = []
+            for j in xrange(1, glp_get_num_cols(prob) + 1):
+                x.append(glp_get_col_prim(prob, j))
+            print("Try to write solution in {0}.".format(
+                    f_name.replace(".pickle", ".spickle")))
+            with open(f_name.replace(".pickle", ".spickle"), 'wb') as f:
+                pickle.dump({"z": z, "x": x}, f)
+            print("Solution sucessfully write in {0}.".format(
+                    f_name.replace(".pickle", ".spickle")))
     del prob
