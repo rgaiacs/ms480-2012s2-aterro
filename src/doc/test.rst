@@ -11,8 +11,8 @@ Para gerar os arquivo de dados para teste a partir do(s) arquivo(s) ppm, utilize
     $ python test/test.py -b --pickle
 
 ..  note::
-    É possível gerar os dados no formato GMPL. Essa opção é desaconselhada pois
-    o problema com barreiras consome muita memória. ::
+    É possível gerar os dados no formato GMPL. Essa opção é desaconselhada (e
+    desatualizada) pois o problema com barreiras consome muita memória. ::
 
         $ cd src
         $ # Para o modelo sem obstaculo.
@@ -65,10 +65,10 @@ no formato LP utilizando: ::
         $ python test/test.py -b --debug
 
 É possível informar o(s) arquivo(s) ppm a ser(em) utilizado para teste (se
-nenhum arquivo for informado é utilizado o `sample12x12.ppm`). ::
+nenhum arquivo for informado é utilizado o `sample.ppm`). ::
 
     $ cd src
     $ # Para o modelo sem obstaculo.
-    $ python test/test.py --pickle --psolve -f sample60x60.ppm sample120x120.ppm
+    $ python test/test.py --pickle --psolve -f sample.ppm foo.ppm bar.ppm
     $ # Para o modelo com obstaculo.
-    $ python test/test.py -b --pickle --psolve -f sample60x60.ppm sample120x120.ppm
+    $ python test/test.py -b --pickle --psolve -f sample.ppm foo.ppm bar.ppm

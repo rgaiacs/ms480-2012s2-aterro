@@ -23,3 +23,5 @@ e para uma imagem com 480 por 480 ::
 
     $ convert input.svg -compress none -scale 480x480 -depth 8 output.ppm
 
+Recomenda-se gerar uma imagem com pelo menos 1200 por 1200 pixels para os testes
+pois nos testes a imagem precisa ser "reduzida".

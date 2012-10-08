@@ -32,6 +32,7 @@ class Aterro:
     Some conventions:
 
         red: set J (source of soil)
+
         green: set A (destination of soil)
 
     Example:
@@ -42,25 +43,31 @@ class Aterro:
         >>> test = aterro.Aterro('test/minimal.ppm', 3)
         >>> test.wdf()
     """
-    def __init__(self, f_name, D):
+    def __init__(self, f_name, preduce, D):
         """Constructor
 
         :param f_name: name of ppm file.
 
         :type f_name: string.
 
+        :param preduce: number of vertical and horizontal pixels to be reduce to
+        one.
+
+        :type preduce: integer.
+
         :param D: max distance between points.
         
         :type D: float.
         """
         self.f_name = f_name
-        self.map = ppm.PPM(f_name)
-        self.D = D
-        self.j = None
-        self.phi = None
-        self.a = None
-        self.psi = None
-        self.valid_paths = None
+        self.preduce = preduce
+        self.map = ppm.PPM(f_name, preduce)
+        self.D = D / preduce
+        self.j = self._who_is_j()
+        self.phi = self._phi()
+        self.a = self._who_is_a()
+        self.psi = self._psi()
+        self.valid_paths = self._who_is_valid_path()
 
     def _is_j(self, p):
         """Return true if point belong to J.
@@ -76,13 +83,19 @@ class Aterro:
         c = self.map.get_color(p)
         r = False
         try:
-            if 0 < c[0] <= 255 and c[1] == 0 and c[2] == 0:
+            # Do not use
+            #
+            #     if 0 < c[0] <= 255 and c[1] < 25 and c[2] < 25:
+            #
+            # because of the erro when convert to the ppm file.
+            if (0 < c[0] <= self.map.max_color and c[1] < self.map.max_color / 10
+                    and c[2] < self.map.max_color / 10):
                 r = True
         except:
             pass
         return r
 
-    def who_is_j(self):
+    def _who_is_j(self):
         """Return a list of tuples of points belong to J.
 
         :return: poins belong to J.
@@ -94,7 +107,7 @@ class Aterro:
             for j in xrange(self.map.get_col()):
                 if self._is_j((i, j)):
                     aux.append((i, j))
-        self.j = aux
+        return aux
 
     def _is_a(self, p):
         """Return true if point belong to A.
@@ -110,13 +123,14 @@ class Aterro:
         c = self.map.get_color(p)
         r = False
         try:
-            if c[0] == 0 and 0 < c[1] <= 255 and c[2] == 0:
+            if (c[0] < self.map.max_color / 10 and 0 < c[1] <= self.map.max_color
+                    and c[2] < self.map.max_color / 10):
                 r = True
         except:
             pass
         return r
 
-    def who_is_a(self):
+    def _who_is_a(self):
         """Return a list of tuples of points belong to A.
 
         :return: poins belong to A.
@@ -128,8 +142,7 @@ class Aterro:
             for j in xrange(self.map.get_col()):
                 if self._is_a((i, j)):
                     aux.append((i, j))
-        self.a = aux
-
+        return aux
 
     def _path_is_valid(self, o, d, t=0):
         """Get if path between o and d is valid.
@@ -162,7 +175,7 @@ class Aterro:
                 valid = True
         return valid
 
-    def who_is_valid_path(self):
+    def _who_is_valid_path(self):
         """ Return a list of all valid paths.
 
         :return: valid paths.
@@ -170,35 +183,46 @@ class Aterro:
         :rtype: list.
         """
         aux = []
-
         for (j_i, j_j) in self.j:
             for (a_i, a_j) in self.a:
                 if self._path_is_valid(
                         (j_i, j_j), (a_i, a_j)):
                     aux.append((j_i, j_j, a_i, a_j))
-
-        self.valid_paths = aux
+        return aux
 
     def _phi(self):
         """Set vector of phi values.
+
+        :return: phi values.
+
+        :rtype: list.
         """
-        self.phi = []
+        aux = []
         for (i, j) in self.j:
-            self.phi.append(self.map.get_red((i, j)))
+            aux.append(self.map.get_red((i, j)))
+        return aux
 
     def _psi(self):
         """Set vector of psi values.
+
+        :return: psi values.
+
+        :rtype: list.
         """
-        self.psi = []
+        aux = []
         for (i, j) in self.a:
-            self.psi.append(self.map.get_green((i, j)))
+            aux.append(self.map.get_green((i, j)))
+        return aux
 
     def wdf(self, t=0):
-        """Write data file.
+        """Write data into GMPL file.
 
         :param t: type of distance
 
         :type t: integer
+
+        .. deprecated:: ef9b47c42656b1cf45ed2d18e5f1c2b1c659e1df
+        Use :meth:`wpf` instead.
         """
         sys.stdout = open(self.f_name.replace(
             ".ppm", "_aterro.dat"), 'w+')
@@ -270,21 +294,15 @@ class Aterro:
     def wpf(self, pf_name = None):
         """Write pickle file.
 
-        :param pf_name: name to use for the pickle file.
-
-        If None, than self.f_name is used.
+        :param pf_name: name to use for the pickle file. If None, than self.f_name is used.
 
         :type pf_name: string.
         """
         import pickle
 
-        self.who_is_j()
-        self._phi()
-        self.who_is_a()
-        self._psi()
-        self.who_is_valid_path()
         if not pf_name:
-            pf_name = self.f_name.replace('.ppm', '_aterro.pickle')
+            pf_name = self.f_name.replace('.ppm',
+                    '{0}_aterro.pickle'.format(self.preduce))
         print("Try to write data in {0}.".format(pf_name))
         with open(pf_name, 'wb') as f:
             pickle.dump({"m": self.map.get_row(), "n": self.map.get_col(),

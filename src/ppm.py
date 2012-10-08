@@ -34,59 +34,82 @@ class PPM:
         >>> import ppm
         >>> test = ppm.PPM('test/sample12x12.ppm')
     """
-    def __init__(self, f_name):
+    def __init__(self, f_name, preduce):
         """Contructor
 
         :param f_name: name of ppm file.
 
         :type f_name: string.
+
+        :param preduce: number of vertical and horizontal pixels to be reduce to
+        one.
+
+        :type preduce: integer.
         """
         try:
             f = open(f_name, 'r')
         except:
-            raise NameError("Check if {0} exist.".format(f_name))
+            raise OSError("Check if {0} exist.".format(f_name))
 
-        self.col = 0
-        self.row = 0
-        self.max_color = 0
-        self.r = []
-        self.g = []
-        self.b = []
+        # Auxiliar variables.
+        col = 0
+        row = 0
+        max_color = 0
+        r = []
+        g = []
+        b = []
 
+        # Read the figure and store it in the memory.
         l = f.readline()
         digits = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
         insert2col = 0
         insert2row = 0
         insert2color = 0
         while l != '':
+            # Lines begin with # are comments.
             if l[0] != '#':
                 ll = l.split()
                 for ll_aux in ll:
                     if ll_aux[0] in digits:
-                        if self.col == 0:
-                            self.col = int(ll_aux)
-                        elif self.row == 0:
-                            self.row = int(ll_aux)
-                            self.r = [[0 for i in xrange(self.col)] for j in xrange(self.row)]
-                            self.g = [[0 for i in xrange(self.col)] for j in xrange(self.row)]
-                            self.b = [[0 for i in xrange(self.col)] for j in xrange(self.row)]
-                        elif self.max_color == 0:
-                            self.max_color = int(ll_aux)
+                        if col == 0:
+                            col = int(ll_aux)
+                        elif row == 0:
+                            row = int(ll_aux)
+                            r = [[0 for i in xrange(col)] for j in xrange(row)]
+                            g = [[0 for i in xrange(col)] for j in xrange(row)]
+                            b = [[0 for i in xrange(col)] for j in xrange(row)]
+                        elif max_color == 0:
+                            max_color = int(ll_aux)
                         else:
                             if insert2color == 0:
-                                self.r[insert2row][insert2col] = int(ll_aux)
+                                r[insert2row][insert2col] = int(ll_aux)
                                 insert2color = (insert2color + 1) % 3
                             elif insert2color == 1:
-                                self.g[insert2row][insert2col] = int(ll_aux)
+                                g[insert2row][insert2col] = int(ll_aux)
                                 insert2color = (insert2color + 1) % 3
                             elif insert2color == 2:
-                                self.b[insert2row][insert2col] = int(ll_aux)
+                                b[insert2row][insert2col] = int(ll_aux)
                                 insert2color = (insert2color + 1) % 3
-                                insert2col = (insert2col + 1) % self.col
+                                insert2col = (insert2col + 1) % col
                                 if insert2col == 0:
                                     insert2row = insert2row + 1
             l = f.readline()
         f.close()
+
+        # Reshape the figure.
+        self.col = col / preduce
+        self.row = row / preduce
+        self.max_color = max_color * preduce * preduce
+        self.r = [[0 for i in xrange(self.col)] for j in xrange(self.row)]
+        self.g = [[0 for i in xrange(self.col)] for j in xrange(self.row)]
+        self.b = [[0 for i in xrange(self.col)] for j in xrange(self.row)]
+        for i in xrange(self.row):
+            for j in xrange(self.col):
+                for ir in xrange(preduce):
+                    for jr in xrange(preduce):
+                        self.r[i][j] += r[i * preduce + ir][j * preduce + jr]
+                        self.g[i][j] += g[i * preduce + ir][j * preduce + jr]
+                        self.b[i][j] += b[i * preduce + ir][j * preduce + jr]
 
     def get_row(self):
         """Get number of rows.

@@ -27,7 +27,8 @@ import os
 import sys
 from subprocess import call
 
-def run(model, f_names, build, pickle, check, solve, psolve, tmlim, memlim, debug):
+def run(model, f_names, build, pickle, check, solve, psolve, tmlim, memlim, D,
+        preduce, debug):
     """Run test.
     
     :param model: model type.
@@ -62,6 +63,15 @@ def run(model, f_names, build, pickle, check, solve, psolve, tmlim, memlim, debu
 
     :type memlim: integer.
 
+    :param preduce: number of vertical and horizontal pixels to be reduce to
+    one.
+
+    :type preduce: integer.
+
+    :param D: max distance between two points.
+
+    :type D: float.
+
     :param debug: enable the debug behavior.
 
     :type debug: boolean.
@@ -70,31 +80,37 @@ def run(model, f_names, build, pickle, check, solve, psolve, tmlim, memlim, debu
     import raterro
 
     if not f_names:
-        f_names = ['test/sample12x12.ppm']
+        f_names = ['test/sample.ppm']
     for f in f_names:
         print('Processing {0}.'.format(f))
         if build:
             print('Reading {0}. This will take some time.'.format(f))
             if model:
-                test = raterro.RAterro(f, 8)
+                test = raterro.RAterro(f, preduce, D)
             else:
-                test = aterro.Aterro(f, 8)
+                test = aterro.Aterro(f, preduce, D)
+            print('Sucessfully read {0}.'.format(f))
             print('Writing data. This will take some time.')
             test.wdf()
+            print('Sucessfully write data.')
         if pickle:
             print('Reading {0}. This will take some time.'.format(f))
             if model:
-                test = raterro.RAterro(f, 8)
+                test = raterro.RAterro(f, preduce, D)
             else:
-                test = aterro.Aterro(f, 8)
+                test = aterro.Aterro(f, preduce, D)
+            print('Sucessfully read {0}.'.format(f))
             print('Writing data. This will take some time.')
             test.wpf()
+            print('Sucessfully write data.')
         if psolve:
             if model:
-                raterro.bs_model(f.replace('.ppm', '_raterro.pickle'), tmlim,
+                raterro.bs_model(f.replace('.ppm',
+                    '{0}_raterro.pickle'.format(preduce)), tmlim,
                         memlim, True, False, debug)
             else:
-                aterro.bs_model(f.replace('.ppm', '_aterro.pickle'), tmlim,
+                aterro.bs_model(f.replace('.ppm',
+                    '{0}_aterro.pickle'.format(preduce)), tmlim,
                         memlim, True, False, debug)
         if model:
             m = 'raterro'
@@ -143,6 +159,10 @@ if __name__ == "__main__":
             help='solve the problem.')
     parser.add_argument('--psolve', action='store_true',
             help='solve the problem using pickle file.')
+    parser.add_argument('--maxd', type=int, default=400,
+            help='maxime distance between points that can be transporte.')
+    parser.add_argument('--preduce', type=int, default=1,
+            help='number of vertical and horizontal pixels to be reduce to one.')
     parser.add_argument('--tmlim', type=int, default=600,
             help='time limit (in seconds).')
     parser.add_argument('--memlim', type=int, default=512,
@@ -153,4 +173,4 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     run(args.b, args.f, args.data, args.pickle, args.check, args.solve,
-            args.psolve, args.tmlim, args.memlim, args.debug)
+            args.psolve, args.tmlim, args.memlim, args.maxd, args.preduce, args.debug)

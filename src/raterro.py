@@ -32,9 +32,11 @@ class RAterro(aterro.Aterro):
 
     Some conventions:
 
-    red: set J (source of soil)
-    green: set A (destination of soil)
-    blue: set R (restriction)
+        red: set J (source of soil)
+
+        green: set A (destination of soil)
+
+        blue: set R (restriction)
 
     Example:
 
@@ -44,20 +46,26 @@ class RAterro(aterro.Aterro):
         >>> test = raterro.RAterro('test/sample12x12.ppm.', 6)
         >>> test.wdf()
     """
-    def __init__(self, f_name, D):
+    def __init__(self, f_name, preduce, D):
         """Constructor
 
         :param f_name: name of ppm file.
 
         :type f_name: string.
 
+        :param preduce: number of vertical and horizontal pixels to be reduce to
+        one.
+
+        :type preduce: integer.
+
         :param D: max distance between two points.
 
         :type D: float.
         """
-        aterro.Aterro.__init__(self, f_name, D)
-        self.r = []
-        self.h = []
+        aterro.Aterro.__init__(self, f_name, preduce, D)
+        self.r = self._who_is_r()
+        self.h = self._who_is_h()
+        self.valid_paths = self._who_is_valid_path()
 
     def _is_r(self, p):
         """Return true if point belong to R.
@@ -73,13 +81,14 @@ class RAterro(aterro.Aterro):
         c = self.map.get_color(p)
         r = False
         try:
-            if c[0] == 0 and c[1] == 0 and 0 < c[2] <= 255:
+            if (c[0] < self.map.max_color / 10 and c[1] < self.map.max_color / 10
+                    and  0 < c[2] < self.map.max_color):
                 r = True
         except:
             pass
         return r
 
-    def who_is_r(self):
+    def _who_is_r(self):
         """Return a list of tuples of points belong to R.
 
         :return: points belong to R.
@@ -91,9 +100,9 @@ class RAterro(aterro.Aterro):
             for j in xrange(self.map.get_col()):
                 if self._is_r((i, j)):
                     aux.append((i, j))
-        self.j = aux
+        return aux
 
-    def who_is_h(self):
+    def _who_is_h(self):
         """Return a list of tuples of points not belong to J, A nor R.
 
         :return: points not belong to J, A nor R.
@@ -107,9 +116,9 @@ class RAterro(aterro.Aterro):
                         not self._is_a((i, j)) and
                         not self._is_p((i, j))):
                     aux.append((i, j))
-        self.h = aux
+        return aux
 
-    def try_line(self, o, d):
+    def _try_line(self, o, d):
         """Try line from o to d.
 
         :param o: point of origin.
@@ -166,7 +175,7 @@ class RAterro(aterro.Aterro):
                     error = error - 1
         return r
 
-    def try_path(self, o, p, d):
+    def _try_path(self, o, p, d):
         """Try Path from o to d passing in p.
 
         :param o: coordinates of the point of origin.
@@ -186,7 +195,7 @@ class RAterro(aterro.Aterro):
         :treturn: boolean.
         """
         r = True
-        if not self.try_line(o, p) or not self.try_line(p, d):
+        if not self._try_line(o, p) or not self._try_line(p, d):
             r = False
         return r
 
@@ -214,7 +223,7 @@ class RAterro(aterro.Aterro):
         :treturn: boolean.
         """
         valid = False
-        if self.try_path(o, p, d):
+        if self._try_path(o, p, d):
             if t == 1:
                 if (self.map.dl(o, p) < self.D and
                         self.map.dl(p, d) < self.D):
@@ -229,7 +238,7 @@ class RAterro(aterro.Aterro):
                     valid = True
         return valid
 
-    def who_is_valid_path(self):
+    def _who_is_valid_path(self):
         """ Return a list of tuples where the last position is a list of the
         possible pivot, for the origin and destinity specify by the other
         position of the tuple.
@@ -257,6 +266,9 @@ class RAterro(aterro.Aterro):
         :param t: type of distance
 
         :type t: integer
+
+        .. deprecated:: ef9b47c42656b1cf45ed2d18e5f1c2b1c659e1df
+        Use :meth:`wpf` instead.
         """
         sys.stdout = open(self.f_name.replace(
             ".ppm", "_raterro.dat"), 'w+')
@@ -353,11 +365,6 @@ class RAterro(aterro.Aterro):
         """
         import pickle
 
-        self.who_is_j()
-        self._phi()
-        self.who_is_a()
-        self._psi()
-        self.who_is_valid_path()
         if not pf_name:
             pf_name = self.f_name.replace('.ppm', '_raterro.pickle')
         with open(pf_name, 'wb') as f:
