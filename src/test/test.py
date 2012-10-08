@@ -27,8 +27,8 @@ import os
 import sys
 from subprocess import call
 
-def run(model, f_names, build, pickle, check, solve, psolve, tmlim, memlim, D,
-        preduce, debug):
+def run(model, f_names, build, pickle, check, solve, psolve, tmlim, memlim,
+        preduce, D, debug):
     """Run test.
     
     :param model: model type.
@@ -106,11 +106,11 @@ def run(model, f_names, build, pickle, check, solve, psolve, tmlim, memlim, D,
         if psolve:
             if model:
                 raterro.bs_model(f.replace('.ppm',
-                    '{0}_raterro.pickle'.format(preduce)), tmlim,
+                    '{0}_raterro.pickle'.format(preduce)), tmlim * 1000,
                         memlim, True, False, debug)
             else:
                 aterro.bs_model(f.replace('.ppm',
-                    '{0}_aterro.pickle'.format(preduce)), tmlim,
+                    '{0}_aterro.pickle'.format(preduce)), tmlim * 1000,
                         memlim, True, False, debug)
         if model:
             m = 'raterro'
@@ -159,7 +159,7 @@ if __name__ == "__main__":
             help='solve the problem.')
     parser.add_argument('--psolve', action='store_true',
             help='solve the problem using pickle file.')
-    parser.add_argument('--maxd', type=int, default=400,
+    parser.add_argument('--maxd', type=int, default=800,
             help='maxime distance between points that can be transporte.')
     parser.add_argument('--preduce', type=int, default=1,
             help='number of vertical and horizontal pixels to be reduce to one.')
@@ -173,4 +173,5 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     run(args.b, args.f, args.data, args.pickle, args.check, args.solve,
-            args.psolve, args.tmlim, args.memlim, args.maxd, args.preduce, args.debug)
+            args.psolve, args.tmlim, args.memlim, args.preduce, args.maxd,
+            args.debug)

@@ -63,9 +63,6 @@ class RAterro(aterro.Aterro):
         :type D: float.
         """
         aterro.Aterro.__init__(self, f_name, preduce, D)
-        self.r = self._who_is_r()
-        self.h = self._who_is_h()
-        self.valid_paths = self._who_is_valid_path()
 
     def _is_r(self, p):
         """Return true if point belong to R.
@@ -114,7 +111,7 @@ class RAterro(aterro.Aterro):
             for j in xrange(self.map.get_col()):
                 if (not self._is_j((i, j)) and
                         not self._is_a((i, j)) and
-                        not self._is_p((i, j))):
+                        not self._is_r((i, j))):
                     aux.append((i, j))
         return aux
 
@@ -162,11 +159,11 @@ class RAterro(aterro.Aterro):
             y = o[1]
             for x in xrange(o[0], d[0] + 1):
                 if steep:
-                    if self.is_r((x, y)):
+                    if self._is_r((x, y)):
                         r = False
                         break
                 else:
-                    if self.is_r((x, y)):
+                    if self._is_r((x, y)):
                         r = False
                         break
                 error = error + deltaerr
@@ -284,21 +281,21 @@ class RAterro(aterro.Aterro):
         print("set J := ");
         for i in xrange(r):
             for j in xrange(c):
-                if self.is_j((i, j)):
+                if self._is_j((i, j)):
                     print("({0}, {1})".format(i, j))
         print(";")
         print("set A := ");
         for i in xrange(r):
             for j in xrange(c):
-                if self.is_a((i, j)):
+                if self._is_a((i, j)):
                     print("({0}, {1})".format(i, j))
         print(";")
         print("set P := ");
         for i in xrange(r):
             for j in xrange(c):
-                if (not self.is_j((i, j))
-                        and not self.is_a((i, j))
-                        and not self.is_r((i, j))):
+                if (not self._is_j((i, j))
+                        and not self._is_a((i, j))
+                        and not self._is_r((i, j))):
                     print("({0}, {1})".format(i, j))
         print(";")
 
@@ -307,7 +304,7 @@ class RAterro(aterro.Aterro):
         begin = True
         for i in xrange(r):
             for j in xrange(c):
-                if self.is_j((i, j)):
+                if self._is_j((i, j)):
                     if begin:
                         begin = False
                         print("[{0}, {1}] {2}".format(
@@ -320,7 +317,7 @@ class RAterro(aterro.Aterro):
         begin = True
         for i in xrange(r):
             for j in xrange(c):
-                if self.is_a((i, j)):
+                if self._is_a((i, j)):
                     if begin:
                         begin = False
                         print("[{0}, {1}] {2}".format(
@@ -366,19 +363,38 @@ class RAterro(aterro.Aterro):
         import pickle
 
         if not pf_name:
-            pf_name = self.f_name.replace('.ppm', '_raterro.pickle')
+            pf_name = self.f_name.replace('.ppm',
+                    '{0}_raterro.pickle'.format(self.preduce))
+        print("Try to write data in {0}.".format(pf_name))
         with open(pf_name, 'wb') as f:
             pickle.dump({"m": self.map.get_row(), "n": self.map.get_col(),
                     "j": self.j, "a": self.a,
                     "phi": self.phi, "psi": self.psi,
                     "p": self.valid_paths}, f)
+        print("Data sucessfully write in {0}.".format(pf_name))
 
-def bs_model(f_name, debug = False):
+def bs_model(f_name, tmlim=3600000, memlim=1024, w2ascii=True, w2pickle=False, debug=False):
     """Build and solve the model.
     
-    :param f_name: name of file with data.
+    :param f_name: name of pickle file with data.
 
     :type f_name: string.
+    
+    :param tmlim: time limit, in milliseconds.
+
+    :type tmlim: integer, default 3600000.
+
+    :param memlim: memory limit, in megabytes.
+
+    :type memlim: integer, default 1024.
+
+    :param w2ascii: write the solution to a ASCII file.
+
+    :type w2ascii: boolean, default True.
+
+    :param w2pickle: write the solution to a pcikle file.
+
+    :type w2pickle: boolean, default False.
 
     :param debug: enable the debug behavior.
 
@@ -389,9 +405,11 @@ def bs_model(f_name, debug = False):
     if debug:
         print("Debug mode enable.")
 
+    print("Try to load data from {0}.".format(f_name))
     with open(f_name, 'rb') as f:
         print("Load {0}.".format(f_name))
         data = pickle.load(f)
+    print("Data sucessfully load from {0}.".format(f_name))
 
     len_j = len(data['j'])
     len_a = len(data['a'])
@@ -431,11 +449,31 @@ def bs_model(f_name, debug = False):
     if debug:
         glp_write_lp(prob, None, f_name.replace(".pickle", ".lp"))
     else:
+        glp_mem_limit(memlim)
+        param = glp_smcp()
+        glp_init_smcp(param)
+        param.tm_lim = tmlim
         glp_simplex(prob, None)
         z = glp_get_obj_val(prob)
-        x = []
-        for j in xrange(1, len(data['p']) + 1):
-            x.append(glp_get_col_prim(prob, j))
-        with open(f_name.replace(".pickle", ".spickle"), 'wb') as f:
-            pickle.dump({"z": z, "x": x}, f)
+        if w2ascii:
+            print("Try to write solution in {0}.".format(
+                    f_name.replace(".pickle", ".txt")))
+            with open(f_name.replace(".pickle", ".txt"), 'wb') as f:
+                for j in xrange(1, glp_get_num_cols(prob) + 1):
+                    aux = glp_get_col_prim(prob, j)
+                    if aux > 0:
+                        f.write("{0} {1}\n".format(glp_get_col_name(prob, j),
+                                aux))
+            print("Solution sucessfully write in {0}.".format(
+                    f_name.replace(".pickle", ".txt")))
+        if w2pickle:
+            x = []
+            for j in xrange(1, glp_get_num_cols(prob) + 1):
+                x.append(glp_get_col_prim(prob, j))
+            print("Try to write solution in {0}.".format(
+                    f_name.replace(".pickle", ".spickle")))
+            with open(f_name.replace(".pickle", ".spickle"), 'wb') as f:
+                pickle.dump({"z": z, "x": x}, f)
+            print("Solution sucessfully write in {0}.".format(
+                    f_name.replace(".pickle", ".spickle")))
     del prob

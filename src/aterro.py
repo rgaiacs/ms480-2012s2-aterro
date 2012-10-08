@@ -67,6 +67,8 @@ class Aterro:
         self.phi = self._phi()
         self.a = self._who_is_a()
         self.psi = self._psi()
+        self.r = self._who_is_r()
+        self.h = self._who_is_h()
         self.valid_paths = self._who_is_valid_path()
 
     def _is_j(self, p):
@@ -143,6 +145,27 @@ class Aterro:
                 if self._is_a((i, j)):
                     aux.append((i, j))
         return aux
+
+    def _is_r(self):
+        """Return true if point belong to R.
+
+        To be override.
+        """
+        return False
+
+    def _who_is_r(self):
+        """Return a list of tuples of points belong to R.
+
+        To be override.
+        """
+        return []
+
+    def _who_is_h(self):
+        """Return a list of tuples of points not belong to J, A nor R.
+
+        To be override.
+        """
+        return []
 
     def _path_is_valid(self, o, d, t=0):
         """Get if path between o and d is valid.
