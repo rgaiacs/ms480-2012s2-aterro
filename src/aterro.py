@@ -37,11 +37,8 @@ class Aterro:
 
     Example:
 
-    Create:
-
         >>> import aterro
-        >>> test = aterro.Aterro('test/minimal.ppm', 3)
-        >>> test.wdf()
+        >>> test = aterro.Aterro('test/sample.ppm', 100, 800)
     """
     def __init__(self, f_name, preduce, D):
         """Constructor

@@ -34,6 +34,7 @@
 
 # Python
 *.py[cod]
+*.txt
 
 # Sphinx
 src/doc/_build/*

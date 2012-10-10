@@ -43,8 +43,7 @@ class RAterro(aterro.Aterro):
     Create:
 
         >>> import aterro
-        >>> test = raterro.RAterro('test/sample12x12.ppm.', 6)
-        >>> test.wdf()
+        >>> test = raterro.RAterro('test/sample.ppm.', 100, 800)
     """
     def __init__(self, f_name, preduce, D):
         """Constructor
@@ -245,7 +244,6 @@ class RAterro(aterro.Aterro):
         :rtype: tuple of list.
         """
         aux = []
-
         for (j_i, j_j) in self.j:
             for (a_i, a_j) in self.a:
                 l = []
@@ -254,8 +252,7 @@ class RAterro(aterro.Aterro):
                             (j_i, j_j), (h_i, h_j), (a_i, a_j)):
                         l.append((h_i, h_j))
                 aux.append((j_i, j_j, a_i, a_j, l))
-
-        self.valid_paths = aux
+        return aux
 
     def wdf(self, t=0):
         """Write data file.
@@ -428,7 +425,7 @@ def bs_model(f_name, tmlim=3600000, memlim=1024, w2ascii=True, w2pickle=False, d
 
     glp_set_obj_dir(prob, GLP_MAX)
     for path in data['p']:
-        if not path[4]:
+        if path[4]:
             count = 0
             col = glp_add_cols(prob, 1)
             glp_set_col_name(prob, col, "{0}".format(path[0:4]))
@@ -453,7 +450,7 @@ def bs_model(f_name, tmlim=3600000, memlim=1024, w2ascii=True, w2pickle=False, d
         param = glp_smcp()
         glp_init_smcp(param)
         param.tm_lim = tmlim
-        glp_simplex(prob, None)
+        glp_simplex(prob, param)
         z = glp_get_obj_val(prob)
         if w2ascii:
             print("Try to write solution in {0}.".format(
