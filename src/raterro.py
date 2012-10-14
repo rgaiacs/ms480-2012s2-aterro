@@ -23,7 +23,6 @@
 
 import sys
 import ppm
-from glpk.glpkpi import *
 import aterro
 
 class RAterro(aterro.Aterro):
@@ -62,6 +61,8 @@ class RAterro(aterro.Aterro):
         :type D: float.
         """
         aterro.Aterro.__init__(self, f_name, preduce, D)
+        self.r = []
+        self.h = []
 
     def _is_r(self, p):
         """Return true if point belong to R.
@@ -259,11 +260,26 @@ class RAterro(aterro.Aterro):
 
         :param t: type of distance
 
+        * ``0``: the distance between centers.
+        * ``1``: the minimum distance.
+        * ``2``: the maximum distance.
+
         :type t: integer
 
         .. deprecated:: ef9b47c42656b1cf45ed2d18e5f1c2b1c659e1df
-        Use :meth:`wpf` instead.
+        
+            Use :meth:`wpf` instead.
         """
+        # Build attributes.
+        if not self.info:
+            self.j = self._who_is_j()
+            self.phi = self._phi()
+            self.a = self._who_is_a()
+            self.psi = self._psi()
+            self.r = self._who_is_r()
+            self.h = self._who_is_h()
+            self.valid_paths = self._who_is_valid_path()
+
         sys.stdout = open(self.f_name.replace(
             ".ppm", "_raterro.dat"), 'w+')
         print("data;")
@@ -351,17 +367,34 @@ class RAterro(aterro.Aterro):
     def wpf(self, pf_name = None):
         """Write pickle file.
 
-        :param pf_name: name to use for the pickle file.
+        :param d_type: type of the distance to be use.
 
-        If None, than self.f_name is used.
+        * ``0``: the distance between centers.
+        * ``1``: the minimum distance.
+        * ``2``: the maximum distance.
+
+        :type d_type: integer.
+
+        :param pf_name: name to use for the pickle file.  If None, than
+            self.f_name is used.
 
         :type pf_name: string.
         """
         import pickle
 
+        # Build attributes.
+        if not self.info:
+            self.j = self._who_is_j()
+            self.phi = self._phi()
+            self.a = self._who_is_a()
+            self.psi = self._psi()
+            self.r = self._who_is_r()
+            self.h = self._who_is_h()
+            self.valid_paths = self._who_is_valid_path(d_type)
+
         if not pf_name:
             pf_name = self.f_name.replace('.ppm',
-                    '{0}_raterro.pickle'.format(self.preduce))
+                    '_raterro{0}-{1}.pickle'.format(self.preduce, d_type))
         print("Try to write data in {0}.".format(pf_name))
         with open(pf_name, 'wb') as f:
             pickle.dump({"m": self.map.get_row(), "n": self.map.get_col(),
@@ -369,108 +402,3 @@ class RAterro(aterro.Aterro):
                     "phi": self.phi, "psi": self.psi,
                     "p": self.valid_paths}, f)
         print("Data sucessfully write in {0}.".format(pf_name))
-
-def bs_model(f_name, tmlim=3600000, memlim=1024, w2ascii=True, w2pickle=False, debug=False):
-    """Build and solve the model.
-    
-    :param f_name: name of pickle file with data.
-
-    :type f_name: string.
-    
-    :param tmlim: time limit, in milliseconds.
-
-    :type tmlim: integer, default 3600000.
-
-    :param memlim: memory limit, in megabytes.
-
-    :type memlim: integer, default 1024.
-
-    :param w2ascii: write the solution to a ASCII file.
-
-    :type w2ascii: boolean, default True.
-
-    :param w2pickle: write the solution to a pcikle file.
-
-    :type w2pickle: boolean, default False.
-
-    :param debug: enable the debug behavior.
-
-    :type debug: boolean.
-    """
-    import pickle
-
-    if debug:
-        print("Debug mode enable.")
-
-    print("Try to load data from {0}.".format(f_name))
-    with open(f_name, 'rb') as f:
-        print("Load {0}.".format(f_name))
-        data = pickle.load(f)
-    print("Data sucessfully load from {0}.".format(f_name))
-
-    len_j = len(data['j'])
-    len_a = len(data['a'])
-    ind = intArray(len_j + len_a + 1)
-    val = doubleArray(len_j + len_a + 1)
-    prob = glp_create_prob()
-    glp_create_index(prob)
-
-    glp_add_rows(prob, len_j + len_a)
-    for i in xrange(len_j):
-        glp_set_row_name(prob, i + 1, "J{0}".format(data['j'][i]))
-        glp_set_row_bnds(prob, i + 1, GLP_UP, 0.0, data['phi'][i])
-    for i in xrange(len_a):
-        glp_set_row_name(prob, len_j + i + 1, "A{0}".format(data['a'][i]))
-        glp_set_row_bnds(prob, len_j + i + 1, GLP_UP, 0.0, data['psi'][i])
-
-    glp_set_obj_dir(prob, GLP_MAX)
-    for path in data['p']:
-        if path[4]:
-            count = 0
-            col = glp_add_cols(prob, 1)
-            glp_set_col_name(prob, col, "{0}".format(path[0:4]))
-            glp_set_col_bnds(prob, col, GLP_LO, 0.0, 0.0)
-            for k in xrange(len_j):
-                if path[0] == data['j'][k][0] and path[1] == data['j'][k][1]:
-                    count = count + 1
-                    ind[count] = glp_find_row(prob, "J{0}".format(data['j'][k]))
-                    val[count] = data['phi'][k]
-            for k in xrange(len_a):
-                if path[4] == data['a'][k][0] and path[5] == data['a'][k][1]:
-                    count = count + 1
-                    ind[count] = glp_find_row(prob, "A{0}".format(data['a'][k]))
-                    val[count] = data['psi'][k]
-            glp_set_mat_col(prob, col, count, ind, val)
-            glp_set_obj_coef(prob, col, 1.0)
-
-    if debug:
-        glp_write_lp(prob, None, f_name.replace(".pickle", ".lp"))
-    else:
-        glp_mem_limit(memlim)
-        param = glp_smcp()
-        glp_init_smcp(param)
-        param.tm_lim = tmlim
-        glp_simplex(prob, param)
-        z = glp_get_obj_val(prob)
-        if w2ascii:
-            print("Try to write solution in {0}.".format(
-                    f_name.replace(".pickle", ".txt")))
-            with open(f_name.replace(".pickle", ".txt"), 'wb') as f:
-                for j in xrange(1, glp_get_num_cols(prob) + 1):
-                    aux = glp_get_col_prim(prob, j)
-                    if aux > 0:
-                        f.write("{0} {1}\n".format(glp_get_col_name(prob, j),
-                                aux))
-            print("Solution sucessfully write in {0}.".format(
-                    f_name.replace(".pickle", ".txt")))
-        if w2pickle:
-            x = []
-            for j in xrange(1, glp_get_num_cols(prob) + 1):
-                x.append(glp_get_col_prim(prob, j))
-            print("Try to write solution in {0}.".format(
-                    f_name.replace(".pickle", ".spickle")))
-            with open(f_name.replace(".pickle", ".spickle"), 'wb') as f:
-                pickle.dump({"z": z, "x": x}, f)
-            print("Solution sucessfully write in {0}.".format(
-                    f_name.replace(".pickle", ".spickle")))
-    del prob

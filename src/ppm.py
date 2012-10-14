@@ -32,7 +32,7 @@ class PPM:
     Load ppm file:
     
         >>> import ppm
-        >>> test = ppm.PPM('test/sample12x12.ppm')
+        >>> test = ppm.PPM('test/sample.ppm', 100)
     """
     def __init__(self, f_name, preduce):
         """Contructor
@@ -207,7 +207,7 @@ class PPM:
         return (self.b[p[0]][p[1]])
 
     def dl(self, o, d):
-        """Compute distance dl between o and d.
+        """Compute min distance between o and d.
 
         :param o: coordinates of origin point.
 
@@ -221,11 +221,24 @@ class PPM:
 
         :rtype: float.
         """
-        # TODO Write function.
-        pass
+        dist = float('Infinity')
+        # Same point.
+        if o[0] == d[0] and o[1] == d[1]:
+            dist = 0
+        else:
+            # Horizontal align.
+            if o[0] == d[0]:
+                dist = abs(o[1] - d[1]) - 1
+            # Vertical align.
+            elif o[1] == d[1]:
+                dist = abs(o[0] - d[0]) - 1
+            else:
+                dist = math.sqrt((abs(o[0] - d[0]) - 1)**2 +
+                        (abs(o[1] - d[1]) - 1)**2)
+        return dist
 
     def du(self, o, d):
-        """Compute distance du between o and a.
+        """Compute max distance between o and a.
 
         :param o: coordinates of origin point.
 
@@ -239,11 +252,24 @@ class PPM:
 
         :rtype: float.
         """
-        # TODO Write function.
-        pass
+        dist = float('Infinity')
+        # Same point.
+        if o[0] == d[0] and o[1] == d[1]:
+            dist = 0
+        else:
+            # Horizontal align.
+            if o[0] == d[0]:
+                dist = abs(o[1] - d[1]) + 1
+            # Vertical align.
+            elif o[1] == d[1]:
+                dist = abs(o[0] - d[0]) + 1
+            else:
+                dist = math.sqrt((abs(o[0] - d[0]) + 1)**2 +
+                        (abs(o[1] - d[1]) + 1)**2)
+        return dist
 
     def dc(self, o, d):
-        """Compute distance dc between o and d.
+        """Compute distance between the centers of o and d.
 
         :param o: coordinates of origin point.
 
