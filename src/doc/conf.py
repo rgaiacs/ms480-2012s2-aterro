@@ -12,6 +12,7 @@
 # serve to show the default.
 
 import sys, os
+import imp
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
@@ -20,6 +21,8 @@ import sys, os
 parentdir = os.path.dirname(
         os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0,parentdir)
+# Include Sage file.
+imp.load_source('aaterro', '../aaterro.sage')
 
 # -- General configuration -----------------------------------------------------
 

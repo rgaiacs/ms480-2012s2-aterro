@@ -222,23 +222,34 @@ class RAterro(aterro.Aterro):
         valid = False
         if self._try_path(o, p, d):
             if t == 1:
-                if (self.map.dl(o, p) < self.D and
-                        self.map.dl(p, d) < self.D):
+                o2p = self.map.dl(o, p)
+                p2d = self.map.dl(p, d)
+                if (o2p < self.D and p2d < self.D):
                     valid = True
             elif t == 2:
-                if (self.map.du(o, p) < self.D and
-                        self.map.du(p, d) < self.D):
+                o2p = self.map.du(o, p)
+                p2d = self.map.du(p, d)
+                if (o2p < self.D and p2d < self.D):
                     valid = True
             else:
-                if (self.map.dc(o, p) < self.D and
-                        self.map.dc(p, d) < self.D):
+                o2p = self.map.dc(o, p)
+                p2d = self.map.dc(p, d)
+                if (o2p < self.D and p2d < self.D):
                     valid = True
-        return valid
+        return (valid, o2p + p2d)
 
-    def _who_is_valid_path(self):
+    def _who_is_valid_path(self, t):
         """ Return a list of tuples where the last position is a list of the
         possible pivot, for the origin and destinity specify by the other
         position of the tuple.
+
+        :param t: type of distance.
+
+        * ``0``: the distance between centers.
+        * ``1``: the minimum distance.
+        * ``2``: the maximum distance.
+
+        :type t: integer
 
         :return: valid paths.
 
@@ -247,12 +258,14 @@ class RAterro(aterro.Aterro):
         aux = []
         for (j_i, j_j) in self.j:
             for (a_i, a_j) in self.a:
-                l = []
+                old_path = (None, None, None, None, None, None,
+                        float('Infinity'))
                 for (h_i, h_j) in self.h:
-                    if self._path_is_valid(
-                            (j_i, j_j), (h_i, h_j), (a_i, a_j)):
-                        l.append((h_i, h_j))
-                aux.append((j_i, j_j, a_i, a_j, l))
+                    try_path = self._path_is_valid(
+                            (j_i, j_j), (h_i, h_j), (a_i, a_j), t)
+                    if try_path[0] and try_path[6] < old_path[6]:
+                        old_path = try_path
+                aux.append(old_path)
         return aux
 
     def wdf(self, t=0):

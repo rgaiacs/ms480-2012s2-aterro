@@ -9,3 +9,9 @@ Implementação
 
 .. automodule:: raterro
    :members:
+
+.. automodule:: aaterro
+   :members:
+
+.. automodule:: modelo
+   :members:

@@ -166,15 +166,18 @@ class Aterro:
         """
         valid = False
         if t == 1:
-            if self.map.dl(o, d) < self.D:
+            dist = self.map.dl(o, d)
+            if dist < self.D:
                 valid = True
         elif t == 2:
-            if self.map.du(o, d) < self.D:
+            dist = self.map.du(o, d)
+            if dist < self.D:
                 valid = True
         else:
-            if self.map.dc(o, d) < self.D:
+            dist = self.map.dc(o, d)
+            if dist < self.D:
                 valid = True
-        return valid
+        return (valid, dist)
 
     def _who_is_valid_path(self, t):
         """ Return a list of all valid paths.
@@ -194,9 +197,10 @@ class Aterro:
         aux = []
         for (j_i, j_j) in self.j:
             for (a_i, a_j) in self.a:
-                if self._path_is_valid(
-                        (j_i, j_j), (a_i, a_j), t):
-                    aux.append((j_i, j_j, a_i, a_j))
+                try_path = self._path_is_valid(
+                        (j_i, j_j), (a_i, a_j), t)
+                if try_path[0]:
+                    aux.append((j_i, j_j, a_i, a_j, try_path[1]))
         return aux
 
     def _phi(self):

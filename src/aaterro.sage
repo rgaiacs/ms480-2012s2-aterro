@@ -133,9 +133,9 @@ class AAterro(raterro.RAterro):
 
         :type D: float.
         """
+        raterro.RAterro.__init__(self, f_name, preduce, D)
         self.c = c
         self.c_r = r
-        raterro.RAterro.__init__(self, f_name, preduce, D)
 
     def _who_is_valid_path(self):
         """ Return a list of tuples where the last position is a list of the

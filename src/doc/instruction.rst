@@ -8,6 +8,7 @@ Esse projeto foi desenvolvido utilizando apenas software livre:
 *   Python-GLPK, `http://www.dcc.fc.up.pt/~jpp/code/python-glpk/
     <http://www.dcc.fc.up.pt/~jpp/code/python-glpk/>`_;
 *   Swig, necessário para o Python-GLPK,
+*   Sage, `http://sagemath.org/ <http://sagemath.org/>`_;
 *   Inkscape, para construção dos mapas,
 *   ImageMagick, para conversão dos mapas para o formato ppm,
 *   LaTeX, para o relatório,
@@ -17,6 +18,9 @@ Para instalar os softwares utilizados em um GNU/Linux que utilize o sistemas de
 pacotes `.deb`, e.g., Debian, Ubuntu, Mint, pode-se utilizar: ::
 
     # apt-get install python python-glpk
+    # apt-add-repository -y ppa:aims/sagemath
+    # apt-get update
+    # apt-get install sagemath-upstream-binary
 
 Para manipular (criar) novos testes: ::
 
