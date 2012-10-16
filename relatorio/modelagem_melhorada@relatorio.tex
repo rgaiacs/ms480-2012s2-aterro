@@ -1,0 +1,82 @@
+% Copyright (c) 2012 Raniere Silva <r.gaia.cs@gmail.com>
+% Copyright (c) 2012 Fernando Cezarino <feolce@gmail.com>
+% Copyright (c) 2012 Ana Paula Diniz Marques <anapdinizm@gmail.com>
+% Copyright (c) 2012 Camile Kunz <camileknz@gmail.com>
+% Copyright (c) 2012 Ana Flavia <anaflavia.c.lima@gmail.com>
+%
+% This file is part of 'MS480 - 2012S2 - Aterro com Obstáculo'.
+%
+% 'MS480 - 2012S2 - Aterro com Obstáculo' is licensed under the Creative
+% Commons Attribution-ShareAlike 3.0 Unported License. To view a copy of
+% this license, visit http://creativecommons.org/licenses/by-sa/3.0/.
+%
+% 'MS480 - 2012S2 - Aterro com Obstáculo' is distributed in the hope
+% that it will be useful, but WITHOUT ANY WARRANTY; without even the
+% implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+% PURPOSE.
+
+\section{Modelagem Aperfei\c{c}oada}
+A seguir, aperfei\c{c}oamos as modelagens apresentada na se\c{c}\~{a}o anterior.
+
+\subsection{Problema sem obstáculo}
+Na modelagem \eqref{eq:model_without_obs}, utilizamos $|J| |A|$ vari\'{a}veis.
+Pela restri\c{c}\~{a}o \eqref{eq:model_without_obs:max_dist} observamos que
+parte destas vari\'{a}veis s\~{a}o fixadas em zero uma vez que $d(x, y)$ \'{e}
+um dado do problema.
+
+\'{E} poss\'{i}vel construir o problema sem as vari\'{a}veis que s\~{a}o nulas
+por $d(x, y) > D$ de modo a reduzir o consumo de mem\'{o}ria e eventualmente
+aumentar a velocidade.
+
+\subsection{Problema com obstáculo circular}
+Na modelagem \eqref{eq:model_with_obs_nl}, utilizamos $|J| |A| |P|$
+vari\'{a}veis. Assim como no problema sem obst\'{a}culo, observamos que pelas
+restri\c{c}\~{o}es \eqref{eq:model_with_obs_nl:max_dist} e
+\eqref{eq:model_with_obs_nl:dist_obs} parte das vari\'{a}veis s\~{a}o fixadas em
+zero.
+
+\'{E} poss\'{i}vel construir o modelo sem as vari\'{a}veis que s\~{a}o nulas de
+modo a reduzir o consumo de mem\'{o}ria e eventualmente aumentar a velocidade.
+
+Consideremos agora os pontos $\hat{x} \in J$, $\hat{y} \in A$, $\hat{z},
+\tilde{z} \in P$, tal que
+\begin{align*}
+    d(\hat{x}, \hat{z}) &< D, & d(\hat{y}, \hat{z}) &< D, \\
+    l(\hat{x}, \hat{z}) &> r, & l(\hat{y}, \hat{z}) &> r, \\
+    d(\hat{x}, \tilde{z}) &< D, & d(\hat{y}, \tilde{z}) &< D, \\
+    l(\hat{x}, \tilde{z}) &> r, & l(\hat{y}, \tilde{z}) &> r
+\end{align*}
+e
+\begin{align*}
+    d(\hat{x}, \hat{z}) + d(\hat{y}, \hat{z}) &< d(\hat{x}, \hat{z}) +
+    d(\hat{y}, \hat{z}).
+\end{align*}
+Pela modelagem \eqref{eq:model_with_obs_nl}, verifica-se que
+$\epsilon_{\hat{x}\hat{z}\hat{y}}$ e $\epsilon_{\hat{x}\tilde{z}\hat{y}}$
+possuem o mesmo peso na fun\c{c}\~{a}o objetivo e portanto os seguintes valores
+s\~{a}o ``equiprov\'{a}veis'' na solu\c{c}\~{a}o \'{o}tima:
+\begin{align*}
+    \epsilon_{\hat{x}\hat{z}\hat{y}} &= \min(\phi(\hat{x}), \psi(\hat{y})), &
+    \epsilon_{\hat{x}\tilde{z}\hat{y}} &= 0, \\
+    \epsilon_{\hat{x}\hat{z}\hat{y}} &= 0, &
+    \epsilon_{\hat{x}\tilde{z}\hat{y}} &= \min(\phi(\hat{x}), \psi(\hat{y})), \\
+    \epsilon_{\hat{x}\hat{z}\hat{y}} &= 0.5 \min(\phi(\hat{x}), \psi(\hat{y})), &
+    \epsilon_{\hat{x}\tilde{z}\hat{y}} &= 0.5 \min(\phi(\hat{x}), \psi(\hat{y})).
+\end{align*}
+
+Seria interessante que na solu\c{c}\~{a}o \'{o}tima apenas ocorresse
+\begin{align*}
+    \epsilon_{\hat{x}\hat{z}\hat{y}} &= \min(\phi(\hat{x}), \psi(\hat{y})), &
+    \epsilon_{\hat{x}\tilde{z}\hat{y}} &= 0,
+\end{align*}
+pois neste caso a dist\^{a}ncia entre $\hat{x}$ e $\hat{y}$ \'{e}
+``m\'{i}nima''. Uma vez que $d(x, z)$ e $d(y, z)$ s\~{a}o dados do problema, \'{e}
+poss\'{i}vel construir o modelo com apenas uma vari\'{a}vel para o par
+$(x, y)$ e utilizando $z$ tal que $d(x, z) + d(y, z)$ seja m\'{i}nimo para $(x,
+y)$. Ao fazer isso, o n\'{u}mero de vari\'{a}veis do problema com obst\'{a}culo
+passa a ser da ordem de $|J| |A|$ que \'{e} a mesma ordem do problema sem
+obst\'{a}culo.
+
+\subsection{Problema com obst\'{a}culo geral}
+Tudo o que foi dito para o problema com obst\'{a}culo circular \'{e} facilmente
+aplicado para o problema com obst\'{a}culo geral.
