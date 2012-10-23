@@ -22,6 +22,8 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 import raterro
+import math
+from scipy.optimize import fmin_cobyla
 
 def minimize_path(x, y, c, r):
     """Solve the problem of minimize the distance between ``x`` and ``y`` not
@@ -49,19 +51,18 @@ def minimize_path(x, y, c, r):
 
     Example:
 
-        sage: minimize_path((-2,0), (2,0), (0,0), 1)
-        sage: minimize_path((-2,1), (2,1), (0,0), 1)
-        sage: minimize_path((-2,2), (2,2), (0,0), 1)
+        >>> minimize_path((-2,0), (2,0), (0,0), 1)
+        >>> minimize_path((-2,1), (2,1), (0,0), 1)
+        >>> minimize_path((-2,2), (2,2), (0,0), 1)
     """
     # To "simplify" the problem, put the point ``c`` at (0, 0).
     a = (x[0] - c[0], x[1] - c[1])
     b = (y[0] - c[0], y[1] - c[1])
 
-    x = var('x')
-    f = lambda p: sqrt((p[0] - a[0])^2 + (p[1] - a[1])^2) + sqrt((p[0] - b[0])^2 + (p[1] - b[1])^2)
-    c_1 = lambda p: -r^2 * ((p[0] - a[0])^2 + (p[1] - a[1])^2) + (p[0] * a[1] - p[1] * a[0])^2 - .1
-    c_2 = lambda p: -r^2 * ((p[0] - b[0])^2 + (p[1] - b[1])^2) + (p[0] * b[1] - p[1] * b[0])^2 - .1
-    sol = minimize_constrained(f, [c_1, c_2], [1,1])
+    f = lambda p: math.sqrt((p[0] - a[0])**2 + (p[1] - a[1])**2) + math.sqrt((p[0] - b[0])**2 + (p[1] - b[1])**2)
+    c_1 = lambda p: -r**2 * ((p[0] - a[0])**2 + (p[1] - a[1])**2) + (p[0] * a[1] - p[1] * a[0])**2 - .1
+    c_2 = lambda p: -r**2 * ((p[0] - b[0])**2 + (p[1] - b[1])**2) + (p[0] * b[1] - p[1] * b[0])**2 - .1
+    sol = fmin_cobyla(f, [1,1], (c_1, c_2))
 
     # Return the point to it's origina position.
     sol = (sol[0] + c[0], sol[1] + c[1])
@@ -92,11 +93,13 @@ def show_mq(x, y, c, r):
 
     Example:
 
-        sage: show_mq((-2,0), (2,0), (0,0), 1)
-        sage: show_mq((-2,1), (2,1), (0,0), 1)
-        sage: show_mq((-2,2), (2,2), (0,0), 1)
+        >>> show_mq((-2,0), (2,0), (0,0), 1)
+        >>> show_mq((-2,1), (2,1), (0,0), 1)
+        >>> show_mq((-2,2), (2,2), (0,0), 1)
     """
-    return circle(c, r) + line([x, minimize_path(x, y, c, r), y])
+    # TODO Replace the folowing line with matplotlib.
+    # return circle(c, r) + line([x, minimize_path(x, y, c, r), y])
+    raise NotImplementedError('need rewrite the code with matplotlib')
 
 class AAterro(raterro.RAterro):
     """AAterro Aterro with (analytic) restriction
@@ -153,3 +156,42 @@ class AAterro(raterro.RAterro):
                 if self._path_is_valid(j, h, a):
                     aux.append(j, a, [h])
         return aux
+
+    def wpf(self, pf_name = None):
+        """Write pickle file.
+
+        :param d_type: type of the distance to be use.
+
+        * ``0``: the distance between centers.
+        * ``1``: the minimum distance.
+        * ``2``: the maximum distance.
+
+        :type d_type: integer.
+
+        :param pf_name: name to use for the pickle file.  If None, than
+            self.f_name is used.
+
+        :type pf_name: string.
+        """
+        import pickle
+
+        # Build attributes.
+        if not self.info:
+            self.j = self._who_is_j()
+            self.phi = self._phi()
+            self.a = self._who_is_a()
+            self.psi = self._psi()
+            self.r = self._who_is_r()
+            self.h = self._who_is_h()
+            self.valid_paths = self._who_is_valid_path(d_type)
+
+        if not pf_name:
+            pf_name = self.f_name.replace('.ppm',
+                    '_aaterro{0}-{1}.pickle'.format(self.preduce, d_type))
+        print("Try to write data in {0}.".format(pf_name))
+        with open(pf_name, 'wb') as f:
+            pickle.dump({"m": self.map.get_row(), "n": self.map.get_col(),
+                    "j": self.j, "a": self.a,
+                    "phi": self.phi, "psi": self.psi,
+                    "p": self.valid_paths}, f)
+        print("Data sucessfully write in {0}.".format(pf_name))

@@ -263,7 +263,7 @@ class RAterro(aterro.Aterro):
                 for (h_i, h_j) in self.h:
                     try_path = self._path_is_valid(
                             (j_i, j_j), (h_i, h_j), (a_i, a_j), t)
-                    if try_path[0] and try_path[6] < old_path[6]:
+                    if try_path[0] and try_path[1] < old_path[1]:
                         old_path = try_path
                 aux.append(old_path)
         return aux
@@ -377,7 +377,7 @@ class RAterro(aterro.Aterro):
         sys.stdout.close()
         sys.stdout = sys.__stdout__
 
-    def wpf(self, pf_name = None):
+    def wpf(self, d_type=0, pf_name = None):
         """Write pickle file.
 
         :param d_type: type of the distance to be use.
