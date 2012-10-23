@@ -78,6 +78,8 @@ def run(model, f_names, build, pickle, check, solve, psolve, tmlim, memlim,
     """
     import aterro
     import raterro
+    import aaterro
+    import modelo
 
     if not f_names:
         f_names = ['test/sample.ppm']
@@ -85,39 +87,50 @@ def run(model, f_names, build, pickle, check, solve, psolve, tmlim, memlim,
         print('Processing {0}.'.format(f))
         if build:
             print('Reading {0}. This will take some time.'.format(f))
-            if model:
-                test = raterro.RAterro(f, preduce, D)
-            else:
+            if not model:
                 test = aterro.Aterro(f, preduce, D)
+            if model == 1:
+                test = raterro.RAterro(f, preduce, D)
+            if model == 2:
+                test = aaterro.AAterro(f, preduce, D)
             print('Sucessfully read {0}.'.format(f))
             print('Writing data. This will take some time.')
             test.wdf()
             print('Sucessfully write data.')
         if pickle:
             print('Reading {0}. This will take some time.'.format(f))
-            if model:
-                test = raterro.RAterro(f, preduce, D)
-            else:
+            if not model:
                 test = aterro.Aterro(f, preduce, D)
+            if model == 1:
+                test = raterro.RAterro(f, preduce, D)
+            if model == 2:
+                test = aaterro.AAterro(f, preduce, D)
             print('Sucessfully read {0}.'.format(f))
             print('Writing data. This will take some time.')
             test.wpf()
             print('Sucessfully write data.')
         if psolve:
-            if model:
-                raterro.bs_model(f.replace('.ppm',
-                    '{0}_raterro.pickle'.format(preduce)), tmlim * 1000,
-                        memlim, True, False, debug)
-            else:
-                aterro.bs_model(f.replace('.ppm',
+            if not model:
+                modelo.abs(f.replace('.ppm',
                     '{0}_aterro.pickle'.format(preduce)), tmlim * 1000,
                         memlim, True, False, debug)
-        if model:
-            m = 'raterro'
-            f = f.replace('.ppm', '_raterro.ppm')
-        else:
+            if model == 1:
+                modelo.rbs(f.replace('.ppm',
+                    '{0}_raterro.pickle'.format(preduce)), tmlim * 1000,
+                        memlim, True, False, debug)
+            if model == 2:
+                modelo.rbs(f.replace('.ppm',
+                    '{0}_aaterro.pickle'.format(preduce)), tmlim * 1000,
+                        memlim, True, False, debug)
+        if not model:
             m = 'aterro'
             f = f.replace('.ppm', '_aterro.ppm')
+        if model == 1:
+            m = 'raterro'
+            f = f.replace('.ppm', '_raterro.ppm')
+        if model == 2:
+            m = 'aaterro'
+            f = f.replace('.ppm', '_aaterro.ppm')
         if check:
             s = 'glpsol -m {0}.mod -d {1} --log {2} --tmlim {3} '\
                     '--memlim {4} --check'.format(m, f.replace('.ppm',
@@ -136,6 +149,13 @@ def run(model, f_names, build, pickle, check, solve, psolve, tmlim, memlim,
 
 
 if __name__ == "__main__":
+    """Call test from the command line interpreter. ::
+
+        $ python test/test.py --pickle --psolve --preduce 100
+        $ python test/test.py -b 1 --pickle --psolve --preduce 100
+        $ python test/test.py -b 2 --pickle --psolve --preduce 100
+    """
+
     import argparse
 
     # See functions at parent directory.
@@ -145,18 +165,18 @@ if __name__ == "__main__":
 
     # Parse of flags.
     parser = argparse.ArgumentParser(description='Test for MS480.')
-    parser.add_argument('-b', action='store_true',
-            help='using barrier in the model.')
+    parser.add_argument('-b', type=int, default=0,
+            help='using barrier in the model with contiuo space (1) or with discrete space (2).')
     parser.add_argument('--data', action='store_true',
-            help='build the data file based on ppm file.')
+            help='build the data file based on ppm file. (deprecated)')
     parser.add_argument('--debug', action='store_true',
             help='enable the debug mode.')
     parser.add_argument('--pickle', action='store_true',
             help='build the data file, with pickle, based on ppm file.')
     parser.add_argument('--check', action='store_true',
-            help='only check for error the problem.')
+            help='only check for error the problem. (deprecated)')
     parser.add_argument('--solve', action='store_true',
-            help='solve the problem.')
+            help='solve the problem. (deprecated)')
     parser.add_argument('--psolve', action='store_true',
             help='solve the problem using pickle file.')
     parser.add_argument('--maxd', type=int, default=800,
