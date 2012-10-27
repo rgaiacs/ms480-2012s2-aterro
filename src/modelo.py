@@ -103,6 +103,7 @@ def abs(f_name, tmlim=3600000, memlim=1024, w2ascii=True, w2pickle=False, debug=
             print("Solution sucessfully write in {0}.".format(
                     f_name.replace(".pickle", ".spickle")))
     del prob
+    return z
 
 def rbs(f_name, tmlim=3600000, memlim=1024, w2ascii=True, w2pickle=False, debug=False):
     """Build and solve the model.
@@ -208,3 +209,4 @@ def rbs(f_name, tmlim=3600000, memlim=1024, w2ascii=True, w2pickle=False, debug=
             print("Solution sucessfully write in {0}.".format(
                     f_name.replace(".pickle", ".spickle")))
     del prob
+    return z

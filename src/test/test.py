@@ -26,6 +26,8 @@
 import os
 import sys
 from subprocess import call
+import time
+import sqlite3
 
 def run(model, f_names, build, pickle, check, solve, psolve, tmlim, memlim,
         preduce, D, debug):
@@ -81,6 +83,23 @@ def run(model, f_names, build, pickle, check, solve, psolve, tmlim, memlim,
     import aaterro
     import modelo
 
+    con = sqlite3.connect('test/test.db')
+    c = con.cursor()
+    try:
+        c.executescript("""
+                CREATE TABLE benchmark (
+                id INTEGER PRIMARY KEY,
+                date TEXT,
+                problem TEXT,
+                reduce INTEGER,
+                solver TEXT,
+                f_max REAL,
+                time REAL);
+                """)
+        con.commit()
+    except:
+        pass
+
     if not f_names:
         f_names = ['test/sample.ppm']
     for f in f_names:
@@ -111,17 +130,56 @@ def run(model, f_names, build, pickle, check, solve, psolve, tmlim, memlim,
             print('Sucessfully write data.')
         if psolve:
             if not model:
-                modelo.abs(f.replace('.ppm',
+                s = time.time()
+                f_max = modelo.abs(f.replace('.ppm',
                     '{0}_aterro.pickle'.format(preduce)), tmlim * 1000,
                         memlim, True, False, debug)
+                s = time.time() - s
+                c.execute("""
+                        INSERT INTO benchmark VALUES (
+                        NULL,
+                        datetime('now'),
+                        'aterro',
+                        ?,
+                        'aterro',
+                        ?,
+                        ?)
+                        """, (preduce, f_max, s))
+                con.commit()
             if model == 1:
-                modelo.rbs(f.replace('.ppm',
+                s = time.time()
+                f_max = modelo.rbs(f.replace('.ppm',
                     '{0}_raterro.pickle'.format(preduce)), tmlim * 1000,
                         memlim, True, False, debug)
+                s = time.time() - s
+                c.execute("""
+                        INSERT INTO benchmark VALUES (
+                        NULL,
+                        datetime('now'),
+                        'aterro com obstaculo',
+                        ?,
+                        'raterro',
+                        ?,
+                        ?)
+                        """, (preduce, f_max, s))
+                con.commit()
             if model == 2:
-                modelo.rbs(f.replace('.ppm',
+                s = time.time()
+                f_max = modelo.rbs(f.replace('.ppm',
                     '{0}_aaterro.pickle'.format(preduce)), tmlim * 1000,
                         memlim, True, False, debug)
+                s = time.time() - s
+                c.execute("""
+                        INSERT INTO benchmark VALUES (
+                        NULL,
+                        datetime('now'),
+                        'aterro com obstaculo',
+                        ?,
+                        'aaterro',
+                        ?,
+                        ?)
+                        """, (preduce, f_max, s))
+                con.commit()
         if not model:
             m = 'aterro'
             f = f.replace('.ppm', '_aterro.ppm')
@@ -146,6 +204,7 @@ def run(model, f_names, build, pickle, check, solve, psolve, tmlim, memlim,
                             tmlim, memlim)
             print(s)
             call(s, shell=True)
+    con.close()
 
 
 if __name__ == "__main__":
