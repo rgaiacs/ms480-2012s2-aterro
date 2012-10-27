@@ -78,6 +78,7 @@ class RAterro(aterro.Aterro):
         c = self.map.get_color(p)
         r = False
         try:
+            # There is a 10% of error in the mesuare of the colors.
             if (c[0] < self.map.max_color / 10 and c[1] < self.map.max_color / 10
                     and  0 < c[2] < self.map.max_color):
                 r = True

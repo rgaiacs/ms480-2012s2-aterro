@@ -80,11 +80,7 @@ class Aterro:
         c = self.map.get_color(p)
         r = False
         try:
-            # Do not use
-            #
-            #     if 0 < c[0] <= 255 and c[1] < 25 and c[2] < 25:
-            #
-            # because of the erro when convert to the ppm file.
+            # There is a 10% of error in the mesuare of the colors.
             if (0 < c[0] <= self.map.max_color and c[1] < self.map.max_color / 10
                     and c[2] < self.map.max_color / 10):
                 r = True
@@ -106,6 +102,18 @@ class Aterro:
                     aux.append((i, j))
         return aux
 
+    def _phi(self):
+        """Set vector of phi values.
+
+        :return: phi values.
+
+        :rtype: list.
+        """
+        aux = []
+        for p in self.j:
+            aux.append(self.map.get_red(p))
+        return aux
+
     def _is_a(self, p):
         """Return true if point belong to A.
 
@@ -120,6 +128,7 @@ class Aterro:
         c = self.map.get_color(p)
         r = False
         try:
+            # There is a 10% of error in the mesuare of the colors.
             if (c[0] < self.map.max_color / 10 and 0 < c[1] <= self.map.max_color
                     and c[2] < self.map.max_color / 10):
                 r = True
@@ -139,6 +148,18 @@ class Aterro:
             for j in xrange(self.map.get_col()):
                 if self._is_a((i, j)):
                     aux.append((i, j))
+        return aux
+
+    def _psi(self):
+        """Set vector of psi values.
+
+        :return: psi values.
+
+        :rtype: list.
+        """
+        aux = []
+        for p in self.a:
+            aux.append(self.map.get_green(p))
         return aux
 
     def _path_is_valid(self, o, d, t=0):
@@ -177,7 +198,7 @@ class Aterro:
             dist = self.map.dc(o, d)
             if dist < self.D:
                 valid = True
-        return (valid, dist)
+        return valid, dist
 
     def _who_is_valid_path(self, t):
         """ Return a list of all valid paths.
@@ -195,36 +216,12 @@ class Aterro:
         :rtype: list.
         """
         aux = []
-        for (j_i, j_j) in self.j:
-            for (a_i, a_j) in self.a:
+        for j_i, j_j in self.j:
+            for a_i, a_j in self.a:
                 try_path = self._path_is_valid(
                         (j_i, j_j), (a_i, a_j), t)
                 if try_path[0]:
                     aux.append((j_i, j_j, a_i, a_j, try_path[1]))
-        return aux
-
-    def _phi(self):
-        """Set vector of phi values.
-
-        :return: phi values.
-
-        :rtype: list.
-        """
-        aux = []
-        for (i, j) in self.j:
-            aux.append(self.map.get_red((i, j)))
-        return aux
-
-    def _psi(self):
-        """Set vector of psi values.
-
-        :return: psi values.
-
-        :rtype: list.
-        """
-        aux = []
-        for (i, j) in self.a:
-            aux.append(self.map.get_green((i, j)))
         return aux
 
     def wdf(self, t=0):

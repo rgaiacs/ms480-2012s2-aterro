@@ -31,9 +31,9 @@ def run(model, f_names, build, pickle, check, solve, psolve, tmlim, memlim,
         preduce, D, debug):
     """Run test.
     
-    :param model: model type.
+    :param model: model type and usefull information.
     
-    :type model: string.
+    :type model: list.
     
     :param f_names: names of files.
     
@@ -89,10 +89,10 @@ def run(model, f_names, build, pickle, check, solve, psolve, tmlim, memlim,
             print('Reading {0}. This will take some time.'.format(f))
             if not model:
                 test = aterro.Aterro(f, preduce, D)
-            if model == 1:
+            if model[0] == 1:
                 test = raterro.RAterro(f, preduce, D)
-            if model == 2:
-                test = aaterro.AAterro(f, preduce, D)
+            if model[0] == 2:
+                test = aaterro.AAterro(f, model[1:3], model[3], preduce, D)
             print('Sucessfully read {0}.'.format(f))
             print('Writing data. This will take some time.')
             test.wdf()
@@ -101,10 +101,10 @@ def run(model, f_names, build, pickle, check, solve, psolve, tmlim, memlim,
             print('Reading {0}. This will take some time.'.format(f))
             if not model:
                 test = aterro.Aterro(f, preduce, D)
-            if model == 1:
+            if model[0] == 1:
                 test = raterro.RAterro(f, preduce, D)
-            if model == 2:
-                test = aaterro.AAterro(f, preduce, D)
+            if model[0] == 2:
+                test = aaterro.AAterro(f, model[1:3], model[3], preduce, D)
             print('Sucessfully read {0}.'.format(f))
             print('Writing data. This will take some time.')
             test.wpf()
@@ -125,10 +125,10 @@ def run(model, f_names, build, pickle, check, solve, psolve, tmlim, memlim,
         if not model:
             m = 'aterro'
             f = f.replace('.ppm', '_aterro.ppm')
-        if model == 1:
+        elif model == 1:
             m = 'raterro'
             f = f.replace('.ppm', '_raterro.ppm')
-        if model == 2:
+        elif model == 2:
             m = 'aaterro'
             f = f.replace('.ppm', '_aaterro.ppm')
         if check:
@@ -153,9 +153,8 @@ if __name__ == "__main__":
 
         $ python test/test.py --pickle --psolve --preduce 100
         $ python test/test.py -b 1 --pickle --psolve --preduce 100
-        $ python test/test.py -b 2 --pickle --psolve --preduce 100
+        $ python test/test.py -b 2 10 10 10 --pickle --psolve --preduce 100
     """
-
     import argparse
 
     # See functions at parent directory.
@@ -165,8 +164,8 @@ if __name__ == "__main__":
 
     # Parse of flags.
     parser = argparse.ArgumentParser(description='Test for MS480.')
-    parser.add_argument('-b', type=int, default=0,
-            help='using barrier in the model with contiuo space (1) or with discrete space (2).')
+    parser.add_argument('-b', nargs='*', type=int,
+            help='using barrier in the model with discrete space (1) or with continuo space (2), with center and radium.')
     parser.add_argument('--data', action='store_true',
             help='build the data file based on ppm file. (deprecated)')
     parser.add_argument('--debug', action='store_true',

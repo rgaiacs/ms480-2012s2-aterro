@@ -74,12 +74,11 @@ class PPM:
         b = []
 
         # Read the figure and store it in the memory.
-        l = f.readline()
         digits = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
         insert2col = 0
         insert2row = 0
         insert2color = 0
-        while l != '':
+        for l in f:
             # Lines begin with # are comments.
             if l[0] != '#':
                 ll = l.split()
@@ -107,7 +106,6 @@ class PPM:
                                 insert2col = (insert2col + 1) % col
                                 if insert2col == 0:
                                     insert2row = insert2row + 1
-            l = f.readline()
         f.close()
 
         # Reshape the figure.
