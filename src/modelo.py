@@ -160,23 +160,22 @@ def rbs(f_name, tmlim=3600000, memlim=1024, w2ascii=True, w2pickle=False, debug=
 
     glp_set_obj_dir(prob, GLP_MAX)
     for path in data['p']:
-        if path[4]:
-            count = 0
-            col = glp_add_cols(prob, 1)
-            glp_set_col_name(prob, col, "{0}".format(path[0:4]))
-            glp_set_col_bnds(prob, col, GLP_LO, 0.0, 0.0)
-            for k in xrange(len_j):
-                if path[0] == data['j'][k][0] and path[1] == data['j'][k][1]:
-                    count = count + 1
-                    ind[count] = glp_find_row(prob, "J{0}".format(data['j'][k]))
-                    val[count] = data['phi'][k]
-            for k in xrange(len_a):
-                if path[4] == data['a'][k][0] and path[5] == data['a'][k][1]:
-                    count = count + 1
-                    ind[count] = glp_find_row(prob, "A{0}".format(data['a'][k]))
-                    val[count] = data['psi'][k]
-            glp_set_mat_col(prob, col, count, ind, val)
-            glp_set_obj_coef(prob, col, 1.0)
+        count = 0
+        col = glp_add_cols(prob, 1)
+        glp_set_col_name(prob, col, "{0}".format([path[p] for p in (0, 1, 4, 5)]))
+        glp_set_col_bnds(prob, col, GLP_LO, 0.0, 0.0)
+        for k in xrange(len_j):
+            if path[0] == data['j'][k][0] and path[1] == data['j'][k][1]:
+                count = count + 1
+                ind[count] = glp_find_row(prob, "J{0}".format(data['j'][k]))
+                val[count] = data['phi'][k]
+        for k in xrange(len_a):
+            if path[4] == data['a'][k][0] and path[5] == data['a'][k][1]:
+                count = count + 1
+                ind[count] = glp_find_row(prob, "A{0}".format(data['a'][k]))
+                val[count] = data['psi'][k]
+        glp_set_mat_col(prob, col, count, ind, val)
+        glp_set_obj_coef(prob, col, 1.0)
 
     if debug:
         glp_write_lp(prob, None, f_name.replace(".pickle", ".lp"))

@@ -200,7 +200,7 @@ class Aterro:
                 valid = True
         return valid, dist
 
-    def _who_is_valid_path(self, t):
+    def _who_is_valid_path(self, t=0):
         """ Return a list of all valid paths.
 
         :param t: type of distance.

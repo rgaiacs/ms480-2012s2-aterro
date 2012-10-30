@@ -239,7 +239,7 @@ class RAterro(aterro.Aterro):
                     valid = True
         return (valid, o2p + p2d)
 
-    def _who_is_valid_path(self, t):
+    def _who_is_valid_path(self, t=0):
         """ Return a list of tuples where the last position is a list of the
         possible pivot, for the origin and destinity specify by the other
         position of the tuple.
@@ -264,8 +264,8 @@ class RAterro(aterro.Aterro):
                 for (h_i, h_j) in self.h:
                     try_path = self._path_is_valid(
                             (j_i, j_j), (h_i, h_j), (a_i, a_j), t)
-                    if try_path[0] and try_path[1] < old_path[1]:
-                        old_path = try_path
+                    if try_path[0] and try_path[1] < old_path[6]:
+                        old_path = (j_i, j_j, h_i, h_j, a_i, a_j, try_path[1])
                 aux.append(old_path)
         return aux
 

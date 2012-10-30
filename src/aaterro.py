@@ -118,7 +118,7 @@ class AAterro(raterro.RAterro):
     Create:
 
         >>> import aterro
-        >>> test = raterro.RAterro('test/sample.ppm.', 100, 800)
+        >>> test = raterro.RAterro('test/sample.ppm.', (550, 421), 98, 100, 800)
     """
     def __init__(self, f_name, c, r, preduce, D):
         """Constructor
@@ -140,7 +140,48 @@ class AAterro(raterro.RAterro):
         self.c = c
         self.c_r = r
 
-    def _who_is_valid_path(self):
+    def _path_is_valid(self, o, p, d, t=0):
+        """Get if path between o and d is valid passing by point p.
+
+        :param o: coordinates of the point of origin.
+
+        :type o: tuple.
+
+        :param p: coordinates of the point of pivot.
+
+        :type p: tuple.
+
+        :param d: coordinates of the point of destination.
+
+        :type d: tuple.
+
+        :param t: type of distance.
+
+        :type t: integer.
+
+        :return: true if path is valid.
+
+        :treturn: boolean.
+        """
+        valid = False
+        if t == 1:
+            o2p = self.map.dl(o, p)
+            p2d = self.map.dl(p, d)
+            if (o2p < self.D and p2d < self.D):
+                valid = True
+        elif t == 2:
+            o2p = self.map.du(o, p)
+            p2d = self.map.du(p, d)
+            if (o2p < self.D and p2d < self.D):
+                valid = True
+        else:
+            o2p = self.map.dc(o, p)
+            p2d = self.map.dc(p, d)
+            if (o2p < self.D and p2d < self.D):
+                valid = True
+        return (valid, o2p + p2d)
+
+    def _who_is_valid_path(self, t=0):
         """ Return a list of tuples where the last position is a list of the
         possible pivot, for the origin and destinity specify by the other
         position of the tuple.
@@ -150,11 +191,14 @@ class AAterro(raterro.RAterro):
         :rtype: tuple of list.
         """
         aux = []
-        for j in self.j:
-            for a in self.a:
-                h = minimize_path(j, a, self.c, self.c_r)
-                if self._path_is_valid(j, h, a):
-                    aux.append(j, a, [h])
+        for j_i, j_j in self.j:
+            for a_i, a_j in self.a:
+                h_i, h_j = minimize_path(j, a, self.c, self.c_r)
+                h_i = int(h_i)
+                h_j = int(h_j)
+                try_path = self._path_is_valid((j_i, j_j), (h_i, h_j), (a_i, a_j), t)
+                if try_path[0]:
+                    aux.append((j_i, j_j, h_i, h_j, a_i, a_j, try_path[1]))
         return aux
 
     def wpf(self, pf_name = None):
