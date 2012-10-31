@@ -29,17 +29,17 @@ por $d(x, y) > D$ de modo a reduzir o consumo de mem\'{o}ria e eventualmente
 aumentar a velocidade.
 
 \subsection{Problema com obstáculo circular}
-Na modelagem \eqref{eq:model_with_obs_nl}, utilizamos $|J| |A| |P|$
+Na modelagem \eqref{eq:model_with_obs_nl}, utilizamos $|J| |A| |H|$
 vari\'{a}veis. Assim como no problema sem obst\'{a}culo, observamos que pelas
 restri\c{c}\~{o}es \eqref{eq:model_with_obs_nl:max_dist} e
 \eqref{eq:model_with_obs_nl:dist_obs} parte das vari\'{a}veis s\~{a}o fixadas em
 zero.
 
-\'{E} poss\'{i}vel construir o modelo sem as vari\'{a}veis que s\~{a}o nulas de
+Novamente, \'{e} poss\'{i}vel construir o modelo sem as vari\'{a}veis que s\~{a}o nulas de
 modo a reduzir o consumo de mem\'{o}ria e eventualmente aumentar a velocidade.
 
 Consideremos agora os pontos $\hat{x} \in J$, $\hat{y} \in A$, $\hat{z},
-\tilde{z} \in P$, tal que
+\tilde{z} \in H$, tal que
 \begin{align*}
     d(\hat{x}, \hat{z}) &< D, & d(\hat{y}, \hat{z}) &< D, \\
     l(\hat{x}, \hat{z}) &> r, & l(\hat{y}, \hat{z}) &> r, \\
@@ -48,26 +48,26 @@ Consideremos agora os pontos $\hat{x} \in J$, $\hat{y} \in A$, $\hat{z},
 \end{align*}
 e
 \begin{align*}
-    d(\hat{x}, \hat{z}) + d(\hat{y}, \hat{z}) &< d(\hat{x}, \hat{z}) +
-    d(\hat{y}, \hat{z}).
+    d(\hat{x}, \hat{z}) + d(\hat{y}, \hat{z}) &< d(\hat{x}, \tilde{z}) +
+    d(\hat{y}, \tilde{z}).
 \end{align*}
 Pela modelagem \eqref{eq:model_with_obs_nl}, verifica-se que
-$\epsilon_{\hat{x}\hat{z}\hat{y}}$ e $\epsilon_{\hat{x}\tilde{z}\hat{y}}$
+$\xi_{\hat{x},\hat{z},\hat{y}}$ e $\xi_{\hat{x},\tilde{z},\hat{y}}$
 possuem o mesmo peso na fun\c{c}\~{a}o objetivo e portanto os seguintes valores
 s\~{a}o ``equiprov\'{a}veis'' na solu\c{c}\~{a}o \'{o}tima:
 \begin{align*}
-    \epsilon_{\hat{x}\hat{z}\hat{y}} &= \min(\phi(\hat{x}), \psi(\hat{y})), &
-    \epsilon_{\hat{x}\tilde{z}\hat{y}} &= 0, \\
-    \epsilon_{\hat{x}\hat{z}\hat{y}} &= 0, &
-    \epsilon_{\hat{x}\tilde{z}\hat{y}} &= \min(\phi(\hat{x}), \psi(\hat{y})), \\
-    \epsilon_{\hat{x}\hat{z}\hat{y}} &= 0.5 \min(\phi(\hat{x}), \psi(\hat{y})), &
-    \epsilon_{\hat{x}\tilde{z}\hat{y}} &= 0.5 \min(\phi(\hat{x}), \psi(\hat{y})).
+    \xi_{\hat{x},\hat{z},\hat{y}} &= \min(\phi(\hat{x}), \psi(\hat{y})), &
+    \xi_{\hat{x},\tilde{z},\hat{y}} &= 0, \\
+    \xi_{\hat{x},\hat{z},\hat{y}} &= 0, &
+    \xi_{\hat{x},\tilde{z},\hat{y}} &= \min(\phi(\hat{x}), \psi(\hat{y})), \\
+    \xi_{\hat{x},\hat{z},\hat{y}} &= 0.5 \min(\phi(\hat{x}), \psi(\hat{y})), &
+    \xi_{\hat{x},\tilde{z},\hat{y}} &= 0.5 \min(\phi(\hat{x}), \psi(\hat{y})).
 \end{align*}
 
 Seria interessante que na solu\c{c}\~{a}o \'{o}tima apenas ocorresse
 \begin{align*}
-    \epsilon_{\hat{x}\hat{z}\hat{y}} &= \min(\phi(\hat{x}), \psi(\hat{y})), &
-    \epsilon_{\hat{x}\tilde{z}\hat{y}} &= 0,
+    \xi_{\hat{x},\hat{z},\hat{y}} &= \min(\phi(\hat{x}), \psi(\hat{y})), &
+    \xi_{\hat{x},\tilde{z},\hat{y}} &= 0,
 \end{align*}
 pois neste caso a dist\^{a}ncia entre $\hat{x}$ e $\hat{y}$ \'{e}
 ``m\'{i}nima''. Uma vez que $d(x, z)$ e $d(y, z)$ s\~{a}o dados do problema, \'{e}
@@ -79,4 +79,5 @@ obst\'{a}culo.
 
 \subsection{Problema com obst\'{a}culo geral}
 Tudo o que foi dito para o problema com obst\'{a}culo circular \'{e} facilmente
-aplicado para o problema com obst\'{a}culo geral.
+aplicado para o problema com obst\'{a}culo geral usando o algoritmo de
+Bresenham.

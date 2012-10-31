@@ -180,20 +180,20 @@ Figura~\ref{fig:disc_J_A_R}.
     interesse.}
     \label{fig:disc_J_A_R}
 \end{figure}
+%TODO arrumar fig:disc_J_A_R
 
-Seja $P$ a região que não corresponde \`{a} jazida, nem ao aterro e nem ao
+Seja $H$ a região que não corresponde \`{a} jazida, nem ao aterro e nem ao
 obstáculo. De maneira semelhante \`{a}s definições utilizadas na subseção
 anterior, seja $\phi: J \to \mathbb{R}$, $\psi: A \to \mathbb{R}$,
-$f: (J, P, A) \to \mathbb{R}$, $d: (J \cup A, P) \to \mathbb{R}$ e $l:
-(J \cup A, P) \to \mathbb{R}$, onde $\phi(x)$ corresponde ao volume de terra
+$f: (J, H, A) \to \mathbb{R}$, $d: (J \cup A, H) \to \mathbb{R}$ e $l:
+(J \cup A, H) \to \mathbb{R}$, onde $\phi(x)$ corresponde ao volume de terra
 disponível no quadrado $x$, $\psi(y)$ ao volume de terra necessário no quadrado
 $y$, $f(x, z, y)$ ao volume de terra transportado do quadrado $x$ para o
-quadrado $y$ passando pelo quadrado $z$, $d(w, z)$ a distância entre os
-quadrados $w$ e $z$\footnote{A distância entre os quadrados $w$ e $z$ é
-definida no Apêndice~\ref{sse:distance}.} e $l(w, z)$ a distância entre a reta
-formada pelos quadrados $w$ e $z$ ao ponto $c$\footnote{A distância entre a
-reta formada pelos quadrados $w$ e $z$ ao ponto $c$ é abordada no
-Apêndice~\ref{sse:point2line}.}.
+quadrado $y$ passando pelo quadrado $z$, $d(w, z)$ a distância\footnote{A
+distância é definida no Apêndice~\ref{sse:distance}.} entre os
+quadrados $w$ e $z$ e $l(w, z)$ a distância entre a reta
+formada pelos quadrados $w$ e $z$ ao ponto $c$.
+%TODO ainda usamos distância entre ponto e reta?
 
 Sendo $\xi_{x, z, y} = f(x, z, y)$ a variável de decisão, podemos modelar o
 problema da seguinte forma:
@@ -216,7 +216,7 @@ problema da seguinte forma:
     \end{align}
     \label{eq:model_with_obs_nl}
 \end{subequations}
-onde $x \in J$, $y \in A$, $z \in P$, \eqref{eq:model_with_obs_nl:max_dist}
+onde $x \in J$, $y \in A$, $z \in H$, \eqref{eq:model_with_obs_nl:max_dist}
 refere-se a distância máxima dos canos utilizados,
 \eqref{eq:model_with_obs_nl:dist_obs} a restrição dos canos não passar pela
 região $R$, \eqref{eq:model_with_obs_nl:max_jazida} a quantidade de terra que pode
@@ -266,6 +266,7 @@ ilustrada na Figura~\ref{fig:disc_J_A_R_aprox}.
     interesse.}
     \label{fig:disc_J_A_R_aprox}
 \end{figure}
+%TODO arrumar fig:disc_J_A_R_aprox
 
 O modelo a ser utilizado com a aproximação da região $R$ é semelhante a
 \eqref{eq:model_with_obs_nl} mudando apenas a restrição
@@ -277,8 +278,8 @@ O modelo a ser utilizado com a aproximação da região $R$ é semelhante a
     b(y, z) \neq 1,
     \label{eq:model_with_obs:dist_obs} 
 \end{align}
-onde $b: (J \cup A, P) \to \left\{ 0, 1 \right\}$ é $1$ se a linha reta
-construída entre os quadrados $w \in J \cup A$ e $z \in P$ utilizando o
+onde $b: (J \cup A, H) \to \left\{ 0, 1 \right\}$ é $1$ se a linha reta
+construída entre os quadrados $w \in J \cup A$ e $z \in H$ utilizando o
 algoritmo de Bresenham\footnote{Ver o Apêndice~\ref{sse:bresenham_line}.} passa
 por $R$ e $0$ caso contrário.
 
