@@ -16,28 +16,26 @@
 % PURPOSE.
 
 \section{Algoritmo de Bresenham} \label{sse:bresenham_line}
-O algoritmo descrito nessa seção determina quais pontos em uma malha
-bidimensional devem ser graficados de modo a obter uma boa aproximação
+O algoritmo de Bresenham determina quais pontos em uma malha
+bidimensional devem ser selecionados de modo a obter uma boa aproximação
 para uma linha reta ligando dois pontos dados.
 
 A seguinte convenção será usada:
 \begin{itemize}
-\item a célula mais àcima e mais à esquerda da malha é representada por $(0,0)$,
-e as coordenadas crescem para a direita e para baixo,
-\item as células são representadas por números inteiros, e
+\item as células são representadas por pares ordenados de inteiros,
+\item a célula no extremo superior esquerdo da malha é representada por
+$(0,0)$, e as coordenadas crescem para a direita e para baixo, e
 \item os pontos extremos do segmento de reta a ser aproximada são $(x_0,y_0)$
-e  $(x_1,y_1)$, onde a primeira coordenada representa a coluna e a sgunda, a
-linha.
+e  $(x_1,y_1)$.
 \end{itemize}
 
 O algoritmo será apresentado apenas para segmentos de reta com coeficiente
-angular entre $-1$ e $0$, ou seja, no octante delimitado pelas direções
-\emph{Oeste} e \emph{Sudoeste}. Neste octante, para cada coluna $x$ entre $x_0$
+angular entre $-1$ e $0$. Para cada coluna $x$ entre $x_0$
 e $x_1$, o algoritmo determina exatamente uma linha $y$, que conterá uma célula
 da aproximação do segmento de reta, enquanto cada linha entre $y_0$ e $y_1$
 pode conter várias células da aproximação.
 
-O \emph{Algoritmo de Bresenham} escolhe um inteiro $y$ correspondendo à célula
+É então escolhido um inteiro $y$ correspondendo à célula
 que mais se aproxima do valor real da função para cada $x$. Assim, para
 sucessivas colunas, o valor de $y$ pode continuar o mesmo ou ser incrementado
 em $1$.
@@ -53,9 +51,9 @@ aproximação para o inteiro mais próximo de:
 y=\frac{y_1-y_0}{x_1-x_0}(x-x_0) + y_0\,.
 \end{equation*}
 
-O coeficiente angular $\frac{y_1-y_0}{x_1-x_0}$ depende apenas dos pontos
-extremos, podendo então ser pré-calculado. Assim, $y$ pode ser calculado para
-sucessivos inteiros $x$ começando de $y_0$ e repetidamente adicionando o
+O coeficiente angular $(y_1-y_0)/(x_1-x_0)$ depende apenas dos pontos
+extremos, podendo então ser pré-calculado. Assim, $y$ pode ser determinado para
+sucessivos inteiros $x$ começando de $y_0$ e repetidamente adicionando-se o
 coeficiente angular.
 
 O erro entre o $y$ aproximado e o verdadeiro estará sempre entre $-0.5$ e
