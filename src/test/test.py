@@ -108,9 +108,9 @@ def run(model, f_names, build, pickle, check, solve, psolve, tmlim, memlim,
             print('Reading {0}. This will take some time.'.format(f))
             if not model:
                 test = aterro.Aterro(f, preduce, D)
-            if model[0] == 1:
+            elif model[0] == 1:
                 test = raterro.RAterro(f, preduce, D)
-            if model[0] == 2:
+            elif model[0] == 2:
                 test = aaterro.AAterro(f, model[1:3], model[3], preduce, D)
             print('Sucessfully read {0}.'.format(f))
             print('Writing data. This will take some time.')
@@ -120,9 +120,9 @@ def run(model, f_names, build, pickle, check, solve, psolve, tmlim, memlim,
             print('Reading {0}. This will take some time.'.format(f))
             if not model:
                 test = aterro.Aterro(f, preduce, D)
-            if model[0] == 1:
+            elif model[0] == 1:
                 test = raterro.RAterro(f, preduce, D)
-            if model[0] == 2:
+            elif model[0] == 2:
                 test = aaterro.AAterro(f, model[1:3], model[3], preduce, D)
             print('Sucessfully read {0}.'.format(f))
             print('Writing data. This will take some time.')
@@ -132,7 +132,7 @@ def run(model, f_names, build, pickle, check, solve, psolve, tmlim, memlim,
             if not model:
                 s = time.time()
                 f_max = modelo.abs(f.replace('.ppm',
-                    '{0}_aterro.pickle'.format(preduce)), tmlim * 1000,
+                    '_aterro{0}-0.pickle'.format(preduce)), tmlim * 1000,
                         memlim, True, False, debug)
                 s = time.time() - s
                 c.execute("""
@@ -146,10 +146,10 @@ def run(model, f_names, build, pickle, check, solve, psolve, tmlim, memlim,
                         ?)
                         """, (preduce, f_max, s))
                 con.commit()
-            if model == 1:
+            elif model[0] == 1:
                 s = time.time()
                 f_max = modelo.rbs(f.replace('.ppm',
-                    '{0}_raterro.pickle'.format(preduce)), tmlim * 1000,
+                    '_raterro{0}-0.pickle'.format(preduce)), tmlim * 1000,
                         memlim, True, False, debug)
                 s = time.time() - s
                 c.execute("""
@@ -163,10 +163,10 @@ def run(model, f_names, build, pickle, check, solve, psolve, tmlim, memlim,
                         ?)
                         """, (preduce, f_max, s))
                 con.commit()
-            if model == 2:
+            elif model[0] == 2:
                 s = time.time()
                 f_max = modelo.rbs(f.replace('.ppm',
-                    '{0}_aaterro.pickle'.format(preduce)), tmlim * 1000,
+                    '_aaterro{0}-0.pickle'.format(preduce)), tmlim * 1000,
                         memlim, True, False, debug)
                 s = time.time() - s
                 c.execute("""
@@ -183,10 +183,10 @@ def run(model, f_names, build, pickle, check, solve, psolve, tmlim, memlim,
         if not model:
             m = 'aterro'
             f = f.replace('.ppm', '_aterro.ppm')
-        elif model == 1:
+        elif model[0] == 1:
             m = 'raterro'
             f = f.replace('.ppm', '_raterro.ppm')
-        elif model == 2:
+        elif model[0] == 2:
             m = 'aaterro'
             f = f.replace('.ppm', '_aaterro.ppm')
         if check:

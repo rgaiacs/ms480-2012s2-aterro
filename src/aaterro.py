@@ -62,7 +62,7 @@ def minimize_path(x, y, c, r):
     f = lambda p: math.sqrt((p[0] - a[0])**2 + (p[1] - a[1])**2) + math.sqrt((p[0] - b[0])**2 + (p[1] - b[1])**2)
     c_1 = lambda p: -r**2 * ((p[0] - a[0])**2 + (p[1] - a[1])**2) + (p[0] * a[1] - p[1] * a[0])**2 - .1
     c_2 = lambda p: -r**2 * ((p[0] - b[0])**2 + (p[1] - b[1])**2) + (p[0] * b[1] - p[1] * b[0])**2 - .1
-    sol = fmin_cobyla(f, [1,1], (c_1, c_2))
+    sol = fmin_cobyla(f, [1,1], (c_1, c_2), disp=0)
 
     # Return the point to it's origina position.
     sol = (sol[0] + c[0], sol[1] + c[1])
@@ -193,7 +193,7 @@ class AAterro(raterro.RAterro):
         aux = []
         for j_i, j_j in self.j:
             for a_i, a_j in self.a:
-                h_i, h_j = minimize_path(j, a, self.c, self.c_r)
+                h_i, h_j = minimize_path((j_i, j_j), (a_i, a_j), self.c, self.c_r)
                 h_i = int(h_i)
                 h_j = int(h_j)
                 try_path = self._path_is_valid((j_i, j_j), (h_i, h_j), (a_i, a_j), t)
@@ -201,7 +201,7 @@ class AAterro(raterro.RAterro):
                     aux.append((j_i, j_j, h_i, h_j, a_i, a_j, try_path[1]))
         return aux
 
-    def wpf(self, pf_name = None):
+    def wpf(self, d_type=0, pf_name=None):
         """Write pickle file.
 
         :param d_type: type of the distance to be use.
