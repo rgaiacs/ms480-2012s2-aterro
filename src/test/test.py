@@ -21,7 +21,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-"""Test the module.
+"""
+Test the module.
 """
 import os
 import sys
@@ -47,7 +48,7 @@ def run(model, f_names, build, pickle, check, solve, psolve, tmlim, memlim,
     
     :param check: check model and data for error.
 
-    type check: boolean.
+    :type check: boolean.
 
     :param solve: try to solve the problem.
 
@@ -65,8 +66,7 @@ def run(model, f_names, build, pickle, check, solve, psolve, tmlim, memlim,
 
     :type memlim: integer.
 
-    :param preduce: number of vertical and horizontal pixels to be reduce to
-    one.
+    :param preduce: number of vertical and horizontal pixels to be reduce to one.
 
     :type preduce: integer.
 

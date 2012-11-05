@@ -15,3 +15,6 @@ Implementação
 
 .. automodule:: modelo
    :members:
+
+.. automodule:: test.test
+   :members:
