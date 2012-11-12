@@ -94,7 +94,8 @@ def run(model, f_names, build, pickle, check, solve, psolve, tmlim, memlim,
                 reduce INTEGER,
                 solver TEXT,
                 f_max REAL,
-                time REAL);
+                p_time REAL,
+                s_time REAL);
                 """)
         con.commit()
     except:
@@ -103,6 +104,7 @@ def run(model, f_names, build, pickle, check, solve, psolve, tmlim, memlim,
     if not f_names:
         f_names = ['test/sample.ppm']
     for f in f_names:
+        print(80*'-')
         print('Processing {0}.'.format(f))
         if build:
             print('Reading {0}. This will take some time.'.format(f))
@@ -119,22 +121,28 @@ def run(model, f_names, build, pickle, check, solve, psolve, tmlim, memlim,
         if pickle:
             print('Reading {0}. This will take some time.'.format(f))
             if not model:
+                p_time = time.time()
                 test = aterro.Aterro(f, preduce, D)
+                p_time = time.time() - p_time
             elif model[0] == 1:
+                p_time = time.time()
                 test = raterro.RAterro(f, preduce, D)
+                p_time = time.time() - p_time
             elif model[0] == 2:
+                p_time = time.time()
                 test = aaterro.AAterro(f, model[1:3], model[3], preduce, D)
+                p_time = time.time() - p_time
             print('Sucessfully read {0}.'.format(f))
             print('Writing data. This will take some time.')
             test.wpf()
             print('Sucessfully write data.')
         if psolve:
             if not model:
-                s = time.time()
+                s_time = time.time()
                 f_max = modelo.abs(f.replace('.ppm',
                     '_aterro{0}-0.pickle'.format(preduce)), tmlim * 1000,
                         memlim, True, False, debug)
-                s = time.time() - s
+                s_time = time.time() - s_time
                 c.execute("""
                         INSERT INTO benchmark VALUES (
                         NULL,
@@ -143,15 +151,16 @@ def run(model, f_names, build, pickle, check, solve, psolve, tmlim, memlim,
                         ?,
                         'aterro',
                         ?,
+                        ?,
                         ?)
-                        """, (preduce, f_max, s))
+                        """, (preduce, f_max, p_time, s_time))
                 con.commit()
             elif model[0] == 1:
-                s = time.time()
+                s_time = time.time()
                 f_max = modelo.rbs(f.replace('.ppm',
                     '_raterro{0}-0.pickle'.format(preduce)), tmlim * 1000,
                         memlim, True, False, debug)
-                s = time.time() - s
+                s_time = time.time() - s_time
                 c.execute("""
                         INSERT INTO benchmark VALUES (
                         NULL,
@@ -160,15 +169,16 @@ def run(model, f_names, build, pickle, check, solve, psolve, tmlim, memlim,
                         ?,
                         'raterro',
                         ?,
+                        ?,
                         ?)
-                        """, (preduce, f_max, s))
+                        """, (preduce, f_max, p_time, s_time))
                 con.commit()
             elif model[0] == 2:
-                s = time.time()
+                s_time = time.time()
                 f_max = modelo.rbs(f.replace('.ppm',
                     '_aaterro{0}-0.pickle'.format(preduce)), tmlim * 1000,
                         memlim, True, False, debug)
-                s = time.time() - s
+                s_time = time.time() - s_time
                 c.execute("""
                         INSERT INTO benchmark VALUES (
                         NULL,
@@ -177,8 +187,9 @@ def run(model, f_names, build, pickle, check, solve, psolve, tmlim, memlim,
                         ?,
                         'aaterro',
                         ?,
+                        ?,
                         ?)
-                        """, (preduce, f_max, s))
+                        """, (preduce, f_max, p_time, s_time))
                 con.commit()
         if not model:
             m = 'aterro'

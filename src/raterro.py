@@ -221,6 +221,7 @@ class RAterro(aterro.Aterro):
         :treturn: boolean.
         """
         valid = False
+        o2d = float('Infinity')
         if self._try_path(o, p, d):
             if t == 1:
                 o2p = self.map.dl(o, p)
@@ -237,7 +238,8 @@ class RAterro(aterro.Aterro):
                 p2d = self.map.dc(p, d)
                 if (o2p < self.D and p2d < self.D):
                     valid = True
-        return (valid, o2p + p2d)
+            o2d = o2p + p2d
+        return (valid, o2d)
 
     def _who_is_valid_path(self, t=0):
         """ Return a list of tuples where the last position is a list of the
