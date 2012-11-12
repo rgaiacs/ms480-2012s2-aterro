@@ -147,13 +147,13 @@ def run(model, f_names, build, pickle, check, solve, psolve, tmlim, memlim,
                         INSERT INTO benchmark VALUES (
                         NULL,
                         datetime('now'),
-                        'aterro',
+                        ?,
                         ?,
                         'aterro',
                         ?,
                         ?,
                         ?)
-                        """, (preduce, f_max, p_time, s_time))
+                        """, (f, preduce, f_max, p_time, s_time))
                 con.commit()
             elif model[0] == 1:
                 s_time = time.time()
@@ -165,13 +165,13 @@ def run(model, f_names, build, pickle, check, solve, psolve, tmlim, memlim,
                         INSERT INTO benchmark VALUES (
                         NULL,
                         datetime('now'),
-                        'aterro com obstaculo',
+                        ?,
                         ?,
                         'raterro',
                         ?,
                         ?,
                         ?)
-                        """, (preduce, f_max, p_time, s_time))
+                        """, (f, preduce, f_max, p_time, s_time))
                 con.commit()
             elif model[0] == 2:
                 s_time = time.time()
@@ -183,13 +183,13 @@ def run(model, f_names, build, pickle, check, solve, psolve, tmlim, memlim,
                         INSERT INTO benchmark VALUES (
                         NULL,
                         datetime('now'),
-                        'aterro com obstaculo',
+                        ?,
                         ?,
                         'aaterro',
                         ?,
                         ?,
                         ?)
-                        """, (preduce, f_max, p_time, s_time))
+                        """, (f, preduce, f_max, p_time, s_time))
                 con.commit()
         if not model:
             m = 'aterro'
