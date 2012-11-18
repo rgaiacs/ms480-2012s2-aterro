@@ -31,7 +31,7 @@ import time
 import sqlite3
 
 def run(model, f_names, build, pickle, check, solve, psolve, tmlim, memlim,
-        preduce, D, debug):
+        preduce, D, d_type, debug):
     """Run test.
     
     :param model: model type and usefull information.
@@ -74,6 +74,14 @@ def run(model, f_names, build, pickle, check, solve, psolve, tmlim, memlim,
 
     :type D: float.
 
+    :param d_type: type of distance.
+
+    * ``0``: the distance between centers.
+    * ``1``: the minimum distance.
+    * ``2``: the maximum distance.
+
+    :type d_type: integer
+
     :param debug: enable the debug behavior.
 
     :type debug: boolean.
@@ -93,6 +101,8 @@ def run(model, f_names, build, pickle, check, solve, psolve, tmlim, memlim,
                 problem TEXT,
                 reduce INTEGER,
                 solver TEXT,
+                cols INTEGER,
+                rows INTEGER,
                 f_max REAL,
                 p_time REAL,
                 s_time REAL);
@@ -109,11 +119,12 @@ def run(model, f_names, build, pickle, check, solve, psolve, tmlim, memlim,
         if build:
             print('Reading {0}. This will take some time.'.format(f))
             if not model:
-                test = aterro.Aterro(f, preduce, D)
+                test = aterro.Aterro(f, preduce, D, d_type)
             elif model[0] == 1:
-                test = raterro.RAterro(f, preduce, D)
+                test = raterro.RAterro(f, preduce, D, d_type)
             elif model[0] == 2:
-                test = aaterro.AAterro(f, model[1:3], model[3], preduce, D)
+                test = aaterro.AAterro(f, model[1:3], model[3], preduce, D,
+                        d_type)
             print('Sucessfully read {0}.'.format(f))
             print('Writing data. This will take some time.')
             test.wdf()
@@ -139,7 +150,7 @@ def run(model, f_names, build, pickle, check, solve, psolve, tmlim, memlim,
         if psolve:
             if not model:
                 s_time = time.time()
-                f_max = modelo.abs(f.replace('.ppm',
+                info = modelo.abs(f.replace('.ppm',
                     '_aterro{0}-0.pickle'.format(preduce)), tmlim * 1000,
                         memlim, True, False, debug)
                 s_time = time.time() - s_time
@@ -152,12 +163,14 @@ def run(model, f_names, build, pickle, check, solve, psolve, tmlim, memlim,
                         'aterro',
                         ?,
                         ?,
+                        ?,
+                        ?,
                         ?)
-                        """, (f, preduce, f_max, p_time, s_time))
+                        """, (f, preduce, info['cols'], info['rows'], info['z'], p_time, s_time))
                 con.commit()
             elif model[0] == 1:
                 s_time = time.time()
-                f_max = modelo.rbs(f.replace('.ppm',
+                info = modelo.rbs(f.replace('.ppm',
                     '_raterro{0}-0.pickle'.format(preduce)), tmlim * 1000,
                         memlim, True, False, debug)
                 s_time = time.time() - s_time
@@ -170,12 +183,14 @@ def run(model, f_names, build, pickle, check, solve, psolve, tmlim, memlim,
                         'raterro',
                         ?,
                         ?,
+                        ?,
+                        ?,
                         ?)
-                        """, (f, preduce, f_max, p_time, s_time))
+                        """, (f, preduce, info['cols'], info['rows'], info['z'], p_time, s_time))
                 con.commit()
             elif model[0] == 2:
                 s_time = time.time()
-                f_max = modelo.rbs(f.replace('.ppm',
+                info = modelo.rbs(f.replace('.ppm',
                     '_aaterro{0}-0.pickle'.format(preduce)), tmlim * 1000,
                         memlim, True, False, debug)
                 s_time = time.time() - s_time
@@ -188,8 +203,10 @@ def run(model, f_names, build, pickle, check, solve, psolve, tmlim, memlim,
                         'aaterro',
                         ?,
                         ?,
+                        ?,
+                        ?,
                         ?)
-                        """, (f, preduce, f_max, p_time, s_time))
+                        """, (f, preduce, info['cols'], info['rows'], info['z'], p_time, s_time))
                 con.commit()
         if not model:
             m = 'aterro'
@@ -250,6 +267,11 @@ if __name__ == "__main__":
             help='solve the problem using pickle file.')
     parser.add_argument('--maxd', type=int, default=800,
             help='maxime distance between points that can be transporte.')
+    parser.add_argument('--dtype', type=int, default=0,
+            help="""type of distance.
+                * ``0``: the distance between centers.
+                * ``1``: the minimum distance.
+                * ``2``: the maximum distance.""")
     parser.add_argument('--preduce', type=int, default=1,
             help='number of vertical and horizontal pixels to be reduce to one.')
     parser.add_argument('--tmlim', type=int, default=600,

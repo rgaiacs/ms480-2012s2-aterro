@@ -42,6 +42,7 @@ def abs(f_name, tmlim=3600000, memlim=1024, w2ascii=True, w2pickle=False, debug=
     len_a = len(data['a'])
     ind = intArray(len_j + len_a + 1)
     val = doubleArray(len_j + len_a + 1)
+    info = {}
     prob = glp_create_prob()
     glp_create_index(prob)
 
@@ -52,6 +53,7 @@ def abs(f_name, tmlim=3600000, memlim=1024, w2ascii=True, w2pickle=False, debug=
     for i in xrange(len_a):
         glp_set_row_name(prob, len_j + i + 1, "A{0}".format(data['a'][i]))
         glp_set_row_bnds(prob, len_j + i + 1, GLP_UP, 0.0, data['psi'][i])
+    info['rows'] = len_j + len_a
 
     glp_set_obj_dir(prob, GLP_MAX)
     for path in data['p']:
@@ -71,6 +73,7 @@ def abs(f_name, tmlim=3600000, memlim=1024, w2ascii=True, w2pickle=False, debug=
                 val[count] = data['psi'][k]
         glp_set_mat_col(prob, col, count, ind, val)
         glp_set_obj_coef(prob, col, 1.0)
+    info['cols'] = col
 
     if debug:
         glp_write_lp(prob, None, f_name.replace(".pickle", ".lp"))
@@ -80,7 +83,7 @@ def abs(f_name, tmlim=3600000, memlim=1024, w2ascii=True, w2pickle=False, debug=
         glp_init_smcp(param)
         param.tm_lim = tmlim
         glp_simplex(prob, param)
-        z = glp_get_obj_val(prob)
+        info['z'] = glp_get_obj_val(prob)
         if w2ascii:
             print("Try to write solution in {0}.".format(
                     f_name.replace(".pickle", ".txt")))
@@ -103,7 +106,7 @@ def abs(f_name, tmlim=3600000, memlim=1024, w2ascii=True, w2pickle=False, debug=
             print("Solution sucessfully write in {0}.".format(
                     f_name.replace(".pickle", ".spickle")))
     del prob
-    return z
+    return info
 
 def rbs(f_name, tmlim=3600000, memlim=1024, w2ascii=True, w2pickle=False, debug=False):
     """Build and solve the model.
@@ -147,6 +150,7 @@ def rbs(f_name, tmlim=3600000, memlim=1024, w2ascii=True, w2pickle=False, debug=
     len_a = len(data['a'])
     ind = intArray(len_j + len_a + 1)
     val = doubleArray(len_j + len_a + 1)
+    info = {}
     prob = glp_create_prob()
     glp_create_index(prob)
 
@@ -157,6 +161,7 @@ def rbs(f_name, tmlim=3600000, memlim=1024, w2ascii=True, w2pickle=False, debug=
     for i in xrange(len_a):
         glp_set_row_name(prob, len_j + i + 1, "A{0}".format(data['a'][i]))
         glp_set_row_bnds(prob, len_j + i + 1, GLP_UP, 0.0, data['psi'][i])
+    info['rows'] = len_j + len_a
 
     glp_set_obj_dir(prob, GLP_MAX)
     for path in data['p']:
@@ -176,6 +181,7 @@ def rbs(f_name, tmlim=3600000, memlim=1024, w2ascii=True, w2pickle=False, debug=
                 val[count] = data['psi'][k]
         glp_set_mat_col(prob, col, count, ind, val)
         glp_set_obj_coef(prob, col, 1.0)
+    info['cols'] = col
 
     if debug:
         glp_write_lp(prob, None, f_name.replace(".pickle", ".lp"))
@@ -185,7 +191,7 @@ def rbs(f_name, tmlim=3600000, memlim=1024, w2ascii=True, w2pickle=False, debug=
         glp_init_smcp(param)
         param.tm_lim = tmlim
         glp_simplex(prob, param)
-        z = glp_get_obj_val(prob)
+        info['z'] = glp_get_obj_val(prob)
         if w2ascii:
             print("Try to write solution in {0}.".format(
                     f_name.replace(".pickle", ".txt")))
@@ -208,4 +214,4 @@ def rbs(f_name, tmlim=3600000, memlim=1024, w2ascii=True, w2pickle=False, debug=
             print("Solution sucessfully write in {0}.".format(
                     f_name.replace(".pickle", ".spickle")))
     del prob
-    return z
+    return info

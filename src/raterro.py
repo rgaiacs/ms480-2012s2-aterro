@@ -42,9 +42,9 @@ class RAterro(aterro.Aterro):
     Create:
 
         >>> import aterro
-        >>> test = raterro.RAterro('test/sample.ppm.', 100, 800)
+        >>> test = raterro.RAterro('test/sample.ppm.', 100, 800, 0)
     """
-    def __init__(self, f_name, preduce, D):
+    def __init__(self, f_name, preduce, D, t):
         """Constructor
 
         :param f_name: name of ppm file.
@@ -59,8 +59,16 @@ class RAterro(aterro.Aterro):
         :param D: max distance between two points.
 
         :type D: float.
+
+        :param t: type of distance.
+
+        * ``0``: the distance between centers.
+        * ``1``: the minimum distance.
+        * ``2``: the maximum distance.
+
+        :type t: integer
         """
-        aterro.Aterro.__init__(self, f_name, preduce, D)
+        aterro.Aterro.__init__(self, f_name, preduce, D, t)
         self.r = []
         self.h = []
 
@@ -197,7 +205,7 @@ class RAterro(aterro.Aterro):
             r = False
         return r
 
-    def _path_is_valid(self, o, p, d, t=0):
+    def _path_is_valid(self, o, p, d):
         """Get if path between o and d is valid passing by point p.
 
         :param o: coordinates of the point of origin.
@@ -212,10 +220,6 @@ class RAterro(aterro.Aterro):
 
         :type d: tuple.
 
-        :param t: type of distance.
-
-        :type t: integer.
-
         :return: true if path is valid.
 
         :treturn: boolean.
@@ -223,12 +227,12 @@ class RAterro(aterro.Aterro):
         valid = False
         o2d = float('Infinity')
         if self._try_path(o, p, d):
-            if t == 1:
+            if self.t == 1:
                 o2p = self.map.dl(o, p)
                 p2d = self.map.dl(p, d)
                 if (o2p < self.D and p2d < self.D):
                     valid = True
-            elif t == 2:
+            elif self.t == 2:
                 o2p = self.map.du(o, p)
                 p2d = self.map.du(p, d)
                 if (o2p < self.D and p2d < self.D):
@@ -241,18 +245,10 @@ class RAterro(aterro.Aterro):
             o2d = o2p + p2d
         return (valid, o2d)
 
-    def _who_is_valid_path(self, t=0):
+    def _who_is_valid_path(self):
         """ Return a list of tuples where the last position is a list of the
         possible pivot, for the origin and destinity specify by the other
         position of the tuple.
-
-        :param t: type of distance.
-
-        * ``0``: the distance between centers.
-        * ``1``: the minimum distance.
-        * ``2``: the maximum distance.
-
-        :type t: integer
 
         :return: valid paths.
 
@@ -265,22 +261,14 @@ class RAterro(aterro.Aterro):
                         float('Infinity'))
                 for (h_i, h_j) in self.h:
                     try_path = self._path_is_valid(
-                            (j_i, j_j), (h_i, h_j), (a_i, a_j), t)
+                            (j_i, j_j), (h_i, h_j), (a_i, a_j))
                     if try_path[0] and try_path[1] < old_path[6]:
                         old_path = (j_i, j_j, h_i, h_j, a_i, a_j, try_path[1])
                 aux.append(old_path)
         return aux
 
-    def wdf(self, t=0):
+    def wdf(self):
         """Write data file.
-
-        :param t: type of distance
-
-        * ``0``: the distance between centers.
-        * ``1``: the minimum distance.
-        * ``2``: the maximum distance.
-
-        :type t: integer
 
         .. deprecated:: ef9b47c42656b1cf45ed2d18e5f1c2b1c659e1df
         
@@ -380,16 +368,8 @@ class RAterro(aterro.Aterro):
         sys.stdout.close()
         sys.stdout = sys.__stdout__
 
-    def wpf(self, d_type=0, pf_name = None):
+    def wpf(self, pf_name = None):
         """Write pickle file.
-
-        :param d_type: type of the distance to be use.
-
-        * ``0``: the distance between centers.
-        * ``1``: the minimum distance.
-        * ``2``: the maximum distance.
-
-        :type d_type: integer.
 
         :param pf_name: name to use for the pickle file.  If None, than
             self.f_name is used.
@@ -406,11 +386,11 @@ class RAterro(aterro.Aterro):
             self.psi = self._psi()
             self.r = self._who_is_r()
             self.h = self._who_is_h()
-            self.valid_paths = self._who_is_valid_path(d_type)
+            self.valid_paths = self._who_is_valid_path()
 
         if not pf_name:
             pf_name = self.f_name.replace('.ppm',
-                    '_raterro{0}-{1}.pickle'.format(self.preduce, d_type))
+                    '_raterro{0}-{1}.pickle'.format(self.preduce, self.t))
         print("Try to write data in {0}.".format(pf_name))
         with open(pf_name, 'wb') as f:
             pickle.dump({"m": self.map.get_row(), "n": self.map.get_col(),
