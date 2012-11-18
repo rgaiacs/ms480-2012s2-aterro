@@ -31,7 +31,7 @@ import time
 import sqlite3
 
 def run(model, f_names, build, pickle, check, solve, psolve, tmlim, memlim,
-        preduce, D, d_type, debug):
+        preduce, D, dtype, debug):
     """Run test.
     
     :param model: model type and usefull information.
@@ -74,13 +74,13 @@ def run(model, f_names, build, pickle, check, solve, psolve, tmlim, memlim,
 
     :type D: float.
 
-    :param d_type: type of distance.
+    :param dtype: type of distance.
 
     * ``0``: the distance between centers.
     * ``1``: the minimum distance.
     * ``2``: the maximum distance.
 
-    :type d_type: integer
+    :type dtype: integer
 
     :param debug: enable the debug behavior.
 
@@ -119,12 +119,12 @@ def run(model, f_names, build, pickle, check, solve, psolve, tmlim, memlim,
         if build:
             print('Reading {0}. This will take some time.'.format(f))
             if not model:
-                test = aterro.Aterro(f, preduce, D, d_type)
+                test = aterro.Aterro(f, preduce, D, dtype)
             elif model[0] == 1:
-                test = raterro.RAterro(f, preduce, D, d_type)
+                test = raterro.RAterro(f, preduce, D, dtype)
             elif model[0] == 2:
                 test = aaterro.AAterro(f, model[1:3], model[3], preduce, D,
-                        d_type)
+                        dtype)
             print('Sucessfully read {0}.'.format(f))
             print('Writing data. This will take some time.')
             test.wdf()
@@ -133,15 +133,15 @@ def run(model, f_names, build, pickle, check, solve, psolve, tmlim, memlim,
             print('Reading {0}. This will take some time.'.format(f))
             if not model:
                 p_time = time.time()
-                test = aterro.Aterro(f, preduce, D)
+                test = aterro.Aterro(f, preduce, D, dtype)
                 p_time = time.time() - p_time
             elif model[0] == 1:
                 p_time = time.time()
-                test = raterro.RAterro(f, preduce, D)
+                test = raterro.RAterro(f, preduce, D, dtype)
                 p_time = time.time() - p_time
             elif model[0] == 2:
                 p_time = time.time()
-                test = aaterro.AAterro(f, model[1:3], model[3], preduce, D)
+                test = aaterro.AAterro(f, model[1:3], model[3], preduce, D, dtype)
                 p_time = time.time() - p_time
             print('Sucessfully read {0}.'.format(f))
             print('Writing data. This will take some time.')
@@ -151,8 +151,8 @@ def run(model, f_names, build, pickle, check, solve, psolve, tmlim, memlim,
             if not model:
                 s_time = time.time()
                 info = modelo.abs(f.replace('.ppm',
-                    '_aterro{0}-0.pickle'.format(preduce)), tmlim * 1000,
-                        memlim, True, False, debug)
+                    '_aterro_r{0}d{1}t{2}.pickle'.format(preduce, D, dtype)),
+                    tmlim * 1000, memlim, True, False, debug)
                 s_time = time.time() - s_time
                 c.execute("""
                         INSERT INTO benchmark VALUES (
@@ -171,8 +171,8 @@ def run(model, f_names, build, pickle, check, solve, psolve, tmlim, memlim,
             elif model[0] == 1:
                 s_time = time.time()
                 info = modelo.rbs(f.replace('.ppm',
-                    '_raterro{0}-0.pickle'.format(preduce)), tmlim * 1000,
-                        memlim, True, False, debug)
+                    '_raterro_r{0}d{1}t{2}.pickle'.format(preduce, D, dtype)),
+                    tmlim * 1000, memlim, True, False, debug)
                 s_time = time.time() - s_time
                 c.execute("""
                         INSERT INTO benchmark VALUES (
@@ -191,8 +191,8 @@ def run(model, f_names, build, pickle, check, solve, psolve, tmlim, memlim,
             elif model[0] == 2:
                 s_time = time.time()
                 info = modelo.rbs(f.replace('.ppm',
-                    '_aaterro{0}-0.pickle'.format(preduce)), tmlim * 1000,
-                        memlim, True, False, debug)
+                    '_aaterro_r{0}d{1}t{2}.pickle'.format(preduce, D, dtype)),
+                    tmlim * 1000, memlim, True, False, debug)
                 s_time = time.time() - s_time
                 c.execute("""
                         INSERT INTO benchmark VALUES (
@@ -285,4 +285,4 @@ if __name__ == "__main__":
 
     run(args.b, args.f, args.data, args.pickle, args.check, args.solve,
             args.psolve, args.tmlim, args.memlim, args.preduce, args.maxd,
-            args.debug)
+            args.dtype, args.debug)

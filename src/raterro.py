@@ -390,7 +390,8 @@ class RAterro(aterro.Aterro):
 
         if not pf_name:
             pf_name = self.f_name.replace('.ppm',
-                    '_raterro{0}-{1}.pickle'.format(self.preduce, self.t))
+                    '_raterro_r{0}d{1}t{2}.pickle'.format(self.preduce,
+                        self.Dreal, self.t))
         print("Try to write data in {0}.".format(pf_name))
         with open(pf_name, 'wb') as f:
             pickle.dump({"m": self.map.get_row(), "n": self.map.get_col(),
