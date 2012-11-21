@@ -99,8 +99,10 @@ def run(model, f_names, build, pickle, check, solve, psolve, tmlim, memlim,
                 id INTEGER PRIMARY KEY,
                 date TEXT,
                 problem TEXT,
+                maxd REAL,
                 reduce INTEGER,
                 solver TEXT,
+                dtype INTEGER,
                 cols INTEGER,
                 rows INTEGER,
                 f_max REAL,
@@ -165,8 +167,10 @@ def run(model, f_names, build, pickle, check, solve, psolve, tmlim, memlim,
                         ?,
                         ?,
                         ?,
+                        ?,
+                        ?,
                         ?)
-                        """, (f, preduce, info['cols'], info['rows'], info['z'], p_time, s_time))
+                        """, (f, D, preduce, dtype, info['cols'], info['rows'], info['z'], p_time, s_time))
                 con.commit()
             elif model[0] == 1:
                 s_time = time.time()
@@ -185,8 +189,10 @@ def run(model, f_names, build, pickle, check, solve, psolve, tmlim, memlim,
                         ?,
                         ?,
                         ?,
+                        ?,
+                        ?,
                         ?)
-                        """, (f, preduce, info['cols'], info['rows'], info['z'], p_time, s_time))
+                        """, (f, D, preduce, dtype, info['cols'], info['rows'], info['z'], p_time, s_time))
                 con.commit()
             elif model[0] == 2:
                 s_time = time.time()
@@ -205,8 +211,10 @@ def run(model, f_names, build, pickle, check, solve, psolve, tmlim, memlim,
                         ?,
                         ?,
                         ?,
+                        ?,
+                        ?,
                         ?)
-                        """, (f, preduce, info['cols'], info['rows'], info['z'], p_time, s_time))
+                        """, (f, D, preduce, dtype, info['cols'], info['rows'], info['z'], p_time, s_time))
                 con.commit()
         if not model:
             m = 'aterro'
