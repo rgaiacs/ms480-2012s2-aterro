@@ -48,30 +48,40 @@ como ilustrado na Figura~\ref{fig:circle_line}.
 \end{figure}
 
 A equação do círculo é
-\begin{align*}
+\begin{align}
     x^2 + y^2 &= r^2
-\end{align*}
-e a equação da reta é
+    \label{ec_circ}
+\end{align}
+e a equação da reta que passa pelos pontos $P$ e $Q$ é
 \begin{align*}
-    y &= \left( \frac{q_2 - p_2}{q_1 - p_1} \right)x + \left( q_2 - \left(
-    \frac{q_2 - p_2}{q_1 - p_1} \right) q_1 \right) \\
-    y &= \left( \frac{q_2 - p_2}{q_1 - p_1} \right)x + \left(
+    (y-p_2)(q_1-p_1)=(q_2-p_2)(x-p_1)\,.
+\end{align*}
+Se $p_1\neq q_1$, esta equação pode ser escrita como
+\begin{align*}
+    y=(x-p_1)\left(\frac{q_2-p_2}{q_1-p_1}\right)+p_2\,,
+\end{align*}
+ou ainda
+\begin{align*}
+    y = x\left( \frac{q_2 - p_2}{q_1 - p_1} \right) + \left(
     \frac{q_1 p_2 - q_2 p_1}{q_1 - p_1} \right).
 \end{align*}
 
-Então,
+Substituíndo em (\ref{ec_circ}), obtemos
 \begin{align*}
     x^2  + \left[ \left( \frac{q_2 - p_2}{q_1 - p_1} \right) x + \left(
-    \frac{q_1 p_2 - q_2 p_1}{q_1 - p_1} \right) \right]^2 & = r^2 \\
+    \frac{q_1 p_2 - q_2 p_1}{q_1 - p_1} \right) \right]^2  = r^2\,,
+\end{align*}
+ou ainda
+\begin{align*}
     \left[ 1 + \left( \frac{q_2 - p_2}{q_1 - p_1} \right)^2 \right] x^2 +
     2 \left( \frac{q_2 - p_2}{q_1 - p_1} \right) \left( \frac{q_1 p_2 - q_2
     p_1}{q_1 - p_1} \right) x + \left( 
-    \frac{q_1 p_2 - q_2 p_1}{q_1 - p_1} \right)^2 & = r^2
+    \frac{q_1 p_2 - q_2 p_1}{q_1 - p_1} \right)^2 & = r^2\,.
 \end{align*}
 Para a equação do segundo grau anterior, o discriminate é
 \begin{align*}
     \Delta &= r^2 \left( \left( q_1 - p_1 \right)^2 + \left( q_2 - p_2
-    \right)^2 \right) - \left( p_1 q_2 - p_2 q_1 \right).
+    \right)^2 \right) - \left( p_1 q_2 - p_2 q_1 \right)^2\,;
 \end{align*}
 e 
 \begin{itemize}
