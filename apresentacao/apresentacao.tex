@@ -1,0 +1,166 @@
+% Copyright (C) 2012 Raniere Silva
+% 
+% This work is licensed under the Creative Commons
+% Attribution-ShareAlike 3.0 Unported License. To view a copy of this
+% license, visit <http://creativecommons.org/licenses/by-sa/3.0/>.
+% 
+% This work is distributed in the hope that it will be useful, but
+% WITHOUT ANY WARRANTY; without even the implied warranty of
+% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+\documentclass[11pt]{beamer}
+% Utilizar apenas para a classe beamer
+\usetheme{CambridgeUS}
+\let\Tiny=\tiny % Redefine at least \Tiny for avoid warning
+
+% Tipo de arquivo.
+\usepackage[utf8]{inputenc}
+% \usepackage[latin1]{inputenc}
+\usepackage[T1]{fontenc}
+
+% Configura\c{c}\~{o}es regionais
+% \usepackage[top=3cm,left=2cm,right=2cm,bottom=3cm]{geometry}
+\usepackage[brazil]{babel}
+\usepackage{indentfirst}
+\uselanguage{brazil}
+\languagepath{brazil}
+\deftranslation[to=brazil]{Example}{Exemplo}
+
+% Textos
+\newcommand{\flang}[1]{\textit{#1}}
+
+% Links
+\usepackage{url}
+\usepackage{hyperref}
+\hypersetup{
+%colorlinks = true,
+}
+\usepackage{breakurl}
+
+% Pacotes matem\'{a}ticos
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\allowdisplaybreaks[4]
+\newtheorem{defi}{Definição}
+\newtheorem{prop}{Proposição}
+
+% Pacotes para tabelas
+\usepackage{multicol}
+\usepackage{multirow}
+\usepackage{array}
+
+% Pacotes gr\'{a}ficos
+\usepackage{graphicx}
+\usepackage{subfigure}
+\usepackage{wrapfig}
+\usepackage{tikz}
+\usetikzlibrary{positioning}
+\usetikzlibrary{fit}
+
+% Pacotes para algoritmos
+\usepackage{algorithmic}
+\algsetup{linenosize=\small}
+\renewcommand{\algorithmicrequire}{\textbf{Entrada:}}
+\renewcommand{\algorithmicensure}{\textbf{Saída:}}
+\renewcommand{\algorithmicend}{\textbf{fim}}
+\renewcommand{\algorithmicif}{\textbf{se}}
+\renewcommand{\algorithmicthen}{\textbf{ent\~{a}o}}
+\renewcommand{\algorithmicelse}{\textbf{caso contr\'{a}rio}}
+\renewcommand{\algorithmicendif}{\algorithmicend}
+\renewcommand{\algorithmicfor}{\textbf{para}}
+\renewcommand{\algorithmicforall}{\textbf{para todo}}
+\renewcommand{\algorithmicdo}{\textbf{fa\c{c}a}}
+\renewcommand{\algorithmicendfor}{\algorithmicend}
+\renewcommand{\algorithmicwhile}{\textbf{enquanto}}
+\renewcommand{\algorithmicendwhile}{\algorithmicend}
+\renewcommand{\algorithmicrepeat}{\textbf{repita}}
+\renewcommand{\algorithmicuntil}{\textbf{at\'{e}}}
+\renewcommand{\algorithmicreturn}{\textbf{retorne}}
+\renewcommand{\algorithmiccomment}[1]{\hspace{2em}/* #1 */}
+
+\usepackage{algorithm}
+\floatname{algorithm}{Algoritmo}
+
+% Pacotes para c\'{o}digos
+\usepackage{textcomp}
+\usepackage{listings}
+\renewcommand{\lstlistingname}{C\'{o}digo}
+\lstset{
+% language=Octave,
+basicstyle=\ttfamily\scriptsize,
+columns=flexible,
+% numbers=left,
+% numberstyle=\footnotesize,
+% stepnumber=5,
+% numbersep=5pt,
+% backgroundcolor=\color{white},
+% showspaces=false,
+% showstringspaces=false,
+% showtabs=false,
+% frame=single,
+tabsize=4,
+captionpos=t,
+breaklines=true,
+breakatwhitespace=false,
+% caption={\texttt{\lstname}},
+% escapeinside={\%*}{*)},
+% morekeywords={#},
+upquote=true,
+}
+\newcommand{\lcode}[1]{\lstinline!#1!}
+% Configura\{c}c\~{o}es para o python
+\lstdefinestyle{python}{
+language=python,
+% escapeinside={\%}{\^{M},
+}
+\lstnewenvironment{cpython}{\lstset{style=python,}}{}
+\newcommand{\fpython}[1]{\lstinputlisting[style=python,]{#1}}
+
+% Index
+\usepackage{makeidx}
+\makeindex
+
+\begin{document}
+\title{MS480 - Problema do Aterro}
+\author[Silva, Cezarino, Marques e Lima]{Raniere Gaia Costa da Silva\footnote{ra092767,
+\url{r.gaia.cs@gmail.com}} \and Fernando de Oliveira Cezarino\footnote{ra085855,
+\url{feolce@gmail.com}} \and Ana~Paula Diniz Marques\footnote{ra076433,
+\url{anapdinizm @gmail.com}} \and  Ana Flávia da Cunha Lima\footnote{ra093370,
+\url{anaflavia.c.lima @gmail.com}}}
+
+\begin{frame}
+    \maketitle
+\end{frame}
+
+\begin{frame}
+    \begin{block}{}
+        Os arquivos desta apresentação encontram-se disponíveis \\
+        em \url{https://github.com/r-gaia-cs/ms480-2012s2-aterro}.
+    \end{block}
+
+    \begin{block}{Licença}
+        Salvo indicado o contrário, esta apresentação está licenciada sob a licença
+        Creative Commons Atribuição 3.0 Não Adaptada. Para ver uma cópia desta
+        licença, visite http://creativecommons.org/licenses/by/3.0/.
+        \begin{center}
+            \includegraphics{../figuras/cc-by.png}
+        \end{center}
+    \end{block}
+\end{frame}
+
+\begin{frame}
+    \tableofcontents
+\end{frame}
+
+\section{Problema do aterro}
+
+\section*{Obrigado}
+\begin{frame}
+    \begin{center}
+        Obrigado!
+    \end{center}
+\end{frame}
+
+\end{document}
