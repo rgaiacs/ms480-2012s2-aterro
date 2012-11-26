@@ -16,34 +16,56 @@
 % PURPOSE.
 
 \section{Implementa\c{c}\~{a}o computacional}
-A parte computacional do projeto foi desenvolvida utilizando a linguagem de
-programação Python\nocite{Python}, o pacote Scipy, o GLPK (GNU Linear
-Programming Kit)\nocite{GLPK} e o Python-GLPK.
-%TODO usarm emph?
+A parte computacional do projeto encontra-se disponível em
+\url{https://github.com/r-gaia-cs/ms480-2012s2-aterro/tree/master/src} e foi
+desenvolvida utilizando:
+\begin{itemize}
+    \item Python\nocite{Python},
+    \item Scipy\nocite{SciPy},
+    \item GLPK (GNU Linear Programming Kit)\nocite{GLPK},
+    \item Python-GLPK.
+\end{itemize}
+O processamento dos testes para a construção dos elementos do problema é feita
+em Python e utiliza o Python-GLPK para a comunicação com o GLPK que é utilizado
+para resolver o problema de Programação Linear. O SciPy é utilizado para
+resolver os problemas de Programação Não-Linear que aparecem na fase de
+processamento.
 
-As figuras utilizadas para armazenar os mapas foram armazenadas
-utilizando o formato \texttt{ppm}.
+Para a criação dos testes, utilizou-se
+\begin{enumerate}
+    \item Inkscape e
+    \item ImageMagick
+\end{enumerate}
+e o formato \texttt{ppm} para armazenar os mapas dos testes.
 
 \subsection{Implementação do problema sem obstáculo}
-Ao implementar \eqref{eq:model_without_obs} foi possível resolver em
-% TODO Incluir resultados.
+O arquivo \texttt{ppm} é lido e ``comprimido'' de acordo com o tamanho da malha
+desejada. Com as informações do arquivo na memória. Verifica-se quais os pares
+cuja distância é inferior a máxima permitida e esses pares são salvos em um
+arquivo binário (para o caso de precisar utilizá-los novamente).
 
-O arquivo \texttt{ppm} é lido e ''comprimido'' de acordo com o tamanho da malha
-desejada. Depois, construímos o modelo e por último, resolvemos o problema.
-%TODO melhorar esse parágrafo
+As informações do arquivo binário são lidas e a partir delas é montado o
+problema de Programação Linear que posteriormente é resolvido pelo GLPK.
 
 \subsection{Implementação do problema com obstáculo circular}
-Para o subproblema de determinar o ponto $z$ que minimiza $\overline{xyz}$,
-utilizou-se a função \texttt{fmin-cobyla} do pacote Scipy, que minimiza uma
-função de várias variáveis sujeita a restrições utilizando um algoritmo baseado
-em aproximações lineares para a função objetivo e as restrições. Maiores
+Ocorre de maneira semelhante ao problema sem obstáculo exceto que procura-se
+por triplas, $(x, z, y)$, que satisfazem 
+\begin{itemize}
+    \item $d(x, z) < D$,
+    \item $d(y, z) < D$,
+    \item $l(x, z) > r$,
+    \item $l(y, z) > r$.
+\end{itemize}
+
+Para um par $(x, y)$ é escolhido a tripla $(x, z, y)$ tal que $d(x, z) + d(y,
+z)$ é minimo. Para que essa escolha seja feita é resolvido um problema de
+Programação Não-Linear por meio da função \texttt{fmin-cobyla} do pacote SciPy.
+Maiores
 informações sobre a função \texttt{fmin-cobyla} podem ser encontradas no
 Apêndice , na documentação do Scipy e em \cite{Powell:2007}.
-%TODO colocar referências
-
-Depois, disso, prosseguimos como no problema sem obstáculo.
 
 \subsection{Implementação do problema com obstáculo geral}
-Utilizou-se o algoritmo de Bresenham.
-
-%TODO melhorar essa seção
+Ocorre de maneira semelhante ao problema com obstáculo circular exceto que ao
+invés de utilizar a função \texttt{fmim-cobyla} do pacote SciPy para resolver
+um problema de Programação Não-Linear é feita uma busca por exaustão utilizando
+o algoritmo de Bresenham para verificar quando $l(x, z) < r$ ou $l(y, z) < r$.
