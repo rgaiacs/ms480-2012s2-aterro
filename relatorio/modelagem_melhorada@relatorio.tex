@@ -77,7 +77,31 @@ y)$. Ao fazer isso, o n\'{u}mero de vari\'{a}veis do problema com obst\'{a}culo
 passa a ser da ordem de $|J| |A|$ que \'{e} a mesma ordem do problema sem
 obst\'{a}culo.
 
+Uma forma de descobrir qual $z$ para o par $(x, y)$ tal que $d(x, z) + d(y, z)$
+é mínimo é utilizando uma busca por exaustão. Uma outra forma é resolver o
+seguinte problema de Programação Não-Linear:
+\begin{align*}
+    \underset{Z}{\text{min }} & \sqrt{(Z_1 - X_1)^2 + (Z_2 - X_2)^2} +
+    \sqrt{(Z_1 - Y_1)^2 + (Z_2 - Y_2)^2}, \\
+    \text{s.a. } & \Delta(X, Z) < 0, \\
+    & \Delta(Y, Z) < 0,
+\end{align*}
+onde
+\begin{align*}
+    \Delta(P, Q) = r^2 \left( (Q_1 - P_1)^2 + (Q_2 - P_2)^2 \right) - \left(
+    P_1 Q_2 - P_2 Q_1 \right)^2,
+\end{align*}
+e $X$, $Y$ são o par coordenado correspondente a posição do centro dos
+retângulos $x$ e $y$, respectivamente, transladada para que o centro da região
+$R$ seja $(0, 0)$, e $r$ é o raio da região $R$.
+
+A motivação para as duas restrições do programa de Programação Não-Linear
+descrito acima decorre da condição para que uma reta que passe pelos pontos $P$
+e $Q$ não possua pontos em comum com um círculo centrado no ponto $(0, 0)$ e
+raio $r$. Maiores detalhes são encontrados no Apêndice~\ref{sse:circle_line}.
+
 \subsection{Problema com obst\'{a}culo geral}
 Tudo o que foi dito para o problema com obst\'{a}culo circular \'{e} facilmente
-aplicado para o problema com obst\'{a}culo geral usando o algoritmo de
-Bresenham.
+aplicado para o problema com obst\'{a}culo geral, exceto em utilizar um problema
+de Programação Não-Linear para descobrir qual $z$ para o par $(x, y)$ tal que
+$d(x, z) + d(y, z)$ é mínimo .

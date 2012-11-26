@@ -46,8 +46,8 @@ $A$.
 \end{figure}
 
 Para modelarmos o problema, discretizamos a região ilustrada na
-Figura~\ref{fig:ilust_J_A} utilizando uma malha quadriculada, como ilustrado na
-Figura~\ref{fig:disc_J_A}, e nomeamos cada quadrado da malha por um número
+Figura~\ref{fig:ilust_J_A} utilizando uma malha retangular, como ilustrado na
+Figura~\ref{fig:disc_J_A}, e nomeamos cada retângulo da malha por um número
 seguindo a lógica parcialmente indicada.
 \begin{figure}[!htb]
     \centering
@@ -81,15 +81,15 @@ seguindo a lógica parcialmente indicada.
         \draw[->] (-.2,8) -- (8.2,8);
         \draw[->] (0,8.2) -- (0,-.2);
     \end{tikzpicture}
-    \caption{Ilustra\c{c}\~{a}o das regiões $J$ e $A$.}
+    \caption{Ilustra\c{c}\~{a}o da malha retangular.}
     \label{fig:disc_J_A}
 \end{figure}
 
-É possível observar que alguns elementos da malha quadriculada encontram-se
+É possível observar que alguns elementos da malha encontram-se
 apenas parcialmente dentro de uma das regiões. Para corrigir isso,
 aproximamos as regiões para a malha utilizada de modo que todos os
 elementos da malha que encontram-se parcialmente presentes em uma das regiões
-passa a pertencer totalmente a ela. O resultado é apresentado na
+passam a pertencer totalmente a ela. O resultado é apresentado na
 Figura~\ref{fig:disc_J_A_aprox}.
 %TODO Melhorar esse parágrafo.
 
@@ -121,15 +121,15 @@ Figura~\ref{fig:disc_J_A_aprox}.
         \draw[->] (-.2,8) -- (8.2,8);
         \draw[->] (0,8.2) -- (0,-.2);
     \end{tikzpicture}
-    \caption{Ilustra\c{c}\~{a}o das regiões $J$ e $A$.}
+    \caption{Ilustra\c{c}\~{a}o do ajuste das regiões $J$ e $A$ à malha retangular.}
     \label{fig:disc_J_A_aprox}
 \end{figure}
 
 Seja $\phi : J \to \mathbb{R}$, $\psi: A \to \mathbb{R}$, $f: (J, A) \to
 \mathbb{R}$ e $d: (J, A) \to \mathbb{R}$, onde $\phi(x)$ corresponde ao volume
-de terra disponível no quadrado $x$, $\psi(y)$ ao volume de terra admitido no
-quadrado $y$, $f(x, y)$ ao volume de terra transportado do quadrado $x$ para o
-quadrado $y$ e $d(x, y)$ a distância entre os quadrados $x$ e $y$.
+de terra disponível no retângulo $x$, $\psi(y)$ ao volume de terra admitido no
+retângulo $y$, $f(x, y)$ ao volume de terra transportado do retângulo $x$ para o
+retângulo $y$ e $d(x, y)$ a distância entre os retângulos $x$ e $y$.
 
 Sendo $\xi_{x, y} = f(x, y)$ a variável de decisão, podemos modelar o problema
 da seguinte forma:
@@ -151,7 +151,7 @@ da seguinte forma:
 onde $x \in J$, $y \in A$, \eqref{eq:model_without_obs:max_dist} refere-se a
 distância máxima dos canos utilizados, \eqref{eq:model_without_obs:max_jazida} a
 quantidade de terra que pode ser retirado de $J$ e
-\eqref{eq:model_without_obs:max_aterro} a quantidade de terra necessária em $A$.
+\eqref{eq:model_without_obs:max_aterro} a quantidade de terra que é admitada em $A$.
 
 O modelo apresentado em \eqref{eq:model_without_obs} possui função objetivo e
 restrições lineares. Em relação à restrição
@@ -189,8 +189,7 @@ Figura~\ref{fig:disc_J_A_R}.
         \draw[->] (-.2,8) -- (8.2,8);
         \draw[->] (0,8.2) -- (0,-.2);
     \end{tikzpicture}
-    \caption{Ilustra\c{c}\~{a}o da malha quadricular sobre a regi\~{a}o de
-    interesse.}
+    \caption{Ilustra\c{c}\~{a}o do obstáculo circular.}
     \label{fig:disc_J_A_R}
 \end{figure}
 %TODO arrumar fig:disc_J_A_R
@@ -200,12 +199,12 @@ obstáculo. De maneira semelhante \`{a}s definições utilizadas na subseção
 anterior, seja $\phi: J \to \mathbb{R}$, $\psi: A \to \mathbb{R}$,
 $f: (J, H, A) \to \mathbb{R}$, $d: (J \cup A, H) \to \mathbb{R}$ e $l:
 (J \cup A, H) \to \mathbb{R}$, onde $\phi(x)$ corresponde ao volume de terra
-disponível no quadrado $x$, $\psi(y)$ ao volume de terra necessário no quadrado
-$y$, $f(x, z, y)$ ao volume de terra transportado do quadrado $x$ para o
-quadrado $y$ passando pelo quadrado $z$, $d(w, z)$ a distância\footnote{A
+disponível no retângulo $x$, $\psi(y)$ ao volume de terra admitido no retângulo
+$y$, $f(x, z, y)$ ao volume de terra transportado do retângulo $x$ para o
+retângulo $y$ passando pelo retângulo $z$, $d(w, z)$ a distância\footnote{A
 distância é definida no Apêndice~\ref{sse:distance}.} entre os
-quadrados $w$ e $z$ e $l(w, z)$ a distância entre a reta
-formada pelos quadrados $w$ e $z$ ao ponto $c$.
+retângulos $w$ e $z$ e $l(w, z)$ a distância entre a reta
+formada pelos retângulos $w$ e $z$ ao ponto $c$.
 %TODO ainda usamos distância entre ponto e reta?
 
 Sendo $\xi_{x, z, y} = f(x, z, y)$ a variável de decisão, podemos modelar o
@@ -231,10 +230,10 @@ problema da seguinte forma:
 \end{subequations}
 onde $x \in J$, $y \in A$, $z \in H$, \eqref{eq:model_with_obs_nl:max_dist}
 refere-se a distância máxima dos canos utilizados,
-\eqref{eq:model_with_obs_nl:dist_obs} a restrição dos canos não passar pela
+\eqref{eq:model_with_obs_nl:dist_obs} a restrição dos canos não passarem pela
 região $R$, \eqref{eq:model_with_obs_nl:max_jazida} a quantidade de terra que pode
 ser retirado de $J$ e \eqref{eq:model_with_obs_nl:max_aterro} a quantidade de terra
-necessário em $A$.
+admitido em $A$.
 
 O modelo apresentado em \eqref{eq:model_with_obs_nl} possue função objetivo e
 restrições lineares. Em relação \`{a}s restrições
@@ -277,8 +276,8 @@ ilustrada na Figura~\ref{fig:disc_J_A_R_aprox}.
         \draw[->] (-.2,8) -- (8.2,8);
         \draw[->] (0,8.2) -- (0,-.2);
     \end{tikzpicture}
-    \caption{Ilustra\c{c}\~{a}o da malha quadricular sobre a regi\~{a}o de
-    interesse.}
+    \caption{Ilustra\c{c}\~{a}o da aproximação de um obstáculo geral (neste
+    caso, um obstáculo circular).}
     \label{fig:disc_J_A_R_aprox}
 \end{figure}
 %TODO arrumar fig:disc_J_A_R_aprox
@@ -289,12 +288,12 @@ O modelo a ser utilizado com a aproximação da região $R$ é semelhante a
 \begin{align}
     % \xi_{x, z, y} &= 0, && \forall (x, z, y) \mid b(x, z) \notin R \text{ ou }
     % b(y, z) \notin R,
-    \xi_{x, z, y} &= 0, && \forall (x, z, y) \mid b(x, z) \neq 1 \text{ ou }
-    b(y, z) \neq 1,
+    \xi_{x, z, y} &= 0, && \forall (x, z, y) \mid b(x, z) = 1 \text{ ou }
+    b(y, z) = 1,
     \label{eq:model_with_obs:dist_obs} 
 \end{align}
 onde $b: (J \cup A, H) \to \left\{ 0, 1 \right\}$ é $1$ se a linha reta
-construída entre os quadrados $w \in J \cup A$ e $z \in H$ utilizando o
+construída entre os retângulos $w \in J \cup A$ e $z \in H$ utilizando o
 algoritmo de Bresenham\footnote{Ver o Apêndice~\ref{sse:bresenham_line}.} passa
 por $R$ e $0$ caso contrário.
 

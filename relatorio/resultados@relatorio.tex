@@ -1,2 +1,26 @@
 \section{Resultados computacionais}
+As tabelas com os dados referentes aos testes computacionais encontrão-se no
+Apêndice~\ref{sse:tab:resul_comp}. A seguir encontra-se a análise dos mesmos.
 
+Em relação aos problemas estudados, observamos pela Tabela~\ref{tab:solver} que
+o problema com o maior valor da função objetivo é o problema com obstáculo geral
+(devido as várias aproximação realizadas e uso de dois canos de comprimento
+máximo $D$) e que o problema com o menor valor da função objetivo foi o problema
+sem obstáculo (devido a ser utilizado apenas um cano de comprimento máximo $D$).
+
+Pelo Teorema~1 em \cite{Andjel:1989:TP}, esperava-se que 
+\begin{align*}
+    F(d^l) \geq F(d^c) \geq F(d^u),
+\end{align*}
+onde $F(d)$ é o valor da função objetivo ao utilizar a distância do tipo $d$.
+Essa relação é verificada na Tabela~\ref{tab:dtype}.
+
+Em relação ao comprimento máximo dos canos, esperava-se que ao aumentar o
+comprimento o valor da função objetivo aumenta-se. É possível observar isso na
+Tabela~\ref{tab:maxd}. Na mesma tabela observa-se que para $D = 900$ e $D =
+1000$ o mesmo valor da função objetivo é obtido e o acredita-se que decorre do
+valor ótimo para o problema ter sido atingido.
+
+E em relação a malha retangular utilizada, esperava-se que quanto menores forem
+os retângulos (menor valor de redução) maior fosse o valor da função objetivo.
+Essa relação é observada na Tabela~\ref{tab:reduce}.

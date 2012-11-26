@@ -16,9 +16,10 @@
 % PURPOSE.
 
 \section{Algoritmo de Bresenham} \label{sse:bresenham_line}
-O algoritmo de Bresenham determina quais pontos em uma malha
-bidimensional devem ser selecionados de modo a obter uma boa aproximação
-para uma linha reta ligando dois pontos dados.
+O algoritmo de Bresenham determina quais pontos em uma malha quadriculada
+devem ser selecionados de modo a obter uma boa aproximação
+para uma linha reta ligando dois pontos dessa malha.\footnote{É possível adaptar
+esse algoritmo para o caso de malhas retangulares sem maiores dificuldades.}
 
 A seguinte convenção será usada:
 \begin{itemize}
@@ -30,10 +31,10 @@ e  $(x_1,y_1)$.
 \end{itemize}
 
 O algoritmo será apresentado apenas para segmentos de reta com coeficiente
-angular entre $-1$ e $0$. Para cada coluna $x$ entre $x_0$
-e $x_1$, o algoritmo determina exatamente uma linha $y$, que conterá uma célula
-da aproximação do segmento de reta, enquanto cada linha entre $y_0$ e $y_1$
-pode conter várias células da aproximação.
+angular entre $-1$ e $0$ mas pode ser extendido para os demais casos. Para cada
+coluna $x$ entre $x_0$ e $x_1$, o algoritmo determina exatamente uma linha $y$,
+que conterá uma célula da aproximação do segmento de reta, enquanto cada linha
+entre $y_0$ e $y_1$ pode conter várias células da aproximação.
 
 É então escolhido um inteiro $y$ correspondendo à célula
 que mais se aproxima do valor real da função para cada $x$. Assim, para

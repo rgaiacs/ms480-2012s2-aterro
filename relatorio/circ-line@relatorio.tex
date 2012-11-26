@@ -16,11 +16,12 @@
 % PURPOSE.
 
 \section{Intersecção de Círculo com Reta} \label{sse:circle_line}
+\nocite{Wolfram:CircleLine}
 Considere um círculo, $C$, com centro em $(0, 0)$ e raio $r$ e os pontos $P =
 (p_1, p_2)$ e $Q = (q_1, q_2)$. A reta $\overline{PQ}$ pode
 \begin{itemize}
     \item não interseptar o círculo $C$,
-    \item ser tagente ao círculo $C$,
+    \item ser tagente ao círculo $C$, ou
     \item ter dois pontos em comum com o círculo $C$,
 \end{itemize}
 como ilustrado na Figura~\ref{fig:circle_line}.
@@ -83,7 +84,13 @@ Para a equação do segundo grau anterior, o discriminate é
     \Delta &= r^2 \left( \left( q_1 - p_1 \right)^2 + \left( q_2 - p_2
     \right)^2 \right) - \left( p_1 q_2 - p_2 q_1 \right)^2\,;
 \end{align*}
-e 
+e
+\begin{itemize}
+    \item se $\Delta < 0$ a equação não possui solução,
+    \item se $\Delta = 0$ a equação possui duas soluções iguais,
+    \item se $\Delta > 0$ a equação possui duas soluções distintas.
+\end{itemize}
+Logo,
 \begin{itemize}
     \item $\overline{PQ}$ não interseptar o círculo $C$ quando $\Delta < 0$,
     \item $\overline{PQ}$ é tagente ao círculo $C$ quando $\Delta = 0$,

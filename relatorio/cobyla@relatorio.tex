@@ -14,29 +14,29 @@
 % implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 % PURPOSE.
 
-\section{COBYLA}
-
-\label{cobyla}
+\section{COBYLA} \label{cobyla}
 A rotina COBYLA \emph{(Constrained Optimization BY Linear Approximation)}
-minimiza uma função objetivo $f(x)$ sujeito à $m$ restrições de desigualdade
-do tipo $g(x)\leq0$, com $x\in\mathbb{R}^n$.
+minimiza uma função $f: \mathbb{R}^n \to \mathbb{R}$ sujeito à $m$ restrições de
+desigualdade do tipo $g(x) \leq 0$, onde $g: \mathbb{R}^n \to \mathbb{R}$, sem
+utilizar nenhuma derivada.
 
-O algoritmo emprega aproximações lineares para a função objetivo e para as
-restrições, tais aproximações sendo formadas por interpolações lineares em
-$n+1$ pontos no espaço das variáveis. Os pontos da interpolação são tratados
+O algoritmo emprega, ao invés de um modelo quadrático, aproximações lineares,
+definidas por uma interpolações lineares de $n+1$ pontos, para a função objetivo
+e para as restrições. , tais aproximações sendo formadas por o espaço das
+variáveis. Os pontos da interpolação são tratados
 como os vértices de um simplex\footnote{Politopo com $n+1$ vértices em um
-espaço $n-$dimensional}.
+espaço $n$-dimensional.}.
 
-O parâmetro $\rho$ controla o tamanho do simplex, e é reduzido automaticamente
-de $\rho_i$ para $\rho_f$. Para cada $\rho$, a subrotina tenta alcançar um bom
-vetor de variáveis para o tamanho atual, e então $\rho$ é reduzido até o valor
-$\rho_f$ ser alcançado.
-
-Portanto, para $\rho_i$ e $\rho_f$ devem ser designados valores razoáveis de
-mudança inicial para e precisão desejada nas variáveis, respectivamente. Porém,
-essa precisão deve ser vista como objeto para experimentação, pois ela não é
-garantida.
-
-A rotina trata cada restrição individualmente quando calcula a mudança para as
-variáveis, ao invés de juntar todas as restrições em uma única função de
-penalidade.
+% O parâmetro $\rho$ controla o tamanho do simplex, e é reduzido automaticamente
+% de $\rho_i$ para $\rho_f$. Para cada $\rho$, a subrotina tenta alcançar um bom
+% vetor de variáveis para o tamanho atual, e então $\rho$ é reduzido até o valor
+% $\rho_f$ ser alcançado.
+% 
+% Portanto, para $\rho_i$ e $\rho_f$ devem ser designados valores razoáveis de
+% mudança inicial para e precisão desejada nas variáveis, respectivamente. Porém,
+% essa precisão deve ser vista como objeto para experimentação, pois ela não é
+% garantida.
+% 
+% A rotina trata cada restrição individualmente quando calcula a mudança para as
+% variáveis, ao invés de juntar todas as restrições em uma única função de
+% penalidade.

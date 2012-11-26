@@ -1,4 +1,4 @@
-\section{Tabelas com os Resultados computacionais}
+\section{Tabelas com os Resultados computacionais} \label{sse:tab:resul_comp}
 
 \begin{landscape}
 % \csvautotabular{../src/test/solver.csv}
@@ -12,9 +12,9 @@
         & \multicolumn{5}{|c|}{t1.svg} & \multicolumn{5}{|c|}{t2.svg} \\ \hline
         Solver & Linhas & Colunas & F. Obj. & T. Proc. & T. Sol. & Linhas &
         Colunas & F. Obj. & T. Proc. & T. Sol. \\ \hline
-        aterro & 110 & 817 & 38.0 & 3.5974 & 0.0436 & 140 & 1629 & 55.0 & 3.6807 & 0.0961 \\ \hline
-        raterro & 110 & 2989 & 49.0 & 3.5674 & 0.1562 & 140 & 4896 & 68.0 & 3.5937 & 0.2803 \\ \hline
-        aaterro & 110 & 1111 & 45.0 & 3.5443 & 0.0635 & 140 & 2128 & 63.0 & 3.4525 & 0.1253 \\ \hline
+        Sem obstáculo & 110 & 817 & 38.0 & 3.5974 & 0.0436 & 140 & 1629 & 55.0 & 3.6807 & 0.0961 \\ \hline
+        Obstáculo circular & 110 & 1111 & 45.0 & 3.5443 & 0.0635 & 140 & 2128 & 63.0 & 3.4525 & 0.1253 \\ \hline
+        Obstáculo geral & 110 & 2989 & 49.0 & 3.5674 & 0.1562 & 140 & 4896 & 68.0 & 3.5937 & 0.2803 \\ \hline
     \end{tabular}
 \end{table}
 
@@ -29,9 +29,9 @@
         & \multicolumn{5}{|c|}{t1.svg} & \multicolumn{5}{|c|}{t2.svg} \\ \hline
         Tipo Dist. & Linhas & Colunas & F. Obj. & T. Proc. & T. Sol. & Linhas &
         Colunas & F. Obj. & T. Proc. & T. Sol. \\ \hline
-        0 & 110 & 1578 & 49.0 & 3.4 & 0.0870 & 140 & 2896 & 68.0 & 3.6735 & 0.1699 \\ \hline
-        1 & 110 & 2034 & 49.0 & 3.5 & 0.1101 & 140 & 3610 & 68.0 & 3.6662 & 0.2113 \\ \hline
-        2 & 110 & 1111 & 45.0 & 3.5 & 0.0635 & 140 & 2128 & 63.0 & 3.4525 & 0.1253 \\ \hline
+        $d^l$ & 110 & 2034 & 49.0 & 3.5 & 0.1101 & 140 & 3610 & 68.0 & 3.6662 & 0.2113 \\ \hline
+        $d^c$ & 110 & 1578 & 49.0 & 3.4 & 0.0870 & 140 & 2896 & 68.0 & 3.6735 & 0.1699 \\ \hline
+        $d^u$ & 110 & 1111 & 45.0 & 3.5 & 0.0635 & 140 & 2128 & 63.0 & 3.4525 & 0.1253 \\ \hline
     \end{tabular}
 \end{table}
 
@@ -63,8 +63,6 @@
         & \multicolumn{5}{|c|}{t1.svg} & \multicolumn{5}{|c|}{t2.svg} \\ \hline
         Redução & Linhas & Colunas & F. Obj. & T. Proc. & T. Sol. & Linhas &
         Colunas & F. Obj. & T. Proc. & T. Sol. \\ \hline
-        reduce & rows & cols & value & process & solver & rows & cols & value &
-        process & solver \\ \hline
         100 & 34 & 101 & 14.0 & 3.6675 & 0.0059 & 44 & 184 & 20.0 & 3.6143 & 0.0099 \\ \hline
         50 & 110 & 1111 & 45.0 & 3.5443 & 0.0635 & 140 & 2128 & 63.0 & 3.4525 & 0.1253 \\ \hline
     \end{tabular}
