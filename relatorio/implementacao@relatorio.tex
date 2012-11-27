@@ -54,18 +54,17 @@ GLPK.
 Ocorre de maneira semelhante ao problema sem obstáculo, exceto que nesse caso
 procura-se por triplas $(x, z, y)$ satisfazendo 
 \begin{itemize}
-    \item $d(x, z) < D$,
-    \item $d(y, z) < D$,
+    \item $d(x, z) \leq D$,
+    \item $d(y, z) \leq D$,
     \item $l(x, z) > r$,
     \item $l(y, z) > r$.
 \end{itemize}
 
 Para um par $(x, y)$ é escolhido a tripla $(x, z, y)$ tal que $d(x, z) + d(y,
-z)$ é minimo. Para que essa escolha seja feita é resolvido um problema de
-Programação Não-Linear por meio da função \texttt{fmin-cobyla} do pacote SciPy.
-Maiores
-informações sobre a função \texttt{fmin-cobyla} podem ser encontradas no
-Apêndice \ref{cobyla}.
+z)$ é minimo. Para que essa escolha seja feita é resolvido o problema de
+Programação Não-Linear \eqref{eq:pnl_aux} por meio da função
+\texttt{fmin-cobyla} do pacote SciPy.  Maiores informações sobre a função
+\texttt{fmin-cobyla} podem ser encontradas no Apêndice \ref{cobyla}.
 
 \subsection{Implementação do problema com obstáculo geral}
 Ocorre de maneira semelhante ao problema com obstáculo circular, exceto que ao

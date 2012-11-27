@@ -218,14 +218,14 @@ problema da seguinte forma:
         & \xi_{x, z, y} = 0, && \forall (x, z, y) \mid d(x, z) > D \text{ ou } 
         d(y, z) > D,
         \label{eq:model_with_obs_nl:max_dist} \\
-        & \xi_{x, z, y} = 0, && \forall (x, z, y) \mid l(x, z) < r \text{ ou }
-        l(y, z) < r,
+        & \xi_{x, z, y} = 0, && \forall (x, z, y) \mid l(x, z) \leq r \text{ ou }
+        l(y, z) \leq r,
         \label{eq:model_with_obs_nl:dist_obs} \\
         & \sum_{z} \sum_{y} \xi_{x, z, y} \leq \phi(x), && \forall x,
         \label{eq:model_with_obs_nl:max_jazida} \\
         & \sum_{x} \sum_{z} \xi_{x, z, y} \leq \psi(y), && \forall y,
         \label{eq:model_with_obs_nl:max_aterro}
-    \end{align}
+  za  \end{align}
     \label{eq:model_with_obs_nl}
 \end{subequations}
 onde $x \in J$, $y \in A$, $z \in H$, \eqref{eq:model_with_obs_nl:max_dist}
@@ -239,7 +239,7 @@ O modelo apresentado em \eqref{eq:model_with_obs_nl} possue função objetivo e
 restrições lineares. Em relação \`{a}s restrições
 \eqref{eq:model_with_obs_nl:max_dist} e \eqref{eq:model_with_obs_nl:dist_obs},
 $d(x, z)$, $d(y, z)$, $l(x, z)$ e $l(y, z)$ são dados do problema.
-
+za
 \subsection{Problema com obst\'{a}culo geral}
 Seria interessante poder lidar com regiões $R$ mais gerais. Uma forma de fazer
 isso é aproximar a região $R$ utilizando o mesmo procedimento adotado para

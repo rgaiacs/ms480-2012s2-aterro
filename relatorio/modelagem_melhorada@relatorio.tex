@@ -41,9 +41,9 @@ modo a reduzir o consumo de mem\'{o}ria e eventualmente aumentar a velocidade.
 Consideremos agora os pontos $\hat{x} \in J$, $\hat{y} \in A$, $\hat{z},
 \tilde{z} \in H$, tal que
 \begin{align*}
-    d(\hat{x}, \hat{z}) &< D, & d(\hat{y}, \hat{z}) &< D, \\
+    d(\hat{x}, \hat{z}) &\leq D, & d(\hat{y}, \hat{z}) &\leq D, \\
     l(\hat{x}, \hat{z}) &> r, & l(\hat{y}, \hat{z}) &> r, \\
-    d(\hat{x}, \tilde{z}) &< D, & d(\hat{y}, \tilde{z}) &< D, \\
+    d(\hat{x}, \tilde{z}) &\leq D, & d(\hat{y}, \tilde{z}) &\leq D, \\
     l(\hat{x}, \tilde{z}) &> r, & l(\hat{y}, \tilde{z}) &> r
 \end{align*}
 e
@@ -69,8 +69,8 @@ Seria interessante que na solu\c{c}\~{a}o \'{o}tima apenas ocorresse
     \xi_{\hat{x},\hat{z},\hat{y}} &= \min(\phi(\hat{x}), \psi(\hat{y})), &
     \xi_{\hat{x},\tilde{z},\hat{y}} &= 0,
 \end{align*}
-pois neste caso a dist\^{a}ncia entre $\hat{x}$ e $\hat{y}$ \'{e}
-``m\'{i}nima''. Uma vez que $d(x, z)$ e $d(y, z)$ s\~{a}o dados do problema, \'{e}
+pois neste caso $d(\hat{x}, z) + d(\hat{y}, z)$ é
+m\'{i}nima. Uma vez que $d(x, z)$ e $d(y, z)$ s\~{a}o dados do problema, \'{e}
 poss\'{i}vel construir o modelo com apenas uma vari\'{a}vel para o par
 $(x, y)$ e utilizando $z$ tal que $d(x, z) + d(y, z)$ seja m\'{i}nimo para $(x,
 y)$. Ao fazer isso, o n\'{u}mero de vari\'{a}veis do problema com obst\'{a}culo
@@ -80,13 +80,14 @@ obst\'{a}culo.
 Uma forma de descobrir qual $z$ para o par $(x, y)$ tal que $d(x, z) + d(y, z)$
 é mínimo é utilizando uma busca por exaustão. Uma outra forma é resolver o
 seguinte problema de Programação Não-Linear:
-\begin{align*}
+\begin{align}
     \underset{Z}{\text{min }} & \sqrt{(Z_1 - X_1)^2 + (Z_2 - X_2)^2} +
-    \sqrt{(Z_1 - Y_1)^2 + (Z_2 - Y_2)^2}, \\
-    \text{s.a. } & \Delta(X, Z) < 0, \\
-    & \Delta(Y, Z) < 0,
-\end{align*}
-onde
+    \sqrt{(Z_1 - Y_1)^2 + (Z_2 - Y_2)^2}, \notag \\
+    \text{s.a. } & \Delta(X, Z) \leq \epsilon, \label{eq:pnl_aux} \\
+    & \Delta(Y, Z) \leq \epsilon, \notag
+\end{align}
+onde $\epsilon \in \mathbb{R}$ e $\epsilon > 0$ é uma pequena pertubação para
+que os canos não sejam tangentes ao obstáculo circular,
 \begin{align*}
     \Delta(P, Q) = r^2 \left( (Q_1 - P_1)^2 + (Q_2 - P_2)^2 \right) - \left(
     P_1 Q_2 - P_2 Q_1 \right)^2,
