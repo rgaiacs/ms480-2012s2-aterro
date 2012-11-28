@@ -15,7 +15,7 @@
 % implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 % PURPOSE.
 
-\section{Intersecção de Círculo com Reta} \label{sse:circle_line}
+\section{Interseção de Círculo com Reta} \label{sse:circle_line}
 \nocite{Wolfram:CircleLine}
 Considere um círculo, $C$, com centro em $(0, 0)$ e raio $r$ e os pontos $P =
 (p_1, p_2)$ e $Q = (q_1, q_2)$. A reta $\overline{PQ}$ pode
@@ -41,9 +41,9 @@ como ilustrado na Figura~\ref{fig:circle_line}.
         node[midway, below]{$r$};
         \draw (11,1) node[left]{$P$} -- (17,1) node[right]{$Q$};
     \end{tikzpicture}
-    \caption{Possíveis interseção de um círculo e uma reta. A interseção é
-    vazia na figura a esquerda, a interseção corresponde a um único ponto na
-    figura no centro e a interseção corresponde a dois pontos distintos na
+    \caption{Possíveis interseções de um círculo e uma reta. A interseção é
+    vazia na figura a esquerda, corresponde a um único ponto na
+    figura no centro e  a dois pontos distintos na
     figura a direita.}
     \label{fig:circle_line}
 \end{figure}
@@ -59,11 +59,11 @@ e a equação da reta que passa pelos pontos $P$ e $Q$ é
 \end{align*}
 Se $p_1\neq q_1$, esta equação pode ser escrita como
 \begin{align*}
-    y=(x-p_1)\left(\frac{q_2-p_2}{q_1-p_1}\right)+p_2\,,
+    y=\left(\frac{q_2-p_2}{q_1-p_1}\right)\left(x-p_1\right)+p_2\,,
 \end{align*}
 ou ainda
 \begin{align*}
-    y = x\left( \frac{q_2 - p_2}{q_1 - p_1} \right) + \left(
+    y = \left( \frac{q_2 - p_2}{q_1 - p_1} \right)x + \left(
     \frac{q_1 p_2 - q_2 p_1}{q_1 - p_1} \right).
 \end{align*}
 
@@ -92,8 +92,8 @@ e
 \end{itemize}
 Logo,
 \begin{itemize}
-    \item $\overline{PQ}$ não interseptar o círculo $C$ quando $\Delta < 0$,
-    \item $\overline{PQ}$ é tagente ao círculo $C$ quando $\Delta = 0$,
+    \item $\overline{PQ}$ não interseptar o círculo $C$ quando $\Delta < 0$\,,
+    \item $\overline{PQ}$ é tagente ao círculo $C$ quando $\Delta = 0$\,,
     \item $\overline{PQ}$ tem dois pontos em comum com o círculo $C$ quando
-        $\Delta > 0$.
+        $\Delta > 0$\,.
 \end{itemize}
