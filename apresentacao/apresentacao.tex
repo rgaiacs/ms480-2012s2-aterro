@@ -155,208 +155,182 @@ language=python,
     \tableofcontents
 \end{frame}
 
-\section{Problema do aterro}
-\begin{frame}
-O problema deste trabalho denominado de ``Aterro com obstáculo'', é uma
-versão modificada do problema abordado por Enrique D. Andjel, Tarcísio L. Lopes
-e José Mario Martinez em ``A Linear Continuous Transportation Problem''
-\cite{Andjel:1989:TP}.
+\section{Problema do Aterro}
+% \begin{frame}
+% O problema deste trabalho denominado de ``Aterro com obstáculo'', é uma
+% versão modificada do problema abordado por Enrique D. Andjel, Tarcísio L. Lopes
+% e José Mario Martinez em ``A Linear Continuous Transportation Problem''
+% \cite{Andjel:1989:TP}.
+% \end{frame}
+
+\begin{frame}{Região}
+    \begin{center}
+        \begin{tikzpicture}[scale=.8]
+            \draw[pattern=bricks] (0,0) -- (0,3) -- (2,2) -- (4,0) -- (0,0);
+            \node[fill=white] at (1,1) {$A$};
+            \draw[pattern=checkerboard] (6,6) -- (8,6) -- (8,8) -- (6,8) -- (5,7) --
+            (6,6);
+            \node[fill=white] at (7,7) {$J$};
+            \only<2>{
+            \draw[line width=4, green] (1.8,1.8) -- (5.6,7.2);
+            \draw[line width=4, red] (3.6,.2) -- (7.8,7.8);
+            }
+
+            % Escala
+            \node[fill=white, above] at (5,1.2) {$0$};
+            \draw[fill=black] (5,1) rectangle (6,1.2) node[fill=white, above]{$e$};
+            \draw[fill=white] (6,1) rectangle (7,1.2) node[fill=white, above]{$2e$};
+            \draw[fill=black] (7,1) rectangle (8,1.2) node[fill=white, above]{$3e$};
+
+            % Eixos
+            \draw[->] (-.2,8) -- (8.2,8);
+            \draw[->] (0,8.2) -- (0,-.2);
+        \end{tikzpicture}
+    \end{center}
 \end{frame}
 
-\begin{frame}
-\begin{columns}
-  \column{.5\textwidth}
-\begin{figure}
-    \centering
-    \begin{tikzpicture}[scale=0.6]
-        \draw[pattern=bricks] (0,0) -- (0,3) -- (2,2) -- (4,0) -- (0,0);
-        \node[fill=white] at (1,1) {$A$};
-        \draw[pattern=checkerboard] (6,6) -- (8,6) -- (8,8) -- (6,8) -- (5,7) --
-        (6,6);
-        \node[fill=white] at (7,7) {$J$};
-        \draw[pattern=fivepointed stars] (4,4) node[fill=white]{$R$}
-        circle (1.7) ;
-        \draw (0.5,1) -- (2,6) (2,6) -- (6.5,7);
+\section{Problema do Aterro com Obstátculo}
+\begin{frame}{Região com obstáculo}
+    \begin{center}
+        \begin{tikzpicture}[scale=.8]
+            \draw[pattern=bricks] (0,0) -- (0,3) -- (2,2) -- (4,0) -- (0,0);
+            \node[fill=white] at (1,1) {$A$};
+            \draw[pattern=checkerboard] (6,6) -- (8,6) -- (8,8) -- (6,8) -- (5,7) --
+            (6,6);
+            \node[fill=white] at (7,7) {$J$};
+            \draw[pattern=fivepointed stars] (4,4) node[fill=white]{$R$}
+            circle (1.7) ;
+            \only<2>{
+            \draw[line width=4, green] (.8,1.8) -- (2,6) -- (5.6,7.2);
+            \draw[line width=4, red] (.4,.4) -- (.4,7) -- (7.8,7.8);
+            }
 
-        % Escala
-        \node[fill=white, above] at (5,1.2) {$0$};
-        \draw[fill=black] (5,1) rectangle (6,1.2) node[fill=white, above]{$e$};
-        \draw[fill=white] (6,1) rectangle (7,1.2) node[fill=white, above]{$2e$};
-        \draw[fill=black] (7,1) rectangle (8,1.2) node[fill=white, above]{$3e$};
+            % Escala
+            \node[fill=white, above] at (5,1.2) {$0$};
+            \draw[fill=black] (5,1) rectangle (6,1.2) node[fill=white, above]{$e$};
+            \draw[fill=white] (6,1) rectangle (7,1.2) node[fill=white, above]{$2e$};
+            \draw[fill=black] (7,1) rectangle (8,1.2) node[fill=white, above]{$3e$};
 
-        % Eixos
-        \draw[->] (-.2,8) -- (8.2,8);
-        \draw[->] (0,8.2) -- (0,-.2);
-    \end{tikzpicture}
-    \caption{Ilustra\c{c}\~{a}o do Problema.}
-    \label{fig:ilust_J_A}
-\end{figure}
-   \column{.5\textwidth}
-   	\begin{block}{O problema ``Aterro com obstáculo'':}
-		Este trabalho consiste em incluir entre $J$ e $A$ uma região $R$, disjunta de $J \cup A$, pela qual os canos que fazem o transporte da terra não podem passar, i.e., um obstáculo. O transporte entre dois pontos é realizado por meio de dois canos inflexíveis e se a distância de algum dos canos é maior que $D$, o transporte é considerado muito caro e por isso não é realizado.
-	\end{block}
-  \end{columns}
+            % Eixos
+            \draw[->] (-.2,8) -- (8.2,8);
+            \draw[->] (0,8.2) -- (0,-.2);
+        \end{tikzpicture}
+    \end{center}
 \end{frame}
 
 \section{A Modelagem}
 \begin{frame}{Discretização}
-\only<1>{
-\begin{columns}
-  \column{.5\textwidth}
-	\begin{block}{Malha retangular}
-Discretizamos a região $J$ e $A$, utilizando uma malha retangular, como ilustrado na Figura abaixo.%~\ref{fig:disc_J_A}, 
-Cada retângulo da malha foi numerado seguindo a lógica parcialmente indicada.
-\end{block}
-  \column{.5\textwidth}
-\begin{figure}
-    \centering
-    \begin{tikzpicture}[scale=0.7]
-        \draw[color=gray, step=.5] (0,0) grid (8,8);
-        \draw[pattern=bricks] (0,0) -- (0,3) -- (2,2) -- (4,0) -- (0,0);
-        \node[fill=white] at (1,1) {$A$};
-        \draw[pattern=checkerboard] (6,6) -- (8,6) -- (8,8) -- (6,8) -- (5,7) --
-        (6,6);
-        \node[fill=white] at (7,7) {$J$};
+    \begin{center}
+        \begin{tikzpicture}[scale=0.8]
+            \draw[color=gray, step=.5] (0,0) grid (8,8);
+            \draw[pattern=bricks] (0,0) -- (0,3) -- (2,2) -- (4,0) -- (0,0);
+            \node[fill=white] at (1,1) {$A$};
+            \draw[pattern=checkerboard] (6,6) -- (8,6) -- (8,8) -- (6,8) -- (5,7) --
+            (6,6);
+            \node[fill=white] at (7,7) {$J$};
 
-        \draw[pattern=bricks](0,0) rectangle (2,2) node[fill=white,
-        midway]{$A$};
-        \draw[pattern=checkerboard] (6,6) rectangle (8,8) node[fill=white,
-        midway]{$J$};
+            \draw[pattern=bricks](0,0) rectangle (2,2) node[fill=white,
+            midway]{$A$};
+            \draw[pattern=checkerboard] (6,6) rectangle (8,8) node[fill=white,
+            midway]{$J$};
 
-        \foreach \x in {1,...,11}{
-            \node at (\x/2 - .25,7.75) {\small{$\x$}};
-        }
-        \foreach \x in {17,...,26}{
-            \node at (\x/2 - 8.25,7.25) {\small{$\x$}};
-        }
+            \only<2>{
+            \foreach \x in {1,...,11}{
+                \node at (\x/2 - .25,7.75) {\small{$\x$}};
+            }
+            \foreach \x in {17,...,26}{
+                \node at (\x/2 - 8.25,7.25) {\small{$\x$}};
+            }
+            }
 
-        % Escala
-        \node[fill=white, above] at (5,1.2) {$0$};
-        \draw[fill=black] (5,1) rectangle (6,1.2) node[fill=white, above]{$e$};
-        \draw[fill=white] (6,1) rectangle (7,1.2) node[fill=white, above]{$2e$};
-        \draw[fill=black] (7,1) rectangle (8,1.2) node[fill=white, above]{$3e$};
+            % Escala
+            \node[fill=white, above] at (5,1.2) {$0$};
+            \draw[fill=black] (5,1) rectangle (6,1.2) node[fill=white, above]{$e$};
+            \draw[fill=white] (6,1) rectangle (7,1.2) node[fill=white, above]{$2e$};
+            \draw[fill=black] (7,1) rectangle (8,1.2) node[fill=white, above]{$3e$};
 
-        % Eixos
-        \draw[->] (-.2,8) -- (8.2,8);
-        \draw[->] (0,8.2) -- (0,-.2);
-    \end{tikzpicture}
-    \caption{Ilustra\c{c}\~{a}o da malha retangular.}
-    \label{fig:disc_J_A}
- \end{figure}
-\end{columns} 
-}
-\only<2>{
-\begin{columns}
-\column{.5\textwidth}
-\begin{figure}
-    \centering
-    \begin{tikzpicture}[scale=0.6]
-        \draw[color=gray, step=.5] (0,0) grid (8,8);
-        \draw[pattern=bricks] (0,0) -- (0,3) -- ++(1,0) -- ++(0,-.5) -- ++(1,0)
-        -- ++(0,-.5) -- ++(.5,0) -- ++(0,-.5) -- ++(.5,0) -- ++(0,-.5) --
-        ++(.5,0) -- ++(0,-.5) -- ++(.5,0) -- ++(0,-.5) -- (4,0) -- (0,0);
-        \node[fill=white] at (1,1) {$A$};
-        \draw[pattern=checkerboard] (6,6) -- (8,6) -- (8,8) -- (6,8) --
-        ++(-.5,0) -- ++(0,-.5) -- ++(-.5,0) -- ++ (0,-.5) -- ++(0,-.5) --
-        ++(.5,0) -- ++(0,-.5) -- ++(.5,0) -- (6,6);
-        \node[fill=white] at (7,7) {$J$};
+            % Eixos
+            \draw[->] (-.2,8) -- (8.2,8);
+            \draw[->] (0,8.2) -- (0,-.2);
+        \end{tikzpicture}
+    \end{center}
+\end{frame}
 
-        \draw[pattern=bricks](0,0) rectangle (2,2) node[fill=white,
-        midway]{$A$};
-        \draw[pattern=checkerboard] (6,6) rectangle (8,8) node[fill=white,
-        midway]{$J$};
+\begin{frame}{Ajuste}
+    \begin{center}
+        \begin{tikzpicture}[scale=0.8]
+            \draw[color=gray, step=.5] (0,0) grid (8,8);
+            \draw[pattern=bricks] (0,0) -- (0,3) -- ++(1,0) -- ++(0,-.5) -- ++(1,0)
+            -- ++(0,-.5) -- ++(.5,0) -- ++(0,-.5) -- ++(.5,0) -- ++(0,-.5) --
+            ++(.5,0) -- ++(0,-.5) -- ++(.5,0) -- ++(0,-.5) -- (4,0) -- (0,0);
+            \node[fill=white] at (1,1) {$A$};
+            \draw[pattern=checkerboard] (6,6) -- (8,6) -- (8,8) -- (6,8) --
+            ++(-.5,0) -- ++(0,-.5) -- ++(-.5,0) -- ++ (0,-.5) -- ++(0,-.5) --
+            ++(.5,0) -- ++(0,-.5) -- ++(.5,0) -- (6,6);
+            \node[fill=white] at (7,7) {$J$};
 
-        % Escala
-        \node[fill=white, above] at (5,1.2) {$0$};
-        \draw[fill=black] (5,1) rectangle (6,1.2) node[fill=white, above]{$e$};
-        \draw[fill=white] (6,1) rectangle (7,1.2) node[fill=white, above]{$2e$};
-        \draw[fill=black] (7,1) rectangle (8,1.2) node[fill=white, above]{$3e$};
+            \draw[pattern=bricks](0,0) rectangle (2,2) node[fill=white,
+            midway]{$A$};
+            \draw[pattern=checkerboard] (6,6) rectangle (8,8) node[fill=white,
+            midway]{$J$};
 
-        % Eixos
-        \draw[->] (-.2,8) -- (8.2,8);
-        \draw[->] (0,8.2) -- (0,-.2);
-    \end{tikzpicture}
-    \caption{Ilustra\c{c}\~{a}o do ajuste das regiões $J$ e $A$ à malha retangular.}
-    \label{fig:disc_J_A_aprox}
-\end{figure}
-\column{.5\textwidth}
-\begin{block}{}
-Alguns elementos da malha encontram-se apenas parcialmente dentro de uma das regiões. Então aproximamos as regiões para a malha utilizada de modo que todos os
-elementos da malha que encontram-se parcialmente presentes em uma das regiões
-passam a pertencer totalmente a ela. O resultado é apresentado na
-Figura ao lado.%~\ref{fig:disc_J_A_aprox}.
-\end{block}
-\end{columns}
-}
-\only<3>{
-\begin{columns}
-\column{.5\textwidth}
-\begin{block}{}
-Considere que a região $R$ pela qual os canos que fazem o transporte da terra
-não podem passar é circular, com centro $c = (c_1, c_2) \in \mathbb{R}^2$ e raio
-$r \in \mathbb{R}$. Então temos a região de interesse ilustrada na
-Figura ao lado%~\ref{fig:disc_J_A_R}.
-\end{block}
-\column{.5\textwidth}
-\begin{figure}
-    \centering
-    \begin{tikzpicture}[scale=0.6]
-        \draw[color=gray, step=.5] (0,0) grid (8,8);
+            % Escala
+            \node[fill=white, above] at (5,1.2) {$0$};
+            \draw[fill=black] (5,1) rectangle (6,1.2) node[fill=white, above]{$e$};
+            \draw[fill=white] (6,1) rectangle (7,1.2) node[fill=white, above]{$2e$};
+            \draw[fill=black] (7,1) rectangle (8,1.2) node[fill=white, above]{$3e$};
 
-        \draw[color=gray, step=.5] (0,0) grid (8,8);
-        \draw[pattern=bricks] (0,0) -- (0,3) -- ++(1,0) -- ++(0,-.5) -- ++(1,0)
-        -- ++(0,-.5) -- ++(.5,0) -- ++(0,-.5) -- ++(.5,0) -- ++(0,-.5) --
-        ++(.5,0) -- ++(0,-.5) -- ++(.5,0) -- ++(0,-.5) -- (4,0) -- (0,0);
-        \node[fill=white] at (1,1) {$A$};
-        \draw[pattern=checkerboard] (6,6) -- (8,6) -- (8,8) -- (6,8) --
-        ++(-.5,0) -- ++(0,-.5) -- ++(-.5,0) -- ++ (0,-.5) -- ++(0,-.5) --
-        ++(.5,0) -- ++(0,-.5) -- ++(.5,0) -- (6,6);
-        \node[fill=white] at (7,7) {$J$};
-        \draw[pattern=fivepointed stars] (4,4) node[fill=white]{$R$}
-        circle (1.7) ;
+            % Eixos
+            \draw[->] (-.2,8) -- (8.2,8);
+            \draw[->] (0,8.2) -- (0,-.2);
+        \end{tikzpicture}
+    \end{center}
+\end{frame}
 
-        % Escala
-        \node[fill=white, above] at (5,1.2) {$0$};
-        \draw[fill=black] (5,1) rectangle (6,1.2) node[fill=white, above]{$e$};
-        \draw[fill=white] (6,1) rectangle (7,1.2) node[fill=white, above]{$2e$};
-        \draw[fill=black] (7,1) rectangle (8,1.2) node[fill=white, above]{$3e$};
+\begin{frame}
+    \begin{center}
+        \begin{tikzpicture}[scale=0.8]
+            \draw[color=gray, step=.5] (0,0) grid (8,8);
 
-        % Eixo
-        \draw[->] (-.2,8) -- (8.2,8);
-        \draw[->] (0,8.2) -- (0,-.2);
-    \end{tikzpicture}
-    \caption{Ilustra\c{c}\~{a}o do obstáculo circular.}
-    \label{fig:disc_J_A_R}
-  \end{figure}
-\end{columns}
-}
+            \draw[color=gray, step=.5] (0,0) grid (8,8);
+            \draw[pattern=bricks] (0,0) -- (0,3) -- ++(1,0) -- ++(0,-.5) -- ++(1,0)
+            -- ++(0,-.5) -- ++(.5,0) -- ++(0,-.5) -- ++(.5,0) -- ++(0,-.5) --
+            ++(.5,0) -- ++(0,-.5) -- ++(.5,0) -- ++(0,-.5) -- (4,0) -- (0,0);
+            \node[fill=white] at (1,1) {$A$};
+            \draw[pattern=checkerboard] (6,6) -- (8,6) -- (8,8) -- (6,8) --
+            ++(-.5,0) -- ++(0,-.5) -- ++(-.5,0) -- ++ (0,-.5) -- ++(0,-.5) --
+            ++(.5,0) -- ++(0,-.5) -- ++(.5,0) -- (6,6);
+            \node[fill=white] at (7,7) {$J$};
+            \draw[pattern=fivepointed stars] (4,4) node[fill=white]{$R$}
+            circle (1.7) ;
+
+            % Escala
+            \node[fill=white, above] at (5,1.2) {$0$};
+            \draw[fill=black] (5,1) rectangle (6,1.2) node[fill=white, above]{$e$};
+            \draw[fill=white] (6,1) rectangle (7,1.2) node[fill=white, above]{$2e$};
+            \draw[fill=black] (7,1) rectangle (8,1.2) node[fill=white, above]{$3e$};
+
+            % Eixo
+            \draw[->] (-.2,8) -- (8.2,8);
+            \draw[->] (0,8.2) -- (0,-.2);
+        \end{tikzpicture}
+  \end{center}
 \end{frame}
 
 \begin{frame}{Modelagem problema com obstáculo circular}
-\begin{block}{}
-\small $\phi(x)=$ volume de terra disponível no retângulo $x$; $\psi(y)=$ volume de terra admitido no retângulo $y$; $f(x, y)=$ volume de terra transportado do retângulo $x$ para o retângulo $y$ e $d(x, y)=$ distância entre os retângulos $x$ e $y$. Sendo $\xi_{x, z, y} = f(x, z, y)$ a variável de decisão, modelamos o
-problema da seguinte forma:
-\end{block}
-\small
-\begin{subequations}
-    \begin{align}
-        \text{max } & \sum_{x} \sum_{z} \sum_{y} \xi_{x, z, y},
-        \label{eq:model_with_obs_nl:obj_func} \\
-        \text{s.a. } & \xi_{x, z, y} \geq 0, && \forall x, z, y,
-        \label{eq:model_with_obs_nl:var} \\
-        & \xi_{x, z, y} = 0, && \forall (x, z, y) \mid d(x, z) > D \text{ ou } 
-        d(y, z) > D,
-        \label{eq:model_with_obs_nl:max_dist} \\
-        & \xi_{x, z, y} = 0, && \forall (x, z, y) \mid l(x, z) < r \text{ ou }
-        l(y, z) < r,
-        \label{eq:model_with_obs_nl:dist_obs} \\
-        & \sum_{z} \sum_{y} \xi_{x, z, y} \leq \phi(x), && \forall x,
-        \label{eq:model_with_obs_nl:max_jazida} \\
-        & \sum_{x} \sum_{z} \xi_{x, z, y} \leq \psi(y), && \forall y,
-        \label{eq:model_with_obs_nl:max_aterro}
-    \end{align}
-    \label{eq:model_with_obs_nl}
-\end{subequations}
+\begin{align*}
+    \text{max } & \sum_{x} \sum_{z} \sum_{y} \xi_{x, z, y}, \\
+    \text{s.a. } & \xi_{x, z, y} \geq 0, && \forall x, z, y, \\
+    & \xi_{x, z, y} = 0, && \forall (x, z, y) \mid d(x, z) > D \text{ ou } 
+    d(y, z) > D, \\
+    & \xi_{x, z, y} = 0, && \forall (x, z, y) \mid l(x, z) < r \text{ ou }
+    l(y, z) < r, \\
+    & \sum_{z} \sum_{y} \xi_{x, z, y} \leq \phi(x), && \forall x, \\
+    & \sum_{x} \sum_{z} \xi_{x, z, y} \leq \psi(y), && \forall y,
+\end{align*}
+onde $\phi(x)$ é o volume de terra disponível em $x$, $\psi(y)$ é o volume de
+terra admitido em $y$; $\xi_{x, z, y}$ é o volume de terra transportado de $x$
+para $y$ passando por $z$.
 \end{frame}
 
 \begin{frame}
