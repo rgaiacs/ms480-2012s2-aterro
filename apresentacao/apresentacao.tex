@@ -1,9 +1,9 @@
 % Copyright (C) 2012 Raniere Silva
-% 
+%
 % This work is licensed under the Creative Commons
 % Attribution-ShareAlike 3.0 Unported License. To view a copy of this
 % license, visit <http://creativecommons.org/licenses/by-sa/3.0/>.
-% 
+%
 % This work is distributed in the hope that it will be useful, but
 % WITHOUT ANY WARRANTY; without even the implied warranty of
 % MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
@@ -58,6 +58,7 @@
 \usepackage{tikz}
 \usetikzlibrary{positioning}
 \usetikzlibrary{fit}
+\usetikzlibrary{patterns}%verificar se necessário
 
 % Pacotes para algoritmos
 \usepackage{algorithmic}
@@ -127,7 +128,7 @@ language=python,
 \author[Silva, Cezarino, Marques e Lima]{Raniere Gaia Costa da Silva\footnote{ra092767,
 \url{r.gaia.cs@gmail.com}} \and Fernando de Oliveira Cezarino\footnote{ra085855,
 \url{feolce@gmail.com}} \and Ana~Paula Diniz Marques\footnote{ra076433,
-\url{anapdinizm @gmail.com}} \and  Ana Flávia da Cunha Lima\footnote{ra093370,
+\url{anapdinizm @gmail.com}} \and Ana Flávia da Cunha Lima\footnote{ra093370,
 \url{anaflavia.c.lima @gmail.com}}}
 
 \begin{frame}
@@ -155,6 +156,562 @@ language=python,
 \end{frame}
 
 \section{Problema do aterro}
+\begin{frame}
+O problema deste trabalho denominado de ``Aterro com obstáculo'', é uma
+versão modificada do problema abordado por Enrique D. Andjel, Tarcísio L. Lopes
+e José Mario Martinez em ``A Linear Continuous Transportation Problem''
+\cite{Andjel:1989:TP}.
+\end{frame}
+
+\begin{frame}
+\begin{columns}
+  \column{.5\textwidth}
+\begin{figure}
+    \centering
+    \begin{tikzpicture}[scale=0.6]
+        \draw[pattern=bricks] (0,0) -- (0,3) -- (2,2) -- (4,0) -- (0,0);
+        \node[fill=white] at (1,1) {$A$};
+        \draw[pattern=checkerboard] (6,6) -- (8,6) -- (8,8) -- (6,8) -- (5,7) --
+        (6,6);
+        \node[fill=white] at (7,7) {$J$};
+        \draw[pattern=fivepointed stars] (4,4) node[fill=white]{$R$}
+        circle (1.7) ;
+        \draw (0.5,1) -- (2,6) (2,6) -- (6.5,7);
+
+        % Escala
+        \node[fill=white, above] at (5,1.2) {$0$};
+        \draw[fill=black] (5,1) rectangle (6,1.2) node[fill=white, above]{$e$};
+        \draw[fill=white] (6,1) rectangle (7,1.2) node[fill=white, above]{$2e$};
+        \draw[fill=black] (7,1) rectangle (8,1.2) node[fill=white, above]{$3e$};
+
+        % Eixos
+        \draw[->] (-.2,8) -- (8.2,8);
+        \draw[->] (0,8.2) -- (0,-.2);
+    \end{tikzpicture}
+    \caption{Ilustra\c{c}\~{a}o do Problema.}
+    \label{fig:ilust_J_A}
+\end{figure}
+   \column{.5\textwidth}
+   	\begin{block}{O problema ``Aterro com obstáculo'':}
+		Este trabalho consiste em incluir entre $J$ e $A$ uma região $R$, disjunta de $J \cup A$, pela qual os canos que fazem o transporte da terra não podem passar, i.e., um obstáculo. O transporte entre dois pontos é realizado por meio de dois canos inflexíveis e se a distância de algum dos canos é maior que $D$, o transporte é considerado muito caro e por isso não é realizado.
+	\end{block}
+  \end{columns}
+\end{frame}
+
+\section{A Modelagem}
+\begin{frame}{Discretização}
+\only<1>{
+\begin{columns}
+  \column{.5\textwidth}
+	\begin{block}{Malha retangular}
+Discretizamos a região $J$ e $A$, utilizando uma malha retangular, como ilustrado na Figura abaixo.%~\ref{fig:disc_J_A}, 
+Cada retângulo da malha foi numerado seguindo a lógica parcialmente indicada.
+\end{block}
+  \column{.5\textwidth}
+\begin{figure}
+    \centering
+    \begin{tikzpicture}[scale=0.7]
+        \draw[color=gray, step=.5] (0,0) grid (8,8);
+        \draw[pattern=bricks] (0,0) -- (0,3) -- (2,2) -- (4,0) -- (0,0);
+        \node[fill=white] at (1,1) {$A$};
+        \draw[pattern=checkerboard] (6,6) -- (8,6) -- (8,8) -- (6,8) -- (5,7) --
+        (6,6);
+        \node[fill=white] at (7,7) {$J$};
+
+        \draw[pattern=bricks](0,0) rectangle (2,2) node[fill=white,
+        midway]{$A$};
+        \draw[pattern=checkerboard] (6,6) rectangle (8,8) node[fill=white,
+        midway]{$J$};
+
+        \foreach \x in {1,...,11}{
+            \node at (\x/2 - .25,7.75) {\small{$\x$}};
+        }
+        \foreach \x in {17,...,26}{
+            \node at (\x/2 - 8.25,7.25) {\small{$\x$}};
+        }
+
+        % Escala
+        \node[fill=white, above] at (5,1.2) {$0$};
+        \draw[fill=black] (5,1) rectangle (6,1.2) node[fill=white, above]{$e$};
+        \draw[fill=white] (6,1) rectangle (7,1.2) node[fill=white, above]{$2e$};
+        \draw[fill=black] (7,1) rectangle (8,1.2) node[fill=white, above]{$3e$};
+
+        % Eixos
+        \draw[->] (-.2,8) -- (8.2,8);
+        \draw[->] (0,8.2) -- (0,-.2);
+    \end{tikzpicture}
+    \caption{Ilustra\c{c}\~{a}o da malha retangular.}
+    \label{fig:disc_J_A}
+ \end{figure}
+\end{columns} 
+}
+\only<2>{
+\begin{columns}
+\column{.5\textwidth}
+\begin{figure}
+    \centering
+    \begin{tikzpicture}[scale=0.6]
+        \draw[color=gray, step=.5] (0,0) grid (8,8);
+        \draw[pattern=bricks] (0,0) -- (0,3) -- ++(1,0) -- ++(0,-.5) -- ++(1,0)
+        -- ++(0,-.5) -- ++(.5,0) -- ++(0,-.5) -- ++(.5,0) -- ++(0,-.5) --
+        ++(.5,0) -- ++(0,-.5) -- ++(.5,0) -- ++(0,-.5) -- (4,0) -- (0,0);
+        \node[fill=white] at (1,1) {$A$};
+        \draw[pattern=checkerboard] (6,6) -- (8,6) -- (8,8) -- (6,8) --
+        ++(-.5,0) -- ++(0,-.5) -- ++(-.5,0) -- ++ (0,-.5) -- ++(0,-.5) --
+        ++(.5,0) -- ++(0,-.5) -- ++(.5,0) -- (6,6);
+        \node[fill=white] at (7,7) {$J$};
+
+        \draw[pattern=bricks](0,0) rectangle (2,2) node[fill=white,
+        midway]{$A$};
+        \draw[pattern=checkerboard] (6,6) rectangle (8,8) node[fill=white,
+        midway]{$J$};
+
+        % Escala
+        \node[fill=white, above] at (5,1.2) {$0$};
+        \draw[fill=black] (5,1) rectangle (6,1.2) node[fill=white, above]{$e$};
+        \draw[fill=white] (6,1) rectangle (7,1.2) node[fill=white, above]{$2e$};
+        \draw[fill=black] (7,1) rectangle (8,1.2) node[fill=white, above]{$3e$};
+
+        % Eixos
+        \draw[->] (-.2,8) -- (8.2,8);
+        \draw[->] (0,8.2) -- (0,-.2);
+    \end{tikzpicture}
+    \caption{Ilustra\c{c}\~{a}o do ajuste das regiões $J$ e $A$ à malha retangular.}
+    \label{fig:disc_J_A_aprox}
+\end{figure}
+\column{.5\textwidth}
+\begin{block}{}
+Alguns elementos da malha encontram-se apenas parcialmente dentro de uma das regiões. Então aproximamos as regiões para a malha utilizada de modo que todos os
+elementos da malha que encontram-se parcialmente presentes em uma das regiões
+passam a pertencer totalmente a ela. O resultado é apresentado na
+Figura ao lado.%~\ref{fig:disc_J_A_aprox}.
+\end{block}
+\end{columns}
+}
+\only<3>{
+\begin{columns}
+\column{.5\textwidth}
+\begin{block}{}
+Considere que a região $R$ pela qual os canos que fazem o transporte da terra
+não podem passar é circular, com centro $c = (c_1, c_2) \in \mathbb{R}^2$ e raio
+$r \in \mathbb{R}$. Então temos a região de interesse ilustrada na
+Figura ao lado%~\ref{fig:disc_J_A_R}.
+\end{block}
+\column{.5\textwidth}
+\begin{figure}
+    \centering
+    \begin{tikzpicture}[scale=0.6]
+        \draw[color=gray, step=.5] (0,0) grid (8,8);
+
+        \draw[color=gray, step=.5] (0,0) grid (8,8);
+        \draw[pattern=bricks] (0,0) -- (0,3) -- ++(1,0) -- ++(0,-.5) -- ++(1,0)
+        -- ++(0,-.5) -- ++(.5,0) -- ++(0,-.5) -- ++(.5,0) -- ++(0,-.5) --
+        ++(.5,0) -- ++(0,-.5) -- ++(.5,0) -- ++(0,-.5) -- (4,0) -- (0,0);
+        \node[fill=white] at (1,1) {$A$};
+        \draw[pattern=checkerboard] (6,6) -- (8,6) -- (8,8) -- (6,8) --
+        ++(-.5,0) -- ++(0,-.5) -- ++(-.5,0) -- ++ (0,-.5) -- ++(0,-.5) --
+        ++(.5,0) -- ++(0,-.5) -- ++(.5,0) -- (6,6);
+        \node[fill=white] at (7,7) {$J$};
+        \draw[pattern=fivepointed stars] (4,4) node[fill=white]{$R$}
+        circle (1.7) ;
+
+        % Escala
+        \node[fill=white, above] at (5,1.2) {$0$};
+        \draw[fill=black] (5,1) rectangle (6,1.2) node[fill=white, above]{$e$};
+        \draw[fill=white] (6,1) rectangle (7,1.2) node[fill=white, above]{$2e$};
+        \draw[fill=black] (7,1) rectangle (8,1.2) node[fill=white, above]{$3e$};
+
+        % Eixo
+        \draw[->] (-.2,8) -- (8.2,8);
+        \draw[->] (0,8.2) -- (0,-.2);
+    \end{tikzpicture}
+    \caption{Ilustra\c{c}\~{a}o do obstáculo circular.}
+    \label{fig:disc_J_A_R}
+  \end{figure}
+\end{columns}
+}
+\end{frame}
+
+\begin{frame}{Modelagem problema com obstáculo circular}
+\begin{block}{}
+\small $\phi(x)=$ volume de terra disponível no retângulo $x$; $\psi(y)=$ volume de terra admitido no retângulo $y$; $f(x, y)=$ volume de terra transportado do retângulo $x$ para o retângulo $y$ e $d(x, y)=$ distância entre os retângulos $x$ e $y$. Sendo $\xi_{x, z, y} = f(x, z, y)$ a variável de decisão, modelamos o
+problema da seguinte forma:
+\end{block}
+\small
+\begin{subequations}
+    \begin{align}
+        \text{max } & \sum_{x} \sum_{z} \sum_{y} \xi_{x, z, y},
+        \label{eq:model_with_obs_nl:obj_func} \\
+        \text{s.a. } & \xi_{x, z, y} \geq 0, && \forall x, z, y,
+        \label{eq:model_with_obs_nl:var} \\
+        & \xi_{x, z, y} = 0, && \forall (x, z, y) \mid d(x, z) > D \text{ ou } 
+        d(y, z) > D,
+        \label{eq:model_with_obs_nl:max_dist} \\
+        & \xi_{x, z, y} = 0, && \forall (x, z, y) \mid l(x, z) < r \text{ ou }
+        l(y, z) < r,
+        \label{eq:model_with_obs_nl:dist_obs} \\
+        & \sum_{z} \sum_{y} \xi_{x, z, y} \leq \phi(x), && \forall x,
+        \label{eq:model_with_obs_nl:max_jazida} \\
+        & \sum_{x} \sum_{z} \xi_{x, z, y} \leq \psi(y), && \forall y,
+        \label{eq:model_with_obs_nl:max_aterro}
+    \end{align}
+    \label{eq:model_with_obs_nl}
+\end{subequations}
+\end{frame}
+
+\begin{frame}
+\begin{columns}
+\column{.5\textwidth}
+\begin{block}{}
+Seria interessante poder lidar com regiões $R$ mais gerais. Para isso é aproximamos a região $R$ utilizando o mesmo procedimento adotado para
+aproximar as regiões $J$ e $A$. O resultado da aproximação da região $R$ é
+ilustrada na Figura ao lado.%~\ref{fig:disc_J_A_R_aprox}.
+\end{block}
+\column{.5\textwidth}
+\begin{figure}
+    \centering
+    \begin{tikzpicture}[scale=0.7]
+        \draw[color=gray, step=.5] (0,0) grid (8,8);
+
+        \draw[color=gray, step=.5] (0,0) grid (8,8);
+        \draw[pattern=bricks] (0,0) -- (0,3) -- ++(1,0) -- ++(0,-.5) -- ++(1,0)
+        -- ++(0,-.5) -- ++(.5,0) -- ++(0,-.5) -- ++(.5,0) -- ++(0,-.5) --
+        ++(.5,0) -- ++(0,-.5) -- ++(.5,0) -- ++(0,-.5) -- (4,0) -- (0,0);
+        \node[fill=white] at (1,1) {$A$};
+        \draw[pattern=checkerboard] (6,6) -- (8,6) -- (8,8) -- (6,8) --
+        ++(-.5,0) -- ++(0,-.5) -- ++(-.5,0) -- ++ (0,-.5) -- ++(0,-.5) --
+        ++(.5,0) -- ++(0,-.5) -- ++(.5,0) -- (6,6);
+        \node[fill=white] at (7,7) {$J$};
+        \draw[pattern=fivepointed stars] (3,2.5) -- ++(0,-.5) -- ++(2,0) --
+        ++(0,.5) -- ++ (.5,0) -- ++(0,.5) -- ++(.5,0) -- ++(0,2) -- ++ (-.5,0)
+        -- ++(0,.5) -- ++(-.5,0) -- ++(0,.5) -- ++(-2,0) -- ++(0,-.5) --
+        ++(-.5,0) -- ++(0,-.5) -- ++(-.5,0) -- ++(0,-2) -- ++(.5,0) -- ++(0,-.5)
+        -- (3,2.5);
+        \node[fill=white] at (4,4) {$R$};
+
+        % Escala
+        \node[fill=white, above] at (5,1.2) {$0$};
+        \draw[fill=black] (5,1) rectangle (6,1.2) node[fill=white, above]{$e$};
+        \draw[fill=white] (6,1) rectangle (7,1.2) node[fill=white, above]{$2e$};
+        \draw[fill=black] (7,1) rectangle (8,1.2) node[fill=white, above]{$3e$};
+
+        % Eixo
+        \draw[->] (-.2,8) -- (8.2,8);
+        \draw[->] (0,8.2) -- (0,-.2);
+    \end{tikzpicture}
+    \caption{Ilustra\c{c}\~{a}o da aproximação de um obstáculo geral (neste
+    caso, um obstáculo circular).}
+    \label{fig:disc_J_A_R_aprox}
+\end{figure}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Modelagem problema com obstáculo geral}
+O modelo a ser utilizado com a aproximação da região $R$ é semelhante a
+\eqref{eq:model_with_obs_nl} mudando apenas a restrição
+\eqref{eq:model_with_obs_nl:dist_obs} que passa a ser
+\begin{align}
+    \xi_{x, z, y} &= 0, && \forall (x, z, y) \mid b(x, z) = 1 \text{ ou }
+    b(y, z) = 1,
+    \label{eq:model_with_obs:dist_obs} 
+\end{align}
+onde $H$ é a região que não corresponde \`{a} jazida, nem ao aterro e nem ao
+obstáculo, $b: (J \cup A, H) \to \left\{ 0, 1 \right\}$ é $1$ se a linha reta
+construída entre os retângulos $w \in J \cup A$ e $z \in H$ utilizando o
+algoritmo de Bresenham\footnote{Ver o Apêndice do reltório.}%~\ref{sse:bresenham_line}.} 
+passa por $R$ e $0$ caso contrário.
+
+Assim com nas restrições \eqref{eq:model_with_obs_nl:max_dist} e
+\eqref{eq:model_with_obs_nl:dist_obs}, $d(x, z)$, $d(y, z)$, $l(x, z)$ e $l(y,
+z)$ são dados do problema, na restri\c{c}\~{a}o
+\eqref{eq:model_with_obs:dist_obs}, $b(x, z)$ e $b(y, z)$ tamb\'{e}m s\~{a}o
+dados do problema.
+\end{frame}
+
+\begin{frame}{Modelagem Aperfeiçoada}
+	\begin{itemize}
+		\item Na modelagem \eqref{eq:model_with_obs_nl}, utilizamos $|J| |A| |H|$
+vari\'{a}veis. Observamos que pelas restri\c{c}\~{o}es \eqref{eq:model_with_obs_nl:max_dist} e
+\eqref{eq:model_with_obs_nl:dist_obs} parte das vari\'{a}veis s\~{a}o fixadas em
+zero.
+		\item \'{E} poss\'{i}vel construir o problema sem as vari\'{a}veis que s\~{a}o nulas por $d(x, y) > D$ de modo a reduzir o consumo de mem\'{o}ria e eventualmente aumentar a velocidade.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Modelagem Aperfeiçoada}
+\only<1>{
+\small Consideremos agora os pontos $\hat{x} \in J$, $\hat{y} \in A$, $\hat{z},
+\tilde{z} \in H$, tal que
+\begin{align*}
+    d(\hat{x}, \hat{z}) &< D, & d(\hat{y}, \hat{z}) &< D, \\
+    l(\hat{x}, \hat{z}) &> r, & l(\hat{y}, \hat{z}) &> r, \\
+    d(\hat{x}, \tilde{z}) &< D, & d(\hat{y}, \tilde{z}) &< D, \\
+    l(\hat{x}, \tilde{z}) &> r, & l(\hat{y}, \tilde{z}) &> r
+\end{align*}
+e
+\begin{align*}
+    d(\hat{x}, \hat{z}) + d(\hat{y}, \hat{z}) &< d(\hat{x}, \tilde{z}) +
+    d(\hat{y}, \tilde{z}).
+\end{align*}
+Pela modelagem \eqref{eq:model_with_obs_nl}, verifica-se que
+$\xi_{\hat{x},\hat{z},\hat{y}}$ e $\xi_{\hat{x},\tilde{z},\hat{y}}$
+possuem o mesmo peso na fun\c{c}\~{a}o objetivo e portanto os seguintes valores
+s\~{a}o equiprov\'{a}veis na solu\c{c}\~{a}o \'{o}tima:
+\begin{align*}
+    \xi_{\hat{x},\hat{z},\hat{y}} &= \min(\phi(\hat{x}), \psi(\hat{y})), &
+    \xi_{\hat{x},\tilde{z},\hat{y}} &= 0, \\
+    \xi_{\hat{x},\hat{z},\hat{y}} &= 0, &
+    \xi_{\hat{x},\tilde{z},\hat{y}} &= \min(\phi(\hat{x}), \psi(\hat{y})), \\
+    \xi_{\hat{x},\hat{z},\hat{y}} &= 0.5 \min(\phi(\hat{x}), \psi(\hat{y})), &
+    \xi_{\hat{x},\tilde{z},\hat{y}} &= 0.5 \min(\phi(\hat{x}), \psi(\hat{y})).
+\end{align*}
+}
+\only<2>{
+Seria interessante que na solu\c{c}\~{a}o \'{o}tima apenas ocorresse
+\begin{align*}
+    \xi_{\hat{x},\hat{z},\hat{y}} &= \min(\phi(\hat{x}), \psi(\hat{y})), &
+    \xi_{\hat{x},\tilde{z},\hat{y}} &= 0,
+\end{align*}
+pois neste caso a dist\^{a}ncia entre $\hat{x}$ e $\hat{y}$ \'{e}
+``m\'{i}nima''. Uma vez que $d(x, z)$ e $d(y, z)$ s\~{a}o dados do problema, \'{e}
+poss\'{i}vel construir o modelo com apenas uma vari\'{a}vel para o par
+$(x, y)$ e utilizando $z$ tal que $d(x, z) + d(y, z)$ seja m\'{i}nimo para $(x,
+y)$. Ao fazer isso, o n\'{u}mero de vari\'{a}veis do problema com obst\'{a}culo
+passa a ser da ordem de $|J| |A|$ que \'{e} a mesma ordem do problema sem
+obst\'{a}culo.
+}
+\only<3>{
+\small Uma forma de descobrir qual $z$ para o par $(x, y)$ tal que $d(x, z) + d(y, z)$
+é mínimo é utilizando uma busca por exaustão. Uma outra forma é resolver o
+seguinte problema de Programação Não-Linear:
+\begin{align*}
+    \underset{Z}{\text{min }} & \sqrt{(Z_1 - X_1)^2 + (Z_2 - X_2)^2} +
+    \sqrt{(Z_1 - Y_1)^2 + (Z_2 - Y_2)^2}, \\
+    \text{s.a. } & \Delta(X, Z) < 0, \\
+    & \Delta(Y, Z) < 0,
+\end{align*}
+onde
+\begin{align*}
+    \Delta(P, Q) = r^2 \left( (Q_1 - P_1)^2 + (Q_2 - P_2)^2 \right) - \left(
+    P_1 Q_2 - P_2 Q_1 \right)^2,
+\end{align*}
+e $X$, $Y$ são o par coordenado correspondente a posição do centro dos
+retângulos $x$ e $y$, respectivamente, transladada para que o centro da região
+$R$ seja $(0, 0)$, e $r$ é o raio da região $R$.
+}
+\only<4>{
+\begin{block}{}
+A motivação para as duas restrições do programa de Programação Não-Linear
+descrito acima decorre da condição para que uma reta que passe pelos pontos $P$
+e $Q$ não possua pontos em comum com um círculo centrado no ponto $(0, 0)$ e
+raio $r$. \footnote{Maiores detalhes são encontrados no Apêndice do relatório.}%~\ref{sse:circle_line}.}
+\end{block}
+}
+\end{frame}
+
+
+\section{Implementação}
+
+\begin{frame}
+A parte computacional do projeto encontra-se disponível em
+\url{https://github.com/r-gaia-cs/ms480-2012s2-aterro/tree/master/src} e foi
+desenvolvida utilizando:
+\begin{itemize}
+    \item Python\nocite{Python},
+    \item SciPy\nocite{SciPy},
+    \item GLPK (GNU Linear Programming Kit)\nocite{GLPK},
+    \item Python-GLPK.
+\end{itemize}
+Para a criação dos testes, utilizou-se
+\begin{itemize}
+    \item Inkscape e
+    \item ImageMagick
+\end{itemize}
+e o formato \texttt{ppm} para armazenar os mapas dos testes.
+\end{frame}
+
+\begin{frame}
+\only<1>{
+\begin{block}{Implementação do problema sem obstáculo}
+O arquivo \texttt{ppm} é lido e adequado para o tamanho da malha
+desejada. Com as informações do arquivo na memória, verifica-se quais os pares
+$(x, y)$ tal que $d(x, y) < D$ e esses pares são salvos em um
+arquivo binário (para o caso de precisar utilizá-los novamente).
+
+Posteriormente, as informações do arquivo binário são lidas e a partir delas é
+montado o problema de Programação Linear, que posteriormente é resolvido pelo
+GLPK.
+\end{block}
+}
+\only<2>{
+\begin{block}{Implementação do problema com obstáculo circular}
+Ocorre de maneira semelhante ao problema sem obstáculo, exceto que nesse caso
+procura-se por triplas $(x, z, y)$ satisfazendo 
+\begin{itemize}
+    \item $d(x, z) < D$,
+    \item $d(y, z) < D$,
+    \item $l(x, z) > r$,
+    \item $l(y, z) > r$.
+\end{itemize}
+
+Para um par $(x, y)$ é escolhido a tripla $(x, z, y)$ tal que $d(x, z) + d(y,
+z)$ é minimo. Para que essa escolha seja feita é resolvido um problema de
+Programação Não-Linear por meio da função \texttt{fmin-cobyla} do pacote SciPy.
+\end{block}
+}
+\only<3>{
+\begin{block}{Implementação do problema com obstáculo geral}
+Ocorre de maneira semelhante ao problema com obstáculo circular, exceto que ao
+invés de utilizar a função \texttt{fmim-cobyla} do pacote SciPy para resolver
+um problema de Programação Não-Linear, é feita uma busca por exaustão utilizando
+o algoritmo de Bresenham para descobrir quando $b(x, z) = 1$ ou $b(y, z) = 1$.
+\end{block}
+}
+\end{frame}
+
+\section{Resultados}
+
+\begin{frame}{Discussão}
+
+\begin{block}{Comparação entre os problemas estudados}
+	\begin{itemize}
+	\item Pela Tabela~\ref{tab:solver} observamos que o problema com o maior valor da função objetivo é o problema com obstáculo geral (devido as várias aproximação realizadas e uso de dois canos de comprimento máximo $D$).\\
+	\item O problema com o menor valor da função objetivo foi o problema sem obstáculo (devido a ser utilizado apenas um cano de comprimento máximo $D$).
+	\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}{Tabelas}
+\begin{table}
+    \centering
+    \caption{Comparação dos Métodos de Resolução (utilizando com máxima distância de 800, redução de 50 e $d^c$)}
+    \label{tab:solver}
+    \begin{tabular}{|c|c|c|c|c|c|}
+        \hline
+        & \multicolumn{5}{|c|}{t1.svg} \\ \hline
+        Solver & Linhas & Colunas & F. Obj. & T. Proc. & T. Sol. \\ \hline
+        Sem obstáculo & 110 & 817 & 38.0 & 3.5974 & 0.0436 \\ \hline
+        Obstáculo circular & 110 & 1111 & 45.0 & 3.5443 & 0.0635 \\ \hline
+        Obstáculo geral & 110 & 2989 & 49.0 & 3.5674 & 0.1562  \\ \hline
+    \end{tabular}
+    \begin{tabular}{|c|c|c|c|c|c|}
+        \hline
+		& \multicolumn{5}{|c|}{t2.svg} \\ \hline
+		Solver & Linhas & Colunas & F. Obj. & T. Proc. & T. Sol. \\ \hline
+		Sem obstáculo & 140 & 1629 & 55.0 & 3.6807 & 0.0961  \\ \hline 
+		Obstáculo circular & 140 & 2128 & 63.0 & 3.4525 & 0.1253  \\ \hline
+		Obstáculo geral & 140 & 4896 & 68.0 & 3.5937 & 0.2803 \\ \hline
+    \end{tabular}
+\end{table}
+\end{frame}
+
+\begin{frame}
+\begin{block}{Teorema~1 em \cite{Andjel:1989:TP}}
+Pelo Teorema~1 em \cite{Andjel:1989:TP}, esperava-se que 
+\begin{align*}
+    F(d^l) \geq F(d^c) \geq F(d^u),
+\end{align*}
+onde $F(d)$ é o valor da função objetivo ao utilizar a distância do tipo $d$.
+Relação verificada na Tabela abaixo. %~\ref{tab:dtype}.
+\end{block}
+\end{frame}
+
+\begin{frame}{Tabela}
+\begin{table}
+    \centering
+    \caption{Comparação dos Tipos de Distâncias (utilizando COBYLA, máxima
+    distância de 800 e redução de 50)}
+    \label{tab:dtype}
+    \begin{tabular}{|c|c|c|c|c|c|}
+        \hline
+        & \multicolumn{5}{|c|}{t1.svg}  \\ \hline
+        Tipo Dist. & Linhas & Colunas & F. Obj. & T. Proc. & T. Sol. \\ \hline
+        $d^l$ & 110 & 2034 & 49.0 & 3.5 & 0.1101 \\ \hline
+        $d^c$ & 110 & 1578 & 49.0 & 3.4 & 0.0870 \\ \hline
+        $d^u$ & 110 & 1111 & 45.0 & 3.5 & 0.0635 \\ \hline
+        \end{tabular}        
+        \begin{tabular}{|c|c|c|c|c|c|}
+        \hline
+        & \multicolumn{5}{|c|}{t2.svg} \\ \hline
+        Tipo Dist. & Linhas & Colunas & F. Obj. & T. Proc. & T. Sol. \\ \hline
+        $d^l$ & 140 & 3610 & 68.0 & 3.6662 & 0.2113 \\ \hline
+        $d^c$ & 140 & 2896 & 68.0 & 3.6735 & 0.1699 \\ \hline
+        $d^u$ & 140 & 2128 & 63.0 & 3.4525 & 0.1253 \\ \hline
+	    \end{tabular}
+\end{table}
+\end{frame}
+
+\begin{frame}{Discussão}
+\begin{block}{}
+Em relação ao comprimento máximo dos canos, esperava-se que ao aumentar o
+comprimento, o valor da função também aumentaria. É possível observar isso na
+Tabela a seguir.%~\ref{tab:maxd}. 
+Na mesma tabela observa-se que para $D = 900$ e $D =
+1000$, o mesmo valor da função objetivo é obtido. Acredita-se que isso decorre
+do valor ótimo para o problema ter sido atingido.
+\end{block}
+\end{frame}
+
+\begin{frame}{Tabela}
+\begin{table}
+    \centering
+    \caption{Comparação do Comprimento Máximo dos Canos (utilizando COBYLA,
+    $d^c$ e com redução de 50)}
+    \label{tab:maxd}
+    \begin{tabular}{|c|c|c|c|c|c|}
+        \hline
+        & \multicolumn{5}{|c|}{t1.svg} \\ \hline
+        Max. Dist. & Linhas & Colunas & F. Obj. & T. Proc. & T. Sol.  \\ \hline
+        800.0 & 110 & 1111 & 45.0 & 3.5443 & 0.0635  \\ \hline
+        900.0 & 110 & 1776 & 49.0 & 3.4865 & 0.0959  \\ \hline
+        1000.0 & 110 & 2404 & 49.0 & 3.6357 & 0.1289  \\ \hline
+    \end{tabular}
+    \begin{tabular}{|c|c|c|c|c|c|}
+    \hline
+    & \multicolumn{5}{|c|}{t2.svg} \\ \hline
+    Max. Dist. & Linhas & Colunas & F. Obj. & T. Proc. & T. Sol. \\ \hline
+    800.0 & 140 & 2128 & 63.0 & 3.4525 & 0.1253 \\ \hline
+    900.0 & 140 & 3247 & 68.0 & 3.5934 & 0.1911 \\ \hline
+    1000.0 & 140 & 4181 & 68.0 & 3.5713 & 0.2497 \\ \hline
+    \end{tabular}
+\end{table}
+\end{frame}
+
+\begin{frame}{Discussão}
+\begin{block}{}
+E em relação a malha retangular utilizada, esperava-se que quanto menores forem
+os retângulos (menor valor de redução), maior fosse o valor da função objetivo.
+Essa relação é observada na Tabela~\ref{tab:reduce}.
+\end{block}
+\end{frame}
+
+\begin{frame}{Tabela}
+\begin{table}
+    \centering
+    \caption{Comparação Redução Devido a Malha de Discretização (utilizando COBYLA, máxima distância de 800 e $d^c$)}
+    \label{tab:reduce}
+    \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|}
+        \hline
+        & \multicolumn{5}{|c|}{t1.svg}  \\ \hline
+        Redução & Linhas & Colunas & F. Obj. & T. Proc. & T. Sol. \\ \hline
+        100 & 34 & 101 & 14.0 & 3.6675 & 0.0059 \\ \hline
+        50 & 110 & 1111 & 45.0 & 3.5443 & 0.0635 \\ \hline
+    \end{tabular}
+    \begin{tabular}{|c|c|c|c|c|c|}
+        \hline
+        & \multicolumn{5}{|c|}{t2.svg} \\ \hline
+        Redução & Linhas & Colunas & F. Obj. & T. Proc. & T. Sol. \\ \hline
+        100 & 44 & 184 & 20.0 & 3.6143 & 0.0099 \\ \hline
+        50 & 140 & 2128 & 63.0 & 3.4525 & 0.1253 \\ \hline
+    \end{tabular}
+\end{table}
+\end{frame}
+
+\section*{Bibliografia}
+\begin{frame}{Bibliografia}
+\bibliographystyle{alpha}
+\bibliography{../referencias}
+\end{frame}
 
 \section*{Obrigado}
 \begin{frame}
