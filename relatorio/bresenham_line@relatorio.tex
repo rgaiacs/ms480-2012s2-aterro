@@ -43,14 +43,14 @@ em $1$.
 
 A equação geral de uma reta passando pelos pontos $(x_0,y_0)$ e  $(x_1,y_1)$
 é dada por:
-\begin{equation*}
-\frac{y-y_0}{y_1-y_0}=\frac{x-x_0}{x_1-x_0}\,.
-\end{equation*}
+\begin{align*}
+\frac{y - y_0}{y_1 - y_0} &= \frac{x - x_0}{x_1 - x_0}.
+\end{align*}
 Para cada coluna $x$, a linha cuja célula deve ser escolhida é dada pela
 aproximação para o inteiro mais próximo de:
-\begin{equation*}
-y=\left(\frac{y_1-y_0}{x_1-x_0}\right)\left(x-x_0\right) + y_0\,.
-\end{equation*}
+\begin{align*}
+y &= \left( \frac{y_1 - y_0}{x_1 - x_0} \right) \left( x - x_0 \right) + y_0.
+\end{align*}
 
 O coeficiente angular $(y_1-y_0)/(x_1-x_0)$ depende apenas dos pontos
 extremos, podendo então ser pré-calculado. Assim, $y$ pode ser determinado para
