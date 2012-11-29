@@ -287,22 +287,6 @@ language=python,
     \end{center}
 \end{frame}
 
-\begin{frame}{Modelagem problema com obstáculo circular}
-    \begin{align*}
-        \text{max } & \sum_{x} \sum_{z} \sum_{y} \xi_{x, z, y}, \\
-        \text{s.a. } & \xi_{x, z, y} \geq 0, && \forall x, z, y, \\
-        & \xi_{x, z, y} = 0, && \forall (x, z, y) \mid d(x, z) > D \text{ ou } 
-        d(y, z) > D, \\
-        & \xi_{x, z, y} = 0, && \forall (x, z, y) \mid l(x, z) \leq r \text{ ou }
-        l(y, z) \leq r, \\
-        & \sum_{z} \sum_{y} \xi_{x, z, y} \leq \phi(x), && \forall x, \\
-        & \sum_{x} \sum_{z} \xi_{x, z, y} \leq \psi(y), && \forall y,
-    \end{align*}
-    onde $\phi(x)$ é o volume de terra disponível em $x$, $\psi(y)$ é o volume de
-    terra admitido em $y$; $\xi_{x, z, y}$ é o volume de terra transportado de $x$
-    para $y$ passando por $z$.
-\end{frame}
-
 \begin{frame}{Problema com obstáculo geral}
     \begin{center}
         \begin{tikzpicture}[scale=.75]
@@ -335,10 +319,35 @@ language=python,
             \draw[->] (0,8.2) -- (0,-.2);
         \end{tikzpicture}
     \end{center}
+\end{frame}
+
+\begin{frame}{Modelagem problema sem obstáculo}
     \begin{align*}
-        \xi_{x, z, y} &= 0, && \forall (x, z, y) \mid b(x, z) = 1 \text{ ou }
-        b(y, z) = 1,
+        \text{max } & \sum_{x} \sum_{y} \xi_{x, y}, \\
+        \text{s.a. } & \xi_{x, y} \geq 0, && \forall x, y, \\
+        & \xi_{x, y} = 0, && \forall (x, y) \mid d(x, y) > D, \\
+        & \sum_{y} \xi_{x, y} \leq \phi(x), && \forall x, \\
+        & \sum_{x} \xi_{x, y} \leq \psi(y), && \forall y,
     \end{align*}
+    onde $\phi(x)$ é o volume de terra disponível em $x$, $\psi(y)$ é o volume de
+    terra admitido em $y$; $\xi_{x, y}$ é o volume de terra transportado de $x$
+    para $y$.
+\end{frame}
+
+\begin{frame}{Modelagem problema com obstáculo circular}
+    \begin{align*}
+        \text{max } & \sum_{x} \sum_{z} \sum_{y} \xi_{x, z, y}, \\
+        \text{s.a. } & \xi_{x, z, y} \geq 0, && \forall x, z, y, \\
+        & \xi_{x, z, y} = 0, && \forall (x, z, y) \mid d(x, z) > D \text{ ou } 
+        d(y, z) > D, \\
+        & \xi_{x, z, y} = 0, && \forall (x, z, y) \mid l(x, z) \leq r \text{ ou }
+        l(y, z) \leq r, \\
+        & \sum_{z} \sum_{y} \xi_{x, z, y} \leq \phi(x), && \forall x, \\
+        & \sum_{x} \sum_{z} \xi_{x, z, y} \leq \psi(y), && \forall y,
+    \end{align*}
+    onde $\phi(x)$ é o volume de terra disponível em $x$, $\psi(y)$ é o volume de
+    terra admitido em $y$; $\xi_{x, z, y}$ é o volume de terra transportado de $x$
+    para $y$ passando por $z$.
 \end{frame}
 
 \begin{frame}{Modelagem Aperfeiçoada}
